@@ -1,0 +1,276 @@
+/* === CONFIGURAÇÃO GLOBAL === */
+.deck-master-container {
+  height: 100vh; 
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+  overflow: hidden; 
+  background: transparent; 
+}
+
+/* === TOPO E TÍTULOS === */
+.header-selecao {
+  text-align: center;
+  height: 60px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+.titulo-duplo {
+  font-size: 42px; 
+  letter-spacing: 5px;
+  margin: 0;
+  border-bottom: 2px dashed #8a2be2;
+  display: inline-block;
+  padding-bottom: 3px;
+}
+
+.azul-neon { color: #00f3ff; text-shadow: 0 0 15px #00f3ff; }
+.roxo-neon { color: #b026ff; text-shadow: 0 0 15px #b026ff; margin-left: 15px; }
+
+/* === LAYOUT CENTRAL === */
+.layout-central {
+  max-width: 1300px; 
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px; 
+  flex: 1; 
+  overflow: hidden; 
+}
+
+/* === ESTILO DAS JANELAS CYBERPUNK === */
+.janela-so {
+  background: rgba(13, 2, 33, 0.85); 
+  border: 2px solid #00f3ff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+}
+
+.header-so {
+  background: rgba(0, 243, 255, 0.1);
+  border-bottom: 2px solid #00f3ff;
+  padding: 3px 15px;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.body-so { padding: 8px 15px; } 
+
+/* === JANELA 1: DECK ATUAL (Horizontal) === */
+.janela-fita { 
+  border-color: #00ff41; 
+  height: 110px; 
+}
+.janela-fita .header-so { border-color: #00ff41; background: rgba(0, 255, 65, 0.1); }
+.contador-deck { color: #00ff41; font-weight: bold; text-shadow: 0 0 8px #00ff41; }
+.janela-fita .body-so { padding: 4px 15px; } 
+
+.fita-cartas {
+  display: flex;
+  gap: 12px;
+  padding: 2px 5px;
+  height: 75px; 
+  align-items: center;
+}
+
+.mini-carta {
+  min-width: 65px; 
+  height: 75px; 
+  border: 2px dashed #00ff41;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 255, 65, 0.05);
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s;
+}
+.mini-carta.placeholder-vazio { border-color: rgba(0, 255, 65, 0.2); cursor: default;}
+.mini-carta:hover:not(.placeholder-vazio) { background: rgba(255, 0, 60, 0.2); border-color: #ff003c; transform: scale(1.05); }
+
+.remover-overlay {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; color: #ff003c; opacity: 0; transition: 0.2s;
+}
+.mini-carta:hover .remover-overlay { opacity: 1; }
+.mini-carta:hover .mini-img, .mini-carta:hover .mini-nome { opacity: 0.2; }
+
+.mini-img { font-size: 14px; color: #00ff41; margin-bottom: 2px; }
+.mini-nome { font-size: 11px; color: white; text-align: center; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 3px; }
+
+.scroll-horizontal { overflow-x: scroll; overflow-y: hidden; } 
+.scroll-horizontal::-webkit-scrollbar { height: 6px; }
+.scroll-horizontal::-webkit-scrollbar-track { background: rgba(0, 255, 65, 0.05); }
+.scroll-horizontal::-webkit-scrollbar-thumb { background: #00ff41; border-radius: 4px; }
+
+
+/* === JANELA 2: BANCO DE DADOS === */
+.janela-banco { 
+  flex: 1; 
+  display: flex;
+  flex-direction: column;
+  border-color: #00f3ff;
+}
+
+.banco-layout { 
+  display: flex; 
+  gap: 0; 
+  flex: 1; 
+  overflow: hidden; 
+  padding: 0; 
+}
+
+.banco-grid {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-content: flex-start;
+  padding: 20px;
+  padding-right: 15px; 
+  overflow-y: scroll; 
+}
+
+/* Scrollbar Cibernético do Banco de Cartas */
+.banco-grid::-webkit-scrollbar { width: 10px; }
+.banco-grid::-webkit-scrollbar-track { 
+    background: rgba(0, 243, 255, 0.02); 
+    border-left: 1px dashed rgba(0, 243, 255, 0.3); 
+}
+.banco-grid::-webkit-scrollbar-thumb { 
+    background: #00f3ff; 
+    border-radius: 5px; 
+    box-shadow: 0 0 10px #00f3ff; 
+}
+
+.aviso-banco-vazio { text-align: center; color: rgba(0, 243, 255, 0.4); font-size: 24px; padding: 40px; width: 100%;}
+
+.card-wrapper {
+  position: relative; cursor: pointer; transition: 0.3s;
+  border-radius: 15px; outline: 2px solid transparent;
+}
+.card-wrapper:hover { transform: translateY(-5px); }
+.card-wrapper.selecionado { outline: 4px solid #00ff41; box-shadow: 0 0 20px rgba(0, 255, 65, 0.4); }
+
+.sel-badge {
+  position: absolute; top: -15px; right: -15px;
+  background: #00ff41; color: black; border-radius: 50%; width: 35px; height: 35px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold; font-size: 20px; z-index: 10; box-shadow: 0 0 15px #00ff41;
+}
+
+/* =========================================
+   FILTRO EXPANDIDO (O TECLADO DE LETRAS!)
+   ========================================= */
+.banco-filtros {
+  width: 320px; /* <--- A EXPANSÃO ACONTECE AQUI! Bem mais largo */
+  border-left: 2px solid #00f3ff; 
+  padding: 20px; 
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: rgba(13, 2, 33, 0.4); /* Fundo um pouquinho mais escuro pra destacar */
+}
+
+.titulo-filtro { 
+    color: #f1c40f; 
+    text-align: center; 
+    margin: 0 0 5px 0; 
+    border-bottom: 1px solid #f1c40f; 
+    padding-bottom: 5px; 
+    font-size: 22px;
+}
+
+.botoes-filtro-container {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 12px; /* Mais espaço entre os quadrados */
+    flex: 1;
+    justify-content: center; 
+    align-content: flex-start; 
+    overflow-y: auto; 
+    padding-right: 5px;
+}
+
+/* Caso o filtro tenha rolagem, será uma rolagem cibernética dourada */
+.botoes-filtro-container::-webkit-scrollbar { width: 6px; }
+.botoes-filtro-container::-webkit-scrollbar-track { background: rgba(241, 196, 15, 0.05); }
+.botoes-filtro-container::-webkit-scrollbar-thumb { background: #f1c40f; border-radius: 3px; }
+
+/* Botão Padrão: Quadrado Perfeito */
+.btn-filtro {
+  background: rgba(0, 0, 0, 0.5); 
+  border: 1px solid #00f3ff; 
+  color: #00f3ff;
+  font-family: 'VT323', monospace; 
+  font-size: 24px; 
+  width: 45px;  /* Quadrados um pouco maiores */
+  height: 45px; 
+  padding: 0;   
+  cursor: pointer; 
+  transition: 0.2s; 
+  border-radius: 6px; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+}
+
+/* Botão "TODOS" ocupa a largura total da linha */
+.btn-filtro.btn-todos {
+  width: 100%; 
+  height: 50px;
+  font-size: 22px;
+  margin-bottom: 10px; /* Dá um espacinho extra antes do alfabeto */
+}
+
+.btn-filtro:hover { background: #00f3ff; color: black; }
+.btn-filtro.ativo { background: #00f3ff; color: black; font-weight: bold; box-shadow: 0 0 15px #00f3ff; }
+
+/* === JANELA 3: PAINEL DE GERENCIAMENTO === */
+.janela-controles { 
+    border-color: #8a2be2; 
+    height: 60px; 
+    margin-top: auto; 
+    align-self: center; 
+    width: max-content; 
+}
+
+.janela-controles .body-so {
+    padding: 0 20px; 
+    height: 100%;
+}
+
+.botoes-container-central { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 25px; 
+    padding: 0;
+    height: 100%; 
+}
+
+.btn-acao {
+  font-family: 'VT323', monospace; font-size: 22px; padding: 6px 25px;
+  border: 2px solid; background: rgba(0, 0, 0, 0.5); color: white;
+  cursor: pointer; border-radius: 6px; transition: 0.3s;
+}
+
+.btn-limpar { border-color: #ff003c; color: #ff003c; }
+.btn-limpar:hover { background: #ff003c; color: black; }
+.btn-salvar { border-color: #00ff41; color: #00ff41; }
+.btn-salvar:hover { background: #00ff41; color: black; }
+.btn-voltar { border-color: #00f3ff; color: #00f3ff; }
+.btn-voltar:hover { background: #00f3ff; color: black; }

@@ -1,0 +1,96 @@
+.desconectado-screen {
+  background-color: #000;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  font-family: 'VT323', monospace;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}
+
+/* Estilo Base das Janelas (Igual aos botões expandidos) */
+.janela-central, .janela-lateral {
+  background: rgba(13, 2, 33, 0.95);
+  border: 2px solid #00f3ff;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.janela-central {
+  width: 500px;
+  height: 300px;
+  border-color: #00ff41; /* Verde Matrix */
+  box-shadow: 0 0 25px rgba(0, 255, 65, 0.3);
+}
+
+.janela-lateral {
+  width: 150px;
+  height: 150px;
+  border-color: #ff003c; /* Vermelho Alerta */
+  box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+}
+
+/* Efeito de Texto Terminal Verde */
+.conteudo-terminal {
+  width: 100%;
+  padding-left: 20px;
+}
+
+.linha-terminal {
+  color: #00ff41;
+  font-size: 24px;
+  margin: 10px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid #00ff41;
+  animation: typing 2s steps(30, end), blink-caret 0.75s step-end infinite;
+}
+
+.delay-1 { animation-delay: 2s; opacity: 0; animation-fill-mode: forwards; }
+.delay-2 { animation-delay: 4s; opacity: 0; animation-fill-mode: forwards; }
+
+.alerta-vermelho h2 {
+  color: #ff003c;
+  font-size: 60px;
+  text-shadow: 0 0 10px #ff003c;
+}
+
+/* Animações */
+@keyframes typing {
+  from { width: 0; opacity: 1; }
+  to { width: 100%; opacity: 1; }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #00ff41; }
+}
+
+.pisca {
+  animation: flash 0.5s infinite alternate;
+}
+
+@keyframes flash {
+  from { opacity: 1; }
+  to { opacity: 0.3; }
+}
+
+/* Linha de Scan estilo TV Antiga */
+.scanline {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0, 255, 65, 0.05) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+}

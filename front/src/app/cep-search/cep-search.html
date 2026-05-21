@@ -1,0 +1,16 @@
+<h2 >Consulta de CEP ( Ambientacao ) </h2 >
+
+<input #cepInput type="text" placeholder="Digite o CEP (apenas números)">
+
+<!-- Event Binding -->
+<button (click)="buscarCep(cepInput.value)">Buscar</button>
+
+<!-- Novo Control Flow do Angular -->
+@if (endereco) {
+  <div style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;">
+    <p><strong>Logradouro:</strong> {{ endereco.logradouro }}</p>
+    <p><strong>Bairro:</strong> {{ endereco.bairro }}</p>
+    <p><strong>Localidade/UF:</strong> {{ endereco.localidade }} - {{ endereco.uf }}</p>
+  </div>
+}
+

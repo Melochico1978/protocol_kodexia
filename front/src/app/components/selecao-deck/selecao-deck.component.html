@@ -1,0 +1,76 @@
+<div class="deck-master-container" style="font-family: 'VT323', monospace;">
+
+  <div class="header-selecao">
+    <h1 class="titulo-duplo">
+      <span class="azul-neon">OFICINA:</span> 
+      <span class="roxo-neon">SELEÇÃO DE DECK</span>
+    </h1>
+  </div>
+
+  <div class="layout-central">
+
+    <div class="janela-so janela-fita">
+      <div class="header-so">
+        <span style="color: #00ff41;">🔴 🟡 🟢 DECK_ATUAL.exe</span>
+        <span class="contador-deck">TOTAL: {{ deckAtual.length }} CARTAS</span>
+      </div>
+      
+      <div class="body-so scroll-horizontal">
+        <div *ngFor="let carta of deckAtual" class="mini-carta" (click)="toggleSelecao(carta)">
+          <div class="remover-overlay">❌</div>
+          <div class="mini-img">IMG</div>
+          <div class="mini-nome">{{ carta.nome }}</div>
+        </div>
+        <div *ngIf="deckAtual.length === 0" class="mini-carta placeholder-vazio">
+           <div class="mini-nome" style="color: rgba(0, 255, 65, 0.3);">VAZIO</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="janela-so janela-banco">
+      <div class="header-so" style="border-color: #00f3ff; color: #00f3ff;">
+        🔴 🟡 🟢 BANCO_DE_DADOS_GLOBAL.db
+      </div>
+      
+      <div class="body-so banco-layout">
+        
+        <div class="banco-grid">
+          <div *ngFor="let carta of cartasFiltradas" 
+               class="card-wrapper" 
+               (click)="toggleSelecao(carta)"
+               [class.selecionado]="carta.selecionada">
+            
+            <div *ngIf="carta.selecionada" class="sel-badge">✓</div>
+            <app-carta [cartaInput]="carta"></app-carta>
+          </div>
+          <div *ngIf="cartasFiltradas.length === 0" class="aviso-banco-vazio">
+            > NENHUM DADO ENCONTRADO NESTE SETOR...
+          </div>
+        </div>
+
+        <div class="banco-filtros">
+          <h3 class="titulo-filtro">FILTRO</h3>
+          <div class="botoes-filtro-container">
+            <button *ngFor="let grupo of grupos" 
+                    class="btn-filtro" 
+                    [class.ativo]="filtroGrupo === grupo"
+                    [class.btn-todos]="grupo === 'TODOS'"
+                    (click)="filtrarCartas(grupo)">
+              {{ grupo }}
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="janela-so janela-controles">
+      <div class="body-so botoes-container-central">
+        <button class="btn-acao btn-limpar" (click)="limparDeck()">🗑️ LIMPAR</button>
+        <button class="btn-acao btn-salvar" (click)="salvarDeck()">💾 SALVAR</button>
+        <button class="btn-acao btn-voltar" (click)="voltar()">🔙 VOLTAR</button>
+      </div>
+    </div>
+
+  </div>
+</div>

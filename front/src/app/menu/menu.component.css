@@ -1,0 +1,320 @@
+.menu-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'VT323', monospace; 
+  /* === CURSOR NORMAL (Mão Aberta) === */
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🖐️</text></svg>'), auto;
+}
+
+.titulo-game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 50px;
+  line-height: 0.85; 
+  background: rgba(13, 2, 33, 0.98); 
+  border: 3px solid #00f3ff;
+  border-radius: 20px;
+  padding: 20px 50px;
+  box-shadow: 0 0 25px rgba(0, 243, 255, 0.2);
+}
+
+.azul-neon {
+  color: #00f3ff !important;
+  font-size: 85px;
+  text-shadow: 0 0 15px #00f3ff;
+  margin: 0;
+  letter-spacing: 4px;
+}
+
+.roxo-neon {
+  color: #b026ff !important;
+  font-size: 85px;
+  text-shadow: 0 0 15px #b026ff;
+  margin: 0;
+  letter-spacing: 4px;
+}
+
+/* Adicionamos uma animação de Fade para o menu não aparecer do nada após a onda */
+.opcoes-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  animation: fadeInMenu 0.3s ease-out forwards;
+}
+
+@keyframes fadeInMenu {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.opcao {
+  position: relative;
+  width: 320px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease;
+  
+  /* === CURSOR DE MÃOZINHA PERSONALIZADO === */
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">👆</text></svg>'), pointer !important;
+}
+
+.conteudo-lista {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: 38px;
+  color: #ffffff !important;
+  transition: opacity 0.3s ease;
+  width: 100%; 
+  height: 100%;
+  background: rgba(13, 2, 33, 0.95); 
+  border: 2px solid rgba(0, 243, 255, 0.4);
+  border-radius: 15px;
+}
+
+.icone {
+  font-size: 38px; 
+  display: flex;
+  align-items: center;
+}
+
+/* === A CAIXA EXPANDIDA === */
+.caixa-expandida {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6); 
+  width: 400px;  
+  height: 250px; 
+  background: rgba(13, 2, 33, 0.98); 
+  border: 3px solid #00f3ff;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly; 
+  
+  padding-top: 35px;
+  overflow: hidden; 
+  
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 0 30px rgba(0, 243, 255, 0.6);
+  z-index: 100;
+}
+
+/* === ABA DE NAVEGADOR FALSA === */
+.caixa-expandida::before {
+  content: "🔴 🟡 🟢   SYS.KODEXIA"; 
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background: rgba(0, 243, 255, 0.15); 
+  border-bottom: 2px solid #00f3ff;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  font-size: 16px;
+  color: #00f3ff;
+  letter-spacing: 2px;
+  box-sizing: border-box;
+}
+
+/* === ANIMAÇÃO DE SCANNER CIBERNÉTICO NA CAIXA === */
+.caixa-expandida::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  background: linear-gradient(to bottom, transparent, rgba(0, 243, 255, 0.2), transparent);
+  animation: scanline 3s linear infinite;
+  pointer-events: none; 
+  z-index: 50;
+}
+
+@keyframes scanline {
+  0% { top: -20%; }
+  100% { top: 100%; }
+}
+
+/* =========================================
+   EFEITO DE TRANSIÇÃO (ONDA) DO SUB-MENU
+   ========================================= */
+.scanline-transicao {
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  background: linear-gradient(to bottom, transparent, #00f3ff, transparent);
+  box-shadow: 0 0 20px #00f3ff;
+  animation: varredura 0.6s ease-in-out forwards;
+  z-index: 999;
+  pointer-events: none;
+}
+
+@keyframes varredura {
+  0% { top: -10%; opacity: 0; }
+  50% { opacity: 1; }
+  100% { top: 110%; opacity: 0; }
+}
+
+/* HOVERS DOS BOTÕES */
+.opcoes-menu:hover .opcao {
+  transform: scale(0.85);
+  opacity: 0.5;
+  height: 40px; 
+}
+
+.opcoes-menu:hover .opcao:hover {
+  transform: scale(1);
+  opacity: 1;
+  height: 250px; 
+}
+
+/* No Sub-menu não queremos expandir as caixas gigantes, então travamos a altura */
+.sub-menu:hover .opcao:hover {
+  height: 60px;
+}
+
+.opcao:hover .conteudo-lista { opacity: 0; }
+
+/* Só mostra a caixa expandida se não for o sub-menu */
+.opcoes-menu:not(.sub-menu) .opcao:hover .caixa-expandida {
+  opacity: 1;
+  pointer-events: all;
+  transform: translate(-50%, -50%) scale(1); 
+}
+
+/* No sub-menu, o conteúdo lista se mantém visível no hover com um efeito de brilho */
+.sub-menu .opcao:hover .conteudo-lista {
+  opacity: 1;
+  box-shadow: 0 0 20px #00f3ff;
+  background: rgba(0, 243, 255, 0.2);
+}
+
+.texto-pequeno { color: #fff; font-size: 22px; margin: 0; z-index: 101;}
+.titulo-central { color: #00f3ff; font-size: 55px; text-shadow: 0 0 10px #00f3ff; margin: 0; text-transform: uppercase; z-index: 101;}
+.espaco-gif {
+  width: 85%;
+  height: 80px;
+  border: 2px dashed #00f3ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00f3ff;
+  font-size: 18px;
+  background: rgba(0, 243, 255, 0.1);
+  border-radius: 10px;
+  z-index: 101;
+}
+
+/* =========================================
+   MÁGICA DOS "GIFS" EM CSS PURO
+   ========================================= */
+
+/* DUELO: Nave e Laser */
+.anim-duelo {
+  display: flex; align-items: center; justify-content: flex-start; padding-left: 20px; overflow: hidden;
+}
+.nave { font-size: 35px; animation: flutuar 2s ease-in-out infinite alternate; }
+.laser { color: #ff007f; font-weight: bold; letter-spacing: 2px; text-shadow: 0 0 10px #ff007f; animation: atirar 0.8s linear infinite; }
+@keyframes flutuar { 0% { transform: translateY(-8px); } 100% { transform: translateY(8px); } }
+@keyframes atirar { 
+  0% { transform: translateX(0); opacity: 1; } 
+  100% { transform: translateX(120px); opacity: 0; } 
+}
+
+/* HISTÓRIA: Terminal Decrypting */
+.anim-historia {
+  font-family: 'Courier New', monospace; font-weight: bold; color: #00ff41; text-shadow: 0 0 8px #00ff41;
+}
+.piscar { animation: blink 1s step-end infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* CRIAÇÃO: Lápis rabiscando no papel */
+.anim-criacao { position: relative; }
+.papel { 
+  width: 70px; height: 50px; background: rgba(255, 255, 255, 0.9); 
+  border-radius: 5px; padding: 10px; display: flex; align-items: center; 
+}
+.rabisco { 
+  color: #0d0221; font-weight: bold; font-size: 18px;
+  overflow: hidden; white-space: nowrap; 
+  animation: desenhar 3s steps(8, end) infinite; 
+}
+.lapis { position: absolute; font-size: 28px; top: -10px; left: -10px; animation: lapisMove 3s infinite; }
+@keyframes desenhar { 0%, 20% { width: 0; } 80%, 100% { width: 100%; } }
+@keyframes lapisMove { 
+  0%, 20% { transform: translate(0, 0) rotate(0deg); } 
+  80% { transform: translate(60px, 10px) rotate(-20deg); } 
+  100% { transform: translate(0, -20px); opacity: 0;} 
+}
+
+/* AJUDA: Engrenagens rodando */
+.anim-ajuda { position: relative; width: 80px; height: 80px; border: none; background: transparent;}
+.eng { position: absolute; line-height: 1; display: inline-block; filter: drop-shadow(0 0 5px #00f3ff); }
+.e1 { top: 0; left: 0; font-size: 35px; animation: girar 4s linear infinite; }
+.e2 { top: 15px; left: 32px; font-size: 25px; animation: girar-reverso 3s linear infinite; }
+.e3 { top: 35px; left: 5px; font-size: 20px; animation: girar 2s linear infinite; }
+@keyframes girar { 100% { transform: rotate(360deg); } }
+@keyframes girar-reverso { 100% { transform: rotate(-360deg); } }
+
+/* SAIR: Boneco correndo pra porta */
+.anim-sair { display: flex; width: 120px; justify-content: space-between; align-items: flex-end; border: none; background: transparent;}
+.porta { font-size: 45px; z-index: 2; }
+.boneco { 
+  font-size: 35px; 
+  animation: correrSair 2s ease-in infinite; 
+  z-index: 1;
+  filter: grayscale(100%) brightness(0) drop-shadow(0 0 4px #00f3ff); 
+}
+@keyframes correrSair { 
+  0% { transform: translateX(-30px); opacity: 1; } 
+  70% { transform: translateX(30px) scale(0.6); opacity: 0.8; } 
+  100% { transform: translateX(30px) scale(0.1); opacity: 0; } 
+}
+
+/* =========================================
+   BARRA DE ROLAGEM INTERNA DA CAIXA
+   ========================================= */
+.scrollbar-interna {
+  position: absolute;
+  right: 6px;
+  top: 40px; 
+  width: 6px;
+  height: 190px; 
+  background: rgba(0, 243, 255, 0.1);
+  border-radius: 5px;
+  z-index: 102;
+}
+
+.thumb-interno {
+  width: 100%;
+  height: 35px;
+  background: rgba(0, 243, 255, 0.7);
+  border-radius: 5px;
+  box-shadow: 0 0 5px #00f3ff;
+  animation: scrollMoveInterno 5s ease-in-out infinite alternate;
+}
+
+@keyframes scrollMoveInterno {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(155px); } 
+}

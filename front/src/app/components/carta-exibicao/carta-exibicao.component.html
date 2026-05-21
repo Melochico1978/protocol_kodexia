@@ -1,0 +1,28 @@
+<div class="card" [class.lendaria]="carta.lendaria">
+  <div class="card-header">
+    <span class="grupo">{{ carta.grupo }}-{{ carta.codigo }}</span>
+    <h3 class="nome">{{ carta.nome }}</h3>
+  </div>
+
+  <div class="card-img">
+    <span class="emoji">💻</span>
+  </div>
+
+  <div class="stats">
+    <div class="stat-row">
+      <label>Performance</label>
+      <div class="bar-container"><div class="bar perf" [style.width]="getBarWidth(carta.performance)"></div></div>
+    </div>
+    <div class="stat-row">
+      <label>Sintaxe</label>
+      <div class="bar-container"><div class="bar sint" [style.width]="getBarWidth(carta.sintaxe)"></div></div>
+    </div>
+    <div class="stat-row">
+      <label>Segurança</label>
+      <div class="bar-container"><div class="bar segu" [style.width]="getBarWidth(carta.seguranca)"></div></div>
+    </div>
+    <!-- Repetir para os outros atributos se desejar -->
+  </div>
+
+  <div *ngIf="carta.lendaria" class="badge">★ LENDÁRIA ★</div>
+</div>

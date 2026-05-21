@@ -1,0 +1,104 @@
+<div class="batalha-master-container" style="font-family: 'VT323', monospace;">
+
+  <div class="header-batalha">
+    <h1 class="titulo-cyberpunk"> [ SIMULAÇÃO VS. IA ] </h1>
+    <p class="log-sistema">{{ mensagemSistema }}</p>
+  </div>
+
+  <div *ngIf="jogoAcabou" class="fim-de-jogo-painel">
+    <h2 class="texto-final" [class.vitoria]="deckJogador.length > 0">
+      {{ deckJogador.length > 0 ? '🏆 SUCESSO DO SISTEMA' : '☠️ FALHA CRÍTICA' }}
+    </h2>
+    <p class="subtexto-final">Operação Encerrada.</p>
+    <button class="btn-acao-final" (click)="voltarParaMenu()">🔙 VOLTAR À BASE CENTRAL</button>
+  </div>
+
+  <div class="layout-batalha" *ngIf="!jogoAcabou">
+
+    <div class="painel-lateral p1">
+      <div class="info-jogador">
+        <div class="icone-mao">🖐️</div>
+        <h2 class="nome-jogador">JOGADOR 1</h2>
+      </div>
+
+      <div class="zona-monte">
+        <div class="monte-cartas" 
+             [class.interativo]="faseAtual === 'COMPRAR'"
+             [class.brilhando]="faseAtual === 'COMPRAR'"
+             (click)="puxarCartas()">
+          <div class="carta-verso">
+            <span class="logo-verso">KODEXIA</span>
+          </div>
+        </div>
+        <div class="contador-cartas">CARTAS: {{ deckJogador.length }}</div>
+      </div>
+    </div>
+
+
+    <div class="arena-central">
+      
+      <div class="zona-embate">
+        
+        <div class="slot-carta slot-p1">
+          <div *ngIf="!cartaAtualJogador" class="placeholder-holografico">AGUARDANDO<br>CARTA</div>
+          <app-carta-exibicao *ngIf="cartaAtualJogador" [carta]="cartaAtualJogador"></app-carta-exibicao>
+        </div>
+
+        <div class="divisor-vs">VS</div>
+
+        <div class="slot-carta slot-p2">
+          
+          <div *ngIf="faseAtual === 'COMPRAR'" class="placeholder-holografico inimigo">MODO<br>ESPERA</div>
+          
+          <div *ngIf="faseAtual === 'ESCOLHER'" class="janela-so menu-ataque">
+            <div class="header-so">🔴 🟡 🟢 ANALISADOR.bat</div>
+            <div class="body-so">
+              <h3 class="titulo-ataque">VETORES DE ATAQUE:</h3>
+              <button class="btn-atributo" (click)="batalhar('performance', 'Performance')">PERFORMANCE [{{cartaAtualJogador?.performance}}]</button>
+              <button class="btn-atributo" (click)="batalhar('sintaxe', 'Sintaxe')">SINTAXE [{{cartaAtualJogador?.sintaxe}}]</button>
+              <button class="btn-atributo" (click)="batalhar('seguranca', 'Segurança')">SEGURANÇA [{{cartaAtualJogador?.seguranca}}]</button>
+              <button class="btn-atributo" (click)="batalhar('longevidade', 'Longevidade')">LONGEVIDADE [{{cartaAtualJogador?.longevidade}}]</button>
+              <button class="btn-atributo" (click)="batalhar('popularidade', 'Popularidade')">POPULARIDADE [{{cartaAtualJogador?.popularidade}}]</button>
+              <button class="btn-atributo" (click)="batalhar('abstracao', 'Abstração')">ABSTRAÇÃO [{{cartaAtualJogador?.abstracao}}]</button>
+              <button class="btn-atributo" (click)="batalhar('versatilidade', 'Versatilidade')">VERSATILIDADE [{{cartaAtualJogador?.versatilidade}}]</button>
+            </div>
+          </div>
+
+          <app-carta-exibicao *ngIf="faseAtual === 'COMPARAR' && cartaAtualBot" [carta]="cartaAtualBot"></app-carta-exibicao>
+
+        </div>
+      </div>
+
+      <div class="zona-empate" *ngIf="deckEmpate.length > 0">
+        <div class="monte-empate-container">
+          <div class="monte-cartas horizontal">
+            <div class="carta-verso">EMPATE</div>
+          </div>
+          <div class="contador-cartas empate-texto">EM DISPUTA: {{ deckEmpate.length }}</div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="painel-lateral p2">
+      <div class="info-jogador">
+        <div class="icone-mao">🤖</div>
+        <h2 class="nome-jogador inimigo-texto">MÁQUINA</h2>
+      </div>
+
+      <div class="zona-monte">
+        <div class="monte-cartas inativo">
+          <div class="carta-verso inimigo-verso">
+            <span class="logo-verso">KODEXIA</span>
+          </div>
+        </div>
+        <div class="contador-cartas inimigo-texto">CARTAS: {{ deckBot.length }}</div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="btn-fuga" routerLink="/inicio">🔙 ABORTAR SIMULAÇÃO</button>
+
+</div>

@@ -1,0 +1,67 @@
+<div class="ajuda-master-container" style="font-family: 'VT323', monospace;">
+
+  <div class="header-ajuda">
+    <h1 class="titulo-central azul-neon">AJUDA & SUPORTE</h1>
+  </div>
+
+  <div class="corpo-ajuda">
+    <div class="janela-so janela-principal">
+      <div class="header-so">
+        <span>SISTEMA_VISUALIZADOR.exe</span>
+        <span class="status-blink">● LENDO_DADOS...</span>
+      </div>
+      <div class="body-so conteudo-dinamico">
+        
+        <div *ngIf="secaoAtiva === 'tutorial'" class="sessao-conteudo">
+          <h2 class="subtitulo">> GUIA DE INICIALIZAÇÃO</h2>
+          <div class="placeholder-midia">
+            <p>[ TERMINAL DE VÍDEO / PACK DE IMAGENS ]</p>
+          </div>
+          <p class="texto-manual">Aprenda a dominar o Protocol Kodexia. Analise as vulnerabilidades do oponente e escolha o atributo de maior impacto para vencer o duelo.</p>
+        </div>
+
+        <div *ngIf="secaoAtiva === 'faq'" class="sessao-conteudo">
+          <h2 class="subtitulo">> F.A.Q - PERGUNTAS FREQUENTES</h2>
+          <div class="lista-faq">
+            <p><strong>P: O que acontece em caso de empate?</strong></p>
+            <p>R: As cartas ficam na mesa. O vencedor da próxima rodada coleta todas.</p>
+            <p><strong>P: Como criar linguagens lendárias?</strong></p>
+            <p>R: Acesse a Oficina e marque a flag 'Lendária' durante o cadastro.</p>
+          </div>
+        </div>
+
+        <div *ngIf="secaoAtiva === 'problemas'" class="sessao-conteudo">
+          <h2 class="subtitulo">> RELATÓRIO DE FALHAS</h2>
+          <p class="texto-manual">Identificou uma anomalia no código? Relate para que nossos engenheiros possam aplicar o patch de correção.</p>
+          <button class="btn-terminal" (click)="alertaSistema()">GERAR TICKET DE ERRO</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="painel-botoes">
+      <div class="janela-so btn-janela retangular" (click)="alterarSecao('problemas')">
+        <div class="corpo-botao">
+          <span class="icone-alerta">⚠️</span>
+          <span>RELATAR PROBLEMA</span>
+        </div>
+      </div>
+
+      <div class="grid-quadrados">
+        <div class="janela-so btn-janela quadrado" (click)="alertaSistema()">
+          <span>COMUNIDADE</span>
+        </div>
+        <div class="janela-so btn-janela quadrado" (click)="alertaSistema()">
+          <span>NOVIDADES</span>
+        </div>
+        <div class="janela-so btn-janela quadrado" (click)="alterarSecao('faq')">
+          <span>F.A.Q.</span>
+        </div>
+        <div class="janela-so btn-janela quadrado" (click)="alterarSecao('tutorial')">
+          <span>CRÉDITOS</span>
+        </div>
+      </div>
+
+      <button class="btn-acao btn-voltar" (click)="voltar()">🔙 VOLTAR</button>
+    </div>
+  </div>
+</div>

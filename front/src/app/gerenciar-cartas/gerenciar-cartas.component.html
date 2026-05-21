@@ -1,0 +1,178 @@
+<div class="gerenciar-master-container" style="font-family: 'VT323', monospace;">
+
+  <div class="header-modo-criacao">
+    <h1 class="titulo-cyberpunk"> [ MODO CRIAÇÃO ] </h1>
+  </div>
+
+  <div class="oficina-container">
+
+    <div class="coluna-visualizador">
+
+      <div class="janela-so janela-nome-carta">
+        <div class="header-so">🔴 🟡 🟢 NOME_ARQUIVO.sys</div>
+        <div class="body-so texto-neon-verde">
+          {{ novaCarta.nome || 'NOME DA CARTA' | uppercase }}
+        </div>
+      </div>
+
+      <div class="janela-so janela-preview">
+        <div class="header-so">🔴 🟡 🟢 VISUALIZADOR_HOLOGRAFICO.exe</div>
+        <div class="body-so layout-preview">
+
+          <div class="preview-esq">
+            <div class="caixa-imagem">
+              <span>IMG</span>
+            </div>
+            <div class="caixa-grupo">
+              GRUPO: {{ novaCarta.grupo }}
+            </div>
+          </div>
+
+          <div class="preview-dir">
+            <div class="attr-mini"><span>PERF:</span>
+              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.performance"></div></div> <span>{{novaCarta.performance}}</span>
+            </div>
+            <div class="attr-mini"><span>SINT:</span>
+              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.sintaxe"></div></div> <span>{{novaCarta.sintaxe}}</span>
+            </div>
+            <div class="attr-mini"><span>SEGU:</span>
+              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.seguranca"></div></div> <span>{{novaCarta.seguranca}}</span>
+            </div>
+            <div class="attr-mini"><span>LONG:</span>
+              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.longevidade"></div></div> <span>{{novaCarta.longevidade}}</span>
+            </div>
+            <div class="attr-mini"><span>POPU:</span>
+              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.popularidade"></div></div> <span>{{novaCarta.popularidade}}</span>
+            </div>
+            <div class="attr-mini"><span>ABST:</span>
+              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.abstracao"></div></div> <span>{{novaCarta.abstracao}}</span>
+            </div>
+            <div class="attr-mini"><span>VERS:</span>
+              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.versatilidade"></div></div> <span>{{novaCarta.versatilidade}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="botoes-acao">
+          <button class="btn-acao btn-salvar" (click)="adicionarCarta()" [disabled]="!novaCarta.nome">💾 SALVAR DADO</button>
+          
+          <button class="btn-acao btn-lixo"
+            (click)="novaCarta = {nome:'', grupo:'A', codigo:'', performance:0, sintaxe:0, seguranca:0, longevidade:0, popularidade:0, abstracao:0, versatilidade:0, lendaria:false}">🗑️</button>
+
+          <button class="btn-acao btn-voltar" routerLink="/inicio">🔙 VOLTAR</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="coluna-meio">
+
+      <div class="janela-so janela-dados">
+        <div class="header-so">🔴 🟡 🟢 COLETOR_INFO.sh</div>
+        <div class="body-so form-dados">
+
+          <label>NOME DA LINGUAGEM:</label>
+          <input type="text" [(ngModel)]="novaCarta.nome" placeholder="Ex: C++, Java...">
+
+          <label>GRUPO:</label>
+          <select [(ngModel)]="novaCarta.grupo">
+            <option value="A">Grupo A</option>
+            <option value="B">Grupo B</option>
+            <option value="C">Grupo C</option>
+            <option value="D">Grupo D</option>
+            <option value="E">Grupo E</option>
+            <option value="F">Grupo F</option>
+            <option value="G">Grupo G</option>
+            <option value="H">Grupo H</option>
+            <option value="I">Grupo I</option>
+            <option value="J">Grupo J</option>
+            <option value="K">Grupo K</option>
+            <option value="L">Grupo L</option>
+            <option value="M">Grupo M</option>
+            <option value="N">Grupo N</option>
+            <option value="O">Grupo O</option>
+            <option value="P">Grupo P</option>
+            <option value="Q">Grupo Q</option>
+            <option value="R">Grupo R</option>
+            <option value="S">Grupo S</option>
+            <option value="T">Grupo T</option>
+            <option value="U">Grupo U</option>
+            <option value="V">Grupo V</option>
+            <option value="W">Grupo W</option>
+            <option value="X">Grupo X</option>
+            <option value="Y">Grupo Y</option>
+            <option value="Z">Grupo Z</option>
+          </select>
+
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #f1c40f; margin-top: 10px;">
+            <input type="checkbox" [(ngModel)]="novaCarta.lendaria" style="transform: scale(1.3);">
+            ✨ LINGUAGEM LENDÁRIA
+          </label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="coluna-direita">
+
+      <div class="janela-so janela-atributos">
+        <div class="header-so">🔴 🟡 🟢 CALIBRADOR_ATRIBUTOS.bat</div>
+        <div class="body-so form-sliders">
+
+          <div class="slider-group">
+            <label>PERFORMANCE [{{novaCarta.performance}}]</label>
+            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.performance">
+          </div>
+          <div class="slider-group">
+            <label>SINTAXE [{{novaCarta.sintaxe}}]</label>
+            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.sintaxe">
+          </div>
+          <div class="slider-group">
+            <label>SEGURANÇA [{{novaCarta.seguranca}}]</label>
+            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.seguranca">
+          </div>
+          <div class="slider-group">
+            <label>LONGEVIDADE [{{novaCarta.longevidade}}]</label>
+            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.longevidade">
+          </div>
+          <div class="slider-group">
+            <label>POPULARIDADE [{{novaCarta.popularidade}}]</label>
+            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.popularidade">
+          </div>
+          <div class="slider-group">
+            <label>ABSTRAÇÃO [{{novaCarta.abstracao}}]</label>
+            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.abstracao">
+          </div>
+          <div class="slider-group">
+            <label>VERSATILIDADE [{{novaCarta.versatilidade}}]</label>
+            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.versatilidade">
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div style="text-align: center; margin-bottom: 20px;">
+    <h2 style="color: #00f3ff; border-bottom: 1px dashed #00f3ff; display: inline-block; padding-bottom: 5px;">[ BANCO DE DADOS: LINGUAGENS CADASTRADAS ]</h2>
+  </div>
+
+  <div class="galeria-wrapper" style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; padding-bottom: 50px;">
+    
+    <div *ngFor="let carta of cartas" class="card-interativo" style="position: relative;">
+      
+      <app-carta [cartaInput]="carta"></app-carta>
+
+      <div style="text-align: center; margin-top: 15px;">
+        <button (click)="excluirCarta(carta.id)"
+          style="padding: 8px 16px; background: transparent; color: #ff003c; border: 1px dashed #ff003c; border-radius: 4px; cursor: pointer; font-size: 16px; font-family: 'VT323', monospace; transition: 0.3s;">
+          🗑️ APAGAR DADO
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>

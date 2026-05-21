@@ -1,0 +1,123 @@
+<div class="menu-container">
+  
+  <div class="titulo-game">
+    <h1 class="azul-neon">PROTOCOL</h1>
+    <h1 class="roxo-neon">KODEXIA</h1>
+  </div>
+
+  <div class="scanline-transicao" *ngIf="efeitoScanline"></div>
+
+  <div class="opcoes-menu" *ngIf="menuAtual === 'principal'">
+    
+    <div class="opcao" (click)="trocarMenu('duelo')">
+      <div class="conteudo-lista">
+        <span class="icone">⚔️</span>
+        <span class="texto">DUELO</span>
+      </div>
+      <div class="caixa-expandida">
+        <p class="texto-pequeno">Acessar modos de...</p>
+        <h2 class="titulo-central">DUELO</h2>
+        <div class="espaco-gif anim-duelo">
+          <span class="nave">👾</span>
+          <span class="laser">_  -  _  -  -</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="opcao" (click)="alerta('ACESSO NEGADO: Módulo de Campanha ainda em desenvolvimento pelo Arquiteto.')">
+      <div class="conteudo-lista">
+        <span class="icone">📖</span>
+        <span class="texto">HISTÓRIA</span>
+      </div>
+      <div class="caixa-expandida">
+        <p class="texto-pequeno">Explore a...</p>
+        <h2 class="titulo-central">HISTÓRIA</h2>
+        <div class="espaco-gif anim-historia">
+          <span class="txt-terminal">> DECRYPTING...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="opcao" (click)="navegar('crud')">
+      <div class="conteudo-lista">
+        <span class="icone">💻</span>
+        <span class="texto">CRIAÇÃO</span>
+      </div>
+      <div class="caixa-expandida">
+        <p class="texto-pequeno">Oficina de...</p>
+        <h2 class="titulo-central">CRIAÇÃO</h2>
+        <div class="espaco-gif anim-criacao">
+          <div class="papel">
+            <span class="rabisco">~ ~ ~ ~ ~ ~</span> 
+          </div>
+          <span class="lapis">✏️</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="opcao" (click)="navegar('ajuda')">
+      <div class="conteudo-lista">
+        <span class="icone">❓</span>
+        <span class="texto">AJUDA</span>
+      </div>
+      <div class="caixa-expandida">
+        <p class="texto-pequeno">Solucione problemas...</p>
+        <h2 class="titulo-central">AJUDA</h2>
+        <div class="espaco-gif anim-ajuda">
+          <span class="eng e1">⚙️</span>
+          <span class="eng e2">⚙️</span>
+          <span class="eng e3">⚙️</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="opcao" (click)="navegar('desconectado')">
+      <div class="conteudo-lista">
+        <span class="icone">🚪</span>
+        <span class="texto">SAIR</span>
+      </div>
+      <div class="caixa-expandida">
+        <p class="texto-pequeno">Desconectando...</p>
+        <h2 class="titulo-central">SAIR</h2>
+        <div class="espaco-gif anim-sair">
+          <span class="boneco">🏃</span>
+          <span class="porta">🚪</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="opcoes-menu sub-menu" *ngIf="menuAtual === 'duelo'">
+    
+    <div class="opcao" (click)="navegar('mesa')">
+      <div class="conteudo-lista">
+        <span class="icone">🤖</span>
+        <span class="texto">VS. IA</span>
+      </div>
+    </div>
+
+    <div class="opcao" (click)="alerta('Professor Miraberto ainda está trabalhando nisso!')">
+      <div class="conteudo-lista">
+        <span class="icone">👥</span>
+        <span class="texto">VS. PLAYER</span>
+      </div>
+    </div>
+
+    <div class="opcao" (click)="navegar('deck')">
+      <div class="conteudo-lista">
+        <span class="icone">🃏</span>
+        <span class="texto">DECK</span>
+      </div>
+    </div>
+
+    <div class="opcao" (click)="trocarMenu('principal')">
+      <div class="conteudo-lista">
+        <span class="icone">🔙</span>
+        <span class="texto">VOLTAR</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>

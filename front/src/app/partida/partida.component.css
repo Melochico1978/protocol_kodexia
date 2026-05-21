@@ -1,0 +1,187 @@
+/* === CONFIGURAÇÃO GLOBAL DA MESA === */
+.batalha-master-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  padding: 20px;
+  position: relative;
+  background: rgba(8, 2, 20, 0.85); /* Cascata transparente no fundo */
+}
+
+/* === TOPO E LOG === */
+.header-batalha {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.titulo-cyberpunk {
+  color: #ff003c;
+  font-size: 50px;
+  letter-spacing: 5px;
+  text-shadow: 0 0 15px #ff003c;
+  border-bottom: 2px dashed #ff003c;
+  display: inline-block;
+  margin: 0 0 10px 0;
+}
+
+.log-sistema {
+  font-size: 24px;
+  color: #00ff41;
+  background: rgba(0, 255, 65, 0.1);
+  padding: 5px 20px;
+  border-radius: 5px;
+  border: 1px solid #00ff41;
+  display: inline-block;
+  margin: 0;
+  animation: piscarTexto 2s infinite alternate;
+}
+
+@keyframes piscarTexto {
+  from { opacity: 1; }
+  to { opacity: 0.7; }
+}
+
+/* === LAYOUT DOS 3 BLOCOS === */
+.layout-batalha {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* === PAINÉIS LATERAIS (P1 e P2) === */
+.painel-lateral {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.info-jogador { text-align: center; }
+.icone-mao { font-size: 80px; filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.5)); }
+.p2 .icone-mao { filter: drop-shadow(0 0 10px rgba(255, 0, 60, 0.5)); }
+
+.nome-jogador {
+  color: #00f3ff; font-size: 30px; margin: 10px 0 0 0;
+  border-bottom: 2px solid #00f3ff;
+}
+.inimigo-texto { color: #ff003c; border-color: #ff003c; }
+
+/* === MONTES DE CARTAS (Efeito 3D) === */
+.zona-monte { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 50px; }
+
+.monte-cartas {
+  width: 140px; height: 200px; background: #0d0221;
+  border: 2px solid #00f3ff; border-radius: 10px; position: relative;
+  box-shadow: -2px -2px 0 0 #00f3ff, -4px -4px 0 0 #0d0221, -6px -6px 0 0 #00f3ff, 0 0 20px rgba(0, 243, 255, 0.4);
+  display: flex; align-items: center; justify-content: center; transition: all 0.3s ease;
+}
+
+.monte-cartas.horizontal {
+  transform: rotate(90deg);
+  box-shadow: 2px -2px 0 0 #f1c40f, 4px -4px 0 0 #0d0221, 6px -6px 0 0 #f1c40f;
+  border-color: #f1c40f;
+}
+
+.monte-cartas.inativo {
+  border-color: #ff003c;
+  box-shadow: 2px -2px 0 0 #ff003c, 4px -4px 0 0 #0d0221, 6px -6px 0 0 #ff003c;
+}
+
+.carta-verso {
+  width: 90%; height: 90%; border: 2px dashed rgba(0, 243, 255, 0.5);
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: #00f3ff; font-weight: bold;
+}
+
+.carta-verso.inimigo-verso { border-color: rgba(255, 0, 60, 0.5); color: #ff003c; }
+
+.monte-cartas.interativo { cursor: pointer; }
+.monte-cartas.interativo:hover { transform: translateY(-10px); }
+.monte-cartas.brilhando { animation: glowPulso 1.5s infinite alternate; }
+
+@keyframes glowPulso {
+  from { box-shadow: -2px -2px 0 0 #00f3ff, -4px -4px 0 0 #0d0221, -6px -6px 0 0 #00f3ff, 0 0 10px rgba(0, 243, 255, 0.2); }
+  to { box-shadow: -2px -2px 0 0 #00ff41, -4px -4px 0 0 #0d0221, -6px -6px 0 0 #00ff41, 0 0 30px rgba(0, 255, 65, 0.8); border-color: #00ff41; }
+}
+
+.contador-cartas { font-size: 22px; background: rgba(0, 0, 0, 0.8); padding: 5px 15px; border: 1px solid #00f3ff; border-radius: 20px; }
+.empate-texto { color: #f1c40f; border-color: #f1c40f; }
+
+/* === ARENA CENTRAL === */
+.arena-central {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; padding: 0 40px;
+}
+
+.zona-embate { display: flex; justify-content: center; align-items: center; gap: 40px; margin-bottom: 60px; width: 100%; }
+
+.slot-carta {
+  width: 350px; height: 500px; display: flex;
+  align-items: center; justify-content: center; position: relative;
+}
+
+.divisor-vs { font-size: 50px; color: #f1c40f; text-shadow: 0 0 20px #f1c40f; font-style: italic; font-weight: bold; }
+
+.placeholder-holografico {
+  width: 100%; height: 100%; border: 2px dashed #00f3ff; border-radius: 15px;
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 30px; color: rgba(0, 243, 255, 0.4); background: rgba(0, 243, 255, 0.05);
+}
+
+.placeholder-holografico.inimigo { border-color: #ff003c; color: rgba(255, 0, 60, 0.4); background: rgba(255, 0, 60, 0.05); }
+
+/* === JANELA DE MENU DE ATRIBUTOS === */
+.janela-so.menu-ataque {
+  width: 100%; height: 100%; background: rgba(13, 2, 33, 0.95);
+  border: 2px solid #f1c40f; border-radius: 15px; box-shadow: 0 0 20px rgba(241, 196, 15, 0.3);
+  display: flex; flex-direction: column;
+}
+
+.janela-so.menu-ataque .header-so {
+  background: rgba(241, 196, 15, 0.2); border-bottom: 2px solid #f1c40f;
+  color: #f1c40f; padding: 10px; font-size: 18px;
+}
+
+.titulo-ataque { color: white; font-size: 24px; text-align: center; margin-top: 0; border-bottom: 1px dashed #f1c40f; padding-bottom: 10px; }
+
+.janela-so.menu-ataque .body-so { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 12px; justify-content: center; }
+
+.btn-atributo {
+  background: rgba(0, 0, 0, 0.8); border: 1px solid #00f3ff; color: #00f3ff;
+  font-family: 'VT323', monospace; font-size: 22px; padding: 10px; cursor: pointer;
+  border-radius: 4px; transition: 0.2s; text-align: left; display: flex; justify-content: space-between;
+}
+.btn-atributo:hover { background: #00f3ff; color: black; transform: scale(1.05); }
+
+/* === MONTE EMPATE === */
+.zona-empate { display: flex; flex-direction: column; align-items: center; }
+.monte-empate-container { display: flex; flex-direction: column; align-items: center; gap: 35px; margin-top: 20px; }
+
+/* === BOTÃO DE ABORTAR === */
+.btn-fuga {
+  position: absolute; top: 30px; left: 30px; background: transparent;
+  border: 2px solid #ff003c; color: #ff003c; padding: 10px 20px;
+  font-family: 'VT323', monospace; font-size: 22px; cursor: pointer; transition: 0.3s;
+}
+.btn-fuga:hover { background: #ff003c; color: black; }
+
+/* === TELA FINAL === */
+.fim-de-jogo-painel {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.8); border: 2px solid #00f3ff; border-radius: 20px; margin: 40px;
+}
+.texto-final { font-size: 60px; color: #ff003c; text-shadow: 0 0 20px #ff003c; margin-bottom: 10px; }
+.texto-final.vitoria { color: #00ff41; text-shadow: 0 0 20px #00ff41; }
+.subtexto-final { font-size: 30px; color: white; margin-bottom: 40px; }
+.btn-acao-final {
+  background: transparent; border: 2px solid #00f3ff; color: #00f3ff; font-family: 'VT323', monospace;
+  font-size: 30px; padding: 15px 30px; cursor: pointer; transition: 0.3s;
+}
+.btn-acao-final:hover { background: #00f3ff; color: black; }

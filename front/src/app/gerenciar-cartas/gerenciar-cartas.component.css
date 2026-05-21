@@ -1,0 +1,273 @@
+/* === CORREÇÃO GLOBAL PARA O CURSOR FUNCIONAR MELHOR === */
+body { 
+  margin: 0; 
+  padding: 0; 
+}
+
+/* === ESTILO DO NOVO TÍTULO === */
+.header-modo-criacao {
+  text-align: center;
+  padding-top: 30px;
+}
+
+.titulo-cyberpunk {
+  color: #00f3ff;
+  font-size: 50px;
+  letter-spacing: 5px;
+  text-shadow: 0 0 15px #00f3ff;
+  border-bottom: 2px dashed #00f3ff;
+  display: inline-block;
+  padding-bottom: 5px;
+  margin: 0;
+}
+
+/* === AFASTAMENTO E LAYOUT DE 3 COLUNAS === */
+.oficina-container {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  align-items: flex-start;
+  max-width: 1250px; 
+  margin: 0 auto;
+  padding: 20px 40px;
+  min-height: calc(100vh - 100px); 
+  font-family: 'VT323', monospace;
+  color: white;
+}
+
+.coluna-visualizador, 
+.coluna-meio, 
+.coluna-direita {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Larguras ajustadas para o layout de 3 colunas */
+.coluna-visualizador { 
+  width: 480px; 
+}
+.coluna-meio { 
+  width: 320px; 
+}
+.coluna-direita { 
+  width: 350px; 
+}
+
+/* === ESTILO DAS JANELAS CYBERPUNK === */
+.janela-so {
+  background: rgba(13, 2, 33, 0.80); 
+  border: 2px solid #00f3ff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+  overflow: hidden;
+  backdrop-filter: blur(4px); 
+}
+
+.header-so {
+  background: rgba(0, 243, 255, 0.2);
+  border-bottom: 2px solid #00f3ff;
+  padding: 5px 15px;
+  font-size: 16px;
+  color: #00f3ff;
+  letter-spacing: 2px;
+}
+
+.body-so {
+  padding: 15px; 
+}
+
+/* === LADO ESQUERDO: VISUALIZADOR === */
+.janela-nome-carta { 
+  text-align: left; 
+  border-color: #00ff41; 
+}
+
+.janela-nome-carta .header-so { 
+  border-color: #00ff41; 
+  color: #00ff41; 
+  background: rgba(0, 255, 65, 0.2);
+}
+
+.texto-neon-verde { 
+  font-size: 28px; 
+  color: #00ff41; 
+  text-shadow: 0 0 8px #00ff41; 
+}
+
+.layout-preview { 
+  display: flex; 
+  gap: 15px; 
+}
+
+.preview-esq { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px; 
+  width: 40%; 
+}
+
+.caixa-imagem {
+  height: 150px; 
+  border: 2px dashed #00f3ff; 
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  font-size: 24px;
+  color: #00f3ff; 
+  background: rgba(0, 243, 255, 0.05);
+}
+
+.caixa-grupo { 
+  text-align: center; 
+  border: 1px solid #00f3ff; 
+  padding: 5px; 
+  font-size: 20px; 
+}
+
+.preview-dir { 
+  width: 60%; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 8px; 
+}
+
+.attr-mini { 
+  display: flex; 
+  align-items: center; 
+  font-size: 16px; 
+  gap: 5px; 
+}
+
+.attr-mini span:first-child { 
+  width: 55px; 
+  color: #00f3ff; 
+}
+
+.attr-mini span:last-child { 
+  width: 35px; 
+  text-align: right; 
+  color: #ff003c; 
+}
+
+.barra-bg { 
+  flex: 1; 
+  height: 10px; 
+  background: rgba(17, 17, 17, 0.8); 
+  border: 1px solid #333; 
+}
+
+.barra-fill { 
+  height: 100%; 
+  background: linear-gradient(90deg, #39ff14, #ff003c); 
+  transition: width 0.2s; 
+}
+
+.botoes-acao {
+  display: flex; 
+  justify-content: space-between; 
+  margin-top: 20px;
+  padding-top: 15px; 
+  border-top: 1px dashed #00f3ff;
+}
+
+.btn-acao {
+  font-family: 'VT323', monospace; 
+  font-size: 20px; 
+  padding: 5px 15px;
+  border: 2px solid; 
+  background: rgba(0, 0, 0, 0.5); 
+  color: white;
+  cursor: pointer; 
+  border-radius: 4px; 
+  transition: 0.3s;
+}
+
+.btn-salvar { border-color: #00ff41; color: #00ff41; }
+.btn-salvar:hover { background: #00ff41; color: black; }
+.btn-salvar:disabled { border-color: #555; color: #555; cursor: not-allowed; }
+.btn-salvar:disabled:hover { background: transparent; color: #555; }
+
+.btn-lixo { border-color: #ff003c; }
+.btn-lixo:hover { background: #ff003c; }
+
+.btn-voltar { border-color: #00f3ff; color: #00f3ff; }
+.btn-voltar:hover { background: #00f3ff; color: black; }
+
+/* === DADOS BÁSICOS (MEIO) E SLIDERS (DIREITA) === */
+.form-dados { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px; 
+}
+
+.form-dados label { 
+  color: #00f3ff; 
+  font-size: 18px; 
+}
+
+.form-dados input, 
+.form-dados select, 
+.form-dados textarea {
+  background: rgba(0, 0, 0, 0.6); 
+  border: 1px solid #00f3ff; 
+  color: white;
+  padding: 8px; 
+  font-family: 'VT323', monospace; 
+  font-size: 18px; 
+  border-radius: 4px;
+}
+
+.form-sliders { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 10px; 
+}
+
+.slider-group label { 
+  color: #ff003c; 
+  font-size: 18px; 
+  display: block; 
+  margin-bottom: 2px; 
+}
+
+/* Customização da "Linha de Puxar" (Range Slider) */
+input[type=range] { 
+  -webkit-appearance: none; 
+  appearance: none; 
+  width: 100%; 
+  background: transparent; 
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none; 
+  height: 18px; 
+  width: 12px;
+  border-radius: 3px; 
+  background: #00f3ff; 
+  cursor: pointer;
+  margin-top: -7px; 
+  box-shadow: 0 0 10px #00f3ff;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%; 
+  height: 5px; 
+  cursor: pointer; 
+  background: rgba(51, 51, 51, 0.8); 
+  border: 1px solid #555;
+}
+
+/* Customização da Barra de Rolagem Interna da Galeria (CSS Puro) */
+.galeria-wrapper::-webkit-scrollbar { 
+  width: 8px; 
+}
+.galeria-wrapper::-webkit-scrollbar-track { 
+  background: rgba(13, 2, 33, 0.9); 
+}
+.galeria-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(0, 243, 255, 0.6); 
+  border-radius: 4px; 
+  border: 1px solid rgba(0, 243, 255, 0.3);
+}

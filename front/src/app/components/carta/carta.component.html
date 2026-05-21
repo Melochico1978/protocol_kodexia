@@ -1,0 +1,95 @@
+<div class="carta-container">
+  <div class="carta-header">
+    <span class="codigo">{{ cartaInput.grupo }}-{{ cartaInput.codigo }}:</span>
+    <span class="nome">{{ cartaInput.nome }}</span>
+  </div>
+
+  <div class="imagem-container">
+    @if (cartaInput.imagem) {
+      <img [src]="cartaInput.imagem" [alt]="cartaInput.nome" class="imagem-pixel">
+    } @else {
+      <div class="placeholder-erro">
+        <div class="glitch-text" data-text="DADO_CORROMPIDO">DADO_CORROMPIDO</div>
+        <span class="sub-erro">ERRO_404: IMG_NOT_FOUND</span>
+        <div class="scanline-erro"></div>
+      </div>
+    }
+  </div>
+
+  <div class="atributos-lista">
+
+    <div class="atributo-linha">
+      <div class="attr-nome">PERFORMANCE</div>
+      <div class="attr-barra-container">
+        <div class="attr-barra-preenchimento" [style.width.%]="cartaInput.performance"></div>
+        <div class="attr-barra-segmentos"></div>
+      </div>
+      <div class="attr-valor">[{{ cartaInput.performance | number:'2.0-0' }}]</div>
+    </div>
+
+    <div class="atributo-linha">
+      <div class="attr-nome">SINTAXE</div>
+      <div class="attr-barra-container">
+        <div class="attr-barra-preenchimento" [style.width.%]="cartaInput.sintaxe"></div>
+        <div class="attr-barra-segmentos"></div>
+      </div>
+      <div class="attr-valor">[{{ cartaInput.sintaxe | number:'2.0-0' }}]</div>
+    </div>
+
+    <div class="atributo-linha">
+      <div class="attr-nome">SEGURANÇA</div>
+      <div class="attr-barra-container">
+        <div class="attr-barra-preenchimento" [style.width.%]="cartaInput.seguranca"></div>
+        <div class="attr-barra-segmentos"></div>
+      </div>
+      <div class="attr-valor">[{{ cartaInput.seguranca | number:'2.0-0' }}]</div>
+    </div>
+
+    <div class="atributo-linha">
+      <div class="attr-nome">LONGEVIDADE</div>
+      <div class="attr-barra-container">
+        <div class="attr-barra-preenchimento" [style.width.%]="cartaInput.longevidade"></div>
+        <div class="attr-barra-segmentos"></div>
+      </div>
+      <div class="attr-valor">[{{ cartaInput.longevidade | number:'2.0-0' }}]</div>
+    </div>
+
+    <div class="atributo-linha">
+      <div class="attr-nome">POPULARIDADE</div>
+      <div class="attr-barra-container">
+        <div class="attr-barra-preenchimento" [style.width.%]="cartaInput.popularidade"></div>
+        <div class="attr-barra-segmentos"></div>
+      </div>
+      <div class="attr-valor">[{{ cartaInput.popularidade | number:'2.0-0' }}]</div>
+    </div>
+
+    <div class="atributo-linha">
+      <div class="attr-nome">ABSTRAÇÃO</div>
+      <div class="attr-barra-container">
+        <div class="attr-barra-preenchimento" [style.width.%]="cartaInput.abstracao"></div>
+        <div class="attr-barra-segmentos"></div>
+      </div>
+      <div class="attr-valor">[{{ cartaInput.abstracao | number:'2.0-0' }}]</div>
+    </div>
+
+    <div class="atributo-linha">
+      <div class="attr-nome">VERSATILIDADE</div>
+      <div class="attr-barra-container">
+        <div class="attr-barra-preenchimento" [style.width.%]="cartaInput.versatilidade"></div>
+        <div class="attr-barra-segmentos"></div>
+      </div>
+      <div class="attr-valor">[{{ cartaInput.versatilidade | number:'2.0-0' }}]</div>
+    </div>
+
+  </div>
+
+  @if (cartaInput.lendaria) {
+    <div class="super-trunfo-box">
+      <div class="titulo-trunfo">CLASSE LENDÁRIA</div>
+      <div class="conteudo-trunfo">
+        <span class="estrela">⚠️</span>
+        <p>ENTIDADE DE ALTO IMPACTO</p>
+      </div>
+    </div>
+  }
+</div>
