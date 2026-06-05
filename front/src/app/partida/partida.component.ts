@@ -27,6 +27,7 @@ export class PartidaComponent implements OnInit {
 
   mensagemSistema: string = '> PROTOCOLO DE COMBATE INICIADO. COMPRE UMA CARTA.';
   jogoAcabou: boolean = false;
+  superTrunfoAtivado: boolean = false; // Controla o efeito visual do Super Trunfo
 
   constructor(private cartaService: CartaService, private router: Router) {}
 
@@ -63,9 +64,41 @@ export class PartidaComponent implements OnInit {
 
     this.cartaAtualJogador = this.deckJogador.shift() || null;
     this.cartaAtualBot = this.deckBot.shift() || null; // O bot puxa junto escondido
+    this.superTrunfoAtivado = false;
     
     this.mensagemSistema = '> CARTA CARREGADA. SELECIONE O VETOR DE ATAQUE.';
     this.faseAtual = 'ESCOLHER';
+  }
+
+  // =====================================================================
+  // REGRA DE POLIMORFISMO — SUPER TRUNFO (espelho do Partida.java)
+  // =====================================================================
+  private verificarSuperTrunfo(carta1: Carta, carta2: Carta): 'JOGADOR' | 'BOT' | null {
+    // Carta do JOGADOR é lendária?
+    if (carta1.lendaria) {
+      if (carta2.grupo === 'A') {
+        // ANULADO: adversário é do Grupo A
+        this.mensagemSistema = '> ⚠️ SUPER TRUNFO ANULADO! A carta adversária é do Grupo A! Combate normal iniciado...';
+        return null;
+      }
+      // ATIVADO: vence automaticamente
+      this.superTrunfoAtivado = true;
+      return 'JOGADOR';
+    }
+
+    // Carta do BOT é lendária?
+    if (carta2.lendaria) {
+      if (carta1.grupo === 'A') {
+        // ANULADO: sua carta é do Grupo A
+        this.mensagemSistema = '> ⚠️ SUPER TRUNFO ANULADO! Sua carta é do Grupo A! Combate normal iniciado...';
+        return null;
+      }
+      // ATIVADO: bot vence automaticamente
+      this.superTrunfoAtivado = true;
+      return 'BOT';
+    }
+
+    return null; // Nenhuma carta lendária — combate normal
   }
 
   // Ação 2: O Jogador clica num atributo na arena central
@@ -74,48 +107,82 @@ export class PartidaComponent implements OnInit {
 
     this.faseAtual = 'COMPARAR'; // Muda a fase para revelar a carta inimiga
 
-    const valorJogador = Number(this.cartaAtualJogador[atributo]);
-    const valorBot = Number(this.cartaAtualBot[atributo]);
+    // =======================================================
+    // 1º — Verificar Super Trunfo antes do combate normal
+    // =======================================================
+    const resultadoSuperTrunfo = this.verificarSuperTrunfo(this.cartaAtualJogador, this.cartaAtualBot);
 
-    if (valorJogador > valorBot) {
-      // JOGADOR VENCE O TURNO
-      let msg = `VITÓRIA! Seu ${nomeAtributo} (${valorJogador}) superou o Bot (${valorBot}).`;
-      
+    if (resultadoSuperTrunfo === 'JOGADOR') {
+      // JOGADOR vence por Super Trunfo
+      let msg = `★ SUPER TRUNFO ACIONADO! VITÓRIA AUTOMÁTICA com ${this.cartaAtualJogador.nome}!`;
       this.deckJogador.push(this.cartaAtualJogador);
       this.deckJogador.push(this.cartaAtualBot);
-
-      // Regra "Empate Leva Tudo"
       if (this.deckEmpate.length > 0) {
         msg += ` E VOCÊ CONQUISTOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
         this.deckJogador.push(...this.deckEmpate);
-        this.deckEmpate = []; // Esvazia o pote
+        this.deckEmpate = [];
       }
-      
       this.mensagemSistema = `> ${msg}`;
 
-    } else if (valorBot > valorJogador) {
-      // BOT VENCE O TURNO
-      let msg = `FALHA CRÍTICA! O Bot superou seu ${nomeAtributo} (${valorJogador} vs ${valorBot}).`;
-      
+    } else if (resultadoSuperTrunfo === 'BOT') {
+      // BOT vence por Super Trunfo
+      let msg = `★ SUPER TRUNFO INIMIGO! O BOT venceu automaticamente com ${this.cartaAtualBot.nome}!`;
       this.deckBot.push(this.cartaAtualBot);
       this.deckBot.push(this.cartaAtualJogador);
-
-      // Regra "Empate Leva Tudo"
       if (this.deckEmpate.length > 0) {
         msg += ` O BOT LEVOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
         this.deckBot.push(...this.deckEmpate);
-        this.deckEmpate = []; // Esvazia o pote
+        this.deckEmpate = [];
       }
-
       this.mensagemSistema = `> ${msg}`;
 
     } else {
-      // EMPATE
-      this.mensagemSistema = `> EMPATE DE SISTEMA! (${valorJogador} vs ${valorBot}) As cartas vão para o pote central.`;
-      
-      // As cartas vão para o "monte deitado"
-      this.deckEmpate.push(this.cartaAtualJogador);
-      this.deckEmpate.push(this.cartaAtualBot);
+      // =======================================================
+      // 2º — COMBATE NORMAL (compara atributos)
+      // =======================================================
+      const valorJogador = Number(this.cartaAtualJogador[atributo]);
+      const valorBot = Number(this.cartaAtualBot[atributo]);
+
+      if (valorJogador > valorBot) {
+        // JOGADOR VENCE O TURNO
+        let msg = `VITÓRIA! Seu ${nomeAtributo} (${valorJogador}) superou o Bot (${valorBot}).`;
+        
+        this.deckJogador.push(this.cartaAtualJogador);
+        this.deckJogador.push(this.cartaAtualBot);
+
+        // Regra "Empate Leva Tudo"
+        if (this.deckEmpate.length > 0) {
+          msg += ` E VOCÊ CONQUISTOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
+          this.deckJogador.push(...this.deckEmpate);
+          this.deckEmpate = []; // Esvazia o pote
+        }
+        
+        this.mensagemSistema = `> ${msg}`;
+
+      } else if (valorBot > valorJogador) {
+        // BOT VENCE O TURNO
+        let msg = `FALHA CRÍTICA! O Bot superou seu ${nomeAtributo} (${valorJogador} vs ${valorBot}).`;
+        
+        this.deckBot.push(this.cartaAtualBot);
+        this.deckBot.push(this.cartaAtualJogador);
+
+        // Regra "Empate Leva Tudo"
+        if (this.deckEmpate.length > 0) {
+          msg += ` O BOT LEVOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
+          this.deckBot.push(...this.deckEmpate);
+          this.deckEmpate = []; // Esvazia o pote
+        }
+
+        this.mensagemSistema = `> ${msg}`;
+
+      } else {
+        // EMPATE
+        this.mensagemSistema = `> EMPATE DE SISTEMA! (${valorJogador} vs ${valorBot}) As cartas vão para o pote central.`;
+        
+        // As cartas vão para o "monte deitado"
+        this.deckEmpate.push(this.cartaAtualJogador);
+        this.deckEmpate.push(this.cartaAtualBot);
+      }
     }
 
     // Espera 3.5 segundos para o jogador ler o resultado, depois limpa a mesa
@@ -128,6 +195,7 @@ export class PartidaComponent implements OnInit {
   recolherCartas(): void {
     this.cartaAtualJogador = null;
     this.cartaAtualBot = null;
+    this.superTrunfoAtivado = false;
     
     if (this.deckJogador.length === 0 || this.deckBot.length === 0) {
       this.finalizarJogo();

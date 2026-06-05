@@ -1,7 +1,12 @@
 <div class="gerenciar-master-container" style="font-family: 'VT323', monospace;">
 
   <div class="header-modo-criacao">
-    <h1 class="titulo-cyberpunk"> [ MODO CRIAÇÃO ] </h1>
+    <h1 class="titulo-cyberpunk" [style.color]="modoEdicao ? '#f1c40f' : ''">
+      {{ modoEdicao ? '[ MODO EDIÇÃO ]' : '[ MODO CRIAÇÃO ]' }}
+    </h1>
+    <div *ngIf="modoEdicao" style="text-align:center; color:#f1c40f; font-size:18px; margin-bottom:10px; border: 1px dashed #f1c40f; padding: 8px; border-radius:4px;">
+      ✏️ EDITANDO: {{ cartaEmEdicao?.nome | uppercase }} — Modifique os dados e clique em SALVAR DADO.
+    </div>
   </div>
 
   <div class="oficina-container">
@@ -54,12 +59,16 @@
         </div>
 
         <div class="botoes-acao">
-          <button class="btn-acao btn-salvar" (click)="adicionarCarta()" [disabled]="!novaCarta.nome">💾 SALVAR DADO</button>
+          <button class="btn-acao btn-salvar" (click)="adicionarCarta()" [disabled]="!novaCarta.nome">
+            {{ modoEdicao ? '✅ SALVAR EDIÇÃO' : '💾 SALVAR DADO' }}
+          </button>
           
-          <button class="btn-acao btn-lixo"
+          <button *ngIf="!modoEdicao" class="btn-acao btn-lixo"
             (click)="novaCarta = {nome:'', grupo:'A', codigo:'', performance:0, sintaxe:0, seguranca:0, longevidade:0, popularidade:0, abstracao:0, versatilidade:0, lendaria:false}">🗑️</button>
 
-          <button class="btn-acao btn-voltar" routerLink="/inicio">🔙 VOLTAR</button>
+          <button *ngIf="modoEdicao" class="btn-acao btn-lixo" (click)="cancelarEdicao()" style="color:#ff003c; border-color:#ff003c;">❌ CANCELAR</button>
+
+          <button *ngIf="!modoEdicao" class="btn-acao btn-voltar" routerLink="/inicio">🔙 VOLTAR</button>
         </div>
       </div>
 
@@ -165,10 +174,14 @@
       
       <app-carta [cartaInput]="carta"></app-carta>
 
-      <div style="text-align: center; margin-top: 15px;">
+      <div style="text-align: center; margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+        <button (click)="editarCarta(carta)"
+          style="padding: 8px 16px; background: transparent; color: #f1c40f; border: 1px dashed #f1c40f; border-radius: 4px; cursor: pointer; font-size: 16px; font-family: 'VT323', monospace; transition: 0.3s;">
+          ✏️ EDITAR
+        </button>
         <button (click)="excluirCarta(carta.id)"
           style="padding: 8px 16px; background: transparent; color: #ff003c; border: 1px dashed #ff003c; border-radius: 4px; cursor: pointer; font-size: 16px; font-family: 'VT323', monospace; transition: 0.3s;">
-          🗑️ APAGAR DADO
+          🗑️ APAGAR
         </button>
       </div>
 

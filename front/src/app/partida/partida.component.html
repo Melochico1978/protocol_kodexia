@@ -2,7 +2,12 @@
 
   <div class="header-batalha">
     <h1 class="titulo-cyberpunk"> [ SIMULAÇÃO VS. IA ] </h1>
-    <p class="log-sistema">{{ mensagemSistema }}</p>
+    <p class="log-sistema" [class.super-trunfo-msg]="superTrunfoAtivado">{{ mensagemSistema }}</p>
+  </div>
+
+  <!-- Banner Super Trunfo -->
+  <div *ngIf="superTrunfoAtivado" class="super-trunfo-banner">
+    ★ SUPER TRUNFO ACIONADO ★
   </div>
 
   <div *ngIf="jogoAcabou" class="fim-de-jogo-painel">
@@ -41,6 +46,8 @@
         
         <div class="slot-carta slot-p1">
           <div *ngIf="!cartaAtualJogador" class="placeholder-holografico">AGUARDANDO<br>CARTA</div>
+          <!-- Indicador de carta lendária -->
+          <div *ngIf="cartaAtualJogador?.lendaria" class="badge-lendaria">★ LENDÁRIA</div>
           <app-carta-exibicao *ngIf="cartaAtualJogador" [carta]="cartaAtualJogador"></app-carta-exibicao>
         </div>
 

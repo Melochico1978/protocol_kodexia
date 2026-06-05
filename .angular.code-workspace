@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../codigo rais/protocol_kodexia/.angular"
+		},
+		{
+			"path": "../codigo rais/protocol_kodexia"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "protocol_kodexia",
+		"commentTranslate.targetLanguage": "pt"
+	}
+}

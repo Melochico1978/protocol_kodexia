@@ -20,6 +20,10 @@ export class CartaService {
     return this.http.post<Carta>(this.apiUrl, carta);
   }
 
+  updateCarta(id: string, carta: Carta): Observable<Carta> {
+    return this.http.put<Carta>(`${this.apiUrl}/${id}`, carta);
+  }
+
   deleteCarta(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
