@@ -5,7 +5,8 @@
   </div>
 
   <div class="card-img">
-    <span class="emoji">💻</span>
+    <span *ngIf="!carta.imagem" class="emoji">💻</span>
+    <img *ngIf="carta.imagem" src="{{ carta.imagem }}" alt="{{ carta.nome }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
   </div>
 
   <div class="stats">

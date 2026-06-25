@@ -6,6 +6,7 @@ import { GerenciarCartasComponent } from './gerenciar-cartas/gerenciar-cartas.co
 import { DesconectadoComponent } from './components/desconectado/desconectado.component';
 import { SelecaoDeckComponent } from './components/selecao-deck/selecao-deck.component';
 import { AjudaComponent } from './components/ajuda/ajuda.component';
+import { MastermindComponent } from './components/mastermind/mastermind.component';
 
 export const routes: Routes = [
   { path: '', component: SplashComponent },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'deck', component: SelecaoDeckComponent }, // A nova rota da Seleção de Deck
   { path: 'desconectado', component: DesconectadoComponent }, 
   { path: 'ajuda', component: AjudaComponent },
+  { path: 'mastermind', component: MastermindComponent },
   { path: '**', redirectTo: '' }, 
 ];

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CartaService } from '../services/carta.service';
 import { Carta } from '../models/carta.model';
@@ -8,112 +9,224 @@ import { CartaExibicaoComponent } from '../components/carta-exibicao/carta-exibi
 @Component({
   selector: 'app-partida',
   standalone: true,
-  imports: [CommonModule, RouterModule, CartaExibicaoComponent],
+  imports: [CommonModule, RouterModule, CartaExibicaoComponent, FormsModule],
   templateUrl: './partida.component.html',
   styleUrl: './partida.component.css'
 })
 export class PartidaComponent implements OnInit {
   
-  // Fases do turno visual: 
-  // COMPRAR (puxar do monte) -> ESCOLHER (menu de atributos) -> COMPARAR (revela bot e mostra quem ganhou)
-  faseAtual: 'COMPRAR' | 'ESCOLHER' | 'COMPARAR' = 'COMPRAR';
+  faseAtual: 'ESCOLHER_CARTA' | 'ESCOLHER' | 'COMPARAR' | 'DEFENDER' = 'ESCOLHER_CARTA';
+  turnoAtual: 'JOGADOR' | 'BOT' = 'JOGADOR';
+  rodadaAtual: number = 1;
 
+  deckInicial: Carta[] = [];
   deckJogador: Carta[] = [];
+  maoJogador: Carta[] = [];
   deckBot: Carta[] = [];
-  deckEmpate: Carta[] = []; // O "Pote" do Empate
+  deckEmpate: Carta[] = [];
 
   cartaAtualJogador: Carta | null = null;
   cartaAtualBot: Carta | null = null;
 
+  atributoAtaqueBot: keyof Carta | null = null;
+  nomeAtributoAtaqueBot: string | null = null;
+
   mensagemSistema: string = '> PROTOCOLO DE COMBATE INICIADO. COMPRE UMA CARTA.';
   jogoAcabou: boolean = false;
-  superTrunfoAtivado: boolean = false; // Controla o efeito visual do Super Trunfo
+  superTrunfoAtivado: boolean = false;
+  vencedor: 'JOGADOR' | 'BOT' | null = null;
+
+  nomeJogador: string = 'JOGADOR 1';
+  editandoNome: boolean = false;
+  vitorias: number = 0;
+  trofeu: string = '🪨 Iniciante';
+  vitoriasBot: number = 0;
+  trofeuBot: string = '🪨 Iniciante';
+
+  isModoBoss: boolean = false;
+  jogadorHP: number = 100;
+  bossHP: number = 100;
+
+  get totalCartasJogador(): number {
+    return this.deckJogador.length + this.maoJogador.length + (this.cartaAtualJogador ? 1 : 0);
+  }
+
+  get totalCartasBot(): number {
+    return this.deckBot.length + (this.cartaAtualBot ? 1 : 0);
+  }
 
   constructor(private cartaService: CartaService, private router: Router) {}
 
   ngOnInit(): void {
-    const deckCompleto = this.cartaService.getDeck();
-    
-    // Proteção com ALERTA VISUAL: Avisa o jogador antes de o barrar!
-    if (deckCompleto.length < 8 || deckCompleto.length % 2 !== 0) {
-      alert('ACESSO NEGADO: Você precisa selecionar pelo menos 8 cartas na Oficina antes de entrar na Arena!');
-      this.router.navigate(['/crud']); 
-      return;
+    if (this.isModoBoss) return;
+
+    if (typeof window !== 'undefined' && window.localStorage) {
+      this.nomeJogador = localStorage.getItem('nomeJogador') || 'JOGADOR 1';
+      this.vitorias = parseInt(localStorage.getItem('vitoriasJogador') || '0', 10);
+      this.atualizarTrofeu();
+      
+      this.vitoriasBot = parseInt(localStorage.getItem('vitoriasBot') || '0', 10);
+      this.atualizarTrofeuBot();
     }
-    
-    this.iniciarJogo(deckCompleto);
+
+    const deckSelecionado = this.cartaService.getDeck();
+
+    if (deckSelecionado.length >= 8 && deckSelecionado.length % 2 === 0) {
+      this.deckInicial = [...deckSelecionado];
+      this.iniciarJogo([...this.deckInicial]);
+    } else {
+      // Se não escolheu um deck (ou escolheu menos de 8), puxa todas as cartas do servidor para testar
+      this.cartaService.getCartas().subscribe({
+        next: (cartas) => {
+          if (cartas.length >= 8) {
+            // Se for ímpar, descartamos 1 carta para a divisão ficar perfeita
+            const limite = cartas.length % 2 === 0 ? cartas.length : cartas.length - 1;
+            this.deckInicial = cartas.slice(0, limite);
+            this.iniciarJogo(this.deckInicial);
+          } else {
+            alert('ACESSO NEGADO: Você precisa de pelo menos 8 cartas cadastradas no banco de dados para jogar!');
+            this.router.navigate(['/crud']); 
+          }
+        },
+        error: (err) => {
+          console.error("Erro ao buscar cartas", err);
+          alert('ERRO: Não foi possível conectar ao banco de dados!');
+          this.router.navigate(['/']);
+        }
+      });
+    }
   }
 
   iniciarJogo(deck: Carta[]): void {
-    // Algoritmo de Fisher-Yates para embaralhar
+    this.jogoAcabou = false;
+    this.vencedor = null;
+    this.cartaAtualJogador = null;
+    this.cartaAtualBot = null;
+    this.maoJogador = [];
+    this.deckEmpate = [];
+    
     const embaralhado = [...deck].sort(() => Math.random() - 0.5);
     const metade = Math.floor(embaralhado.length / 2);
     
     this.deckJogador = embaralhado.slice(0, metade);
     this.deckBot = embaralhado.slice(metade);
+
+    this.preencherMao();
+    this.rodadaAtual = 1;
+    this.turnoAtual = 'JOGADOR';
+    this.faseAtual = 'ESCOLHER_CARTA';
+    this.mensagemSistema = '> SELECIONE UMA CARTA DA SUA MÃO.';
+    this.mostrarOverlay('INICIAR PARTIDA');
   }
 
-  // Ação 1: O Jogador clica no seu baralho para puxar
-  puxarCartas(): void {
-    if (this.faseAtual !== 'COMPRAR' || this.jogoAcabou) return;
+  preencherMao(): void {
+    while (this.maoJogador.length < 5 && this.deckJogador.length > 0) {
+      const carta = this.deckJogador.shift();
+      if (carta) {
+        this.maoJogador.push(carta);
+      }
+    }
+  }
 
-    if (this.deckJogador.length === 0 || this.deckBot.length === 0) {
-      this.finalizarJogo();
-      return;
+  mostrarOverlay(texto: string): void {
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay-cyberpunk';
+    overlay.innerHTML = `<h1 class="texto-glitch" data-text="${texto}">${texto}</h1>`;
+    document.body.appendChild(overlay);
+    setTimeout(() => {
+      overlay.remove();
+    }, 1500);
+  }
+
+  selecionarCartaDaMao(index: number): void {
+    if (this.jogoAcabou) return;
+
+    if (this.faseAtual === 'ESCOLHER_CARTA') {
+      if (this.maoJogador.length === 0 || this.deckBot.length === 0) {
+        this.finalizarJogo();
+        return;
+      }
+
+      this.cartaAtualJogador = this.maoJogador.splice(index, 1)[0];
+      this.cartaAtualBot = this.deckBot.shift() || null;
+      this.superTrunfoAtivado = false;
+      
+      this.mensagemSistema = '> CARTA CARREGADA. SELECIONE O VETOR DE ATAQUE.';
+      this.faseAtual = 'ESCOLHER';
+    } else if (this.faseAtual === 'DEFENDER') {
+      this.cartaAtualJogador = this.maoJogador.splice(index, 1)[0];
+      this.superTrunfoAtivado = false;
+      
+      if (this.atributoAtaqueBot && this.nomeAtributoAtaqueBot) {
+        this.batalhar(this.atributoAtaqueBot, this.nomeAtributoAtaqueBot);
+      }
+    }
+  }
+
+  iniciarTurnoBot(): void {
+    if (this.deckBot.length === 0) return;
+    
+    this.cartaAtualBot = this.deckBot.shift() || null;
+    if (!this.cartaAtualBot) return;
+
+    const atributos: { chave: keyof Carta, nome: string }[] = [
+      { chave: 'performance', nome: 'PERFORMANCE' },
+      { chave: 'sintaxe', nome: 'SINTAXE' },
+      { chave: 'seguranca', nome: 'SEGURANÇA' },
+      { chave: 'longevidade', nome: 'LONGEVIDADE' },
+      { chave: 'popularidade', nome: 'POPULARIDADE' },
+      { chave: 'abstracao', nome: 'ABSTRAÇÃO' },
+      { chave: 'versatilidade', nome: 'VERSATILIDADE' }
+    ];
+
+    let melhorAtributo = atributos[0];
+    let maiorValor = Number(this.cartaAtualBot[melhorAtributo.chave]) || 0;
+
+    for (let i = 1; i < atributos.length; i++) {
+      const valor = Number(this.cartaAtualBot[atributos[i].chave]) || 0;
+      if (valor > maiorValor) {
+        maiorValor = valor;
+        melhorAtributo = atributos[i];
+      }
     }
 
-    this.cartaAtualJogador = this.deckJogador.shift() || null;
-    this.cartaAtualBot = this.deckBot.shift() || null; // O bot puxa junto escondido
-    this.superTrunfoAtivado = false;
+    this.atributoAtaqueBot = melhorAtributo.chave;
+    this.nomeAtributoAtaqueBot = melhorAtributo.nome;
     
-    this.mensagemSistema = '> CARTA CARREGADA. SELECIONE O VETOR DE ATAQUE.';
-    this.faseAtual = 'ESCOLHER';
+    this.mensagemSistema = `> ATAQUE INIMIGO: O Bot atacou com ${this.nomeAtributoAtaqueBot}. Escolha uma carta para DEFENDER!`;
+    this.faseAtual = 'DEFENDER';
   }
 
-  // =====================================================================
-  // REGRA DE POLIMORFISMO — SUPER TRUNFO (espelho do Partida.java)
-  // =====================================================================
   private verificarSuperTrunfo(carta1: Carta, carta2: Carta): 'JOGADOR' | 'BOT' | null {
-    // Carta do JOGADOR é lendária?
     if (carta1.lendaria) {
       if (carta2.grupo === 'A') {
-        // ANULADO: adversário é do Grupo A
         this.mensagemSistema = '> ⚠️ SUPER TRUNFO ANULADO! A carta adversária é do Grupo A! Combate normal iniciado...';
         return null;
       }
-      // ATIVADO: vence automaticamente
       this.superTrunfoAtivado = true;
       return 'JOGADOR';
     }
 
-    // Carta do BOT é lendária?
     if (carta2.lendaria) {
       if (carta1.grupo === 'A') {
-        // ANULADO: sua carta é do Grupo A
         this.mensagemSistema = '> ⚠️ SUPER TRUNFO ANULADO! Sua carta é do Grupo A! Combate normal iniciado...';
         return null;
       }
-      // ATIVADO: bot vence automaticamente
       this.superTrunfoAtivado = true;
       return 'BOT';
     }
 
-    return null; // Nenhuma carta lendária — combate normal
+    return null;
   }
 
-  // Ação 2: O Jogador clica num atributo na arena central
   batalhar(atributo: keyof Carta, nomeAtributo: string): void {
-    if (this.faseAtual !== 'ESCOLHER' || !this.cartaAtualJogador || !this.cartaAtualBot) return;
+    if ((this.faseAtual !== 'ESCOLHER' && this.faseAtual !== 'DEFENDER') || !this.cartaAtualJogador || !this.cartaAtualBot) return;
 
-    this.faseAtual = 'COMPARAR'; // Muda a fase para revelar a carta inimiga
+    this.faseAtual = 'COMPARAR';
 
-    // =======================================================
-    // 1º — Verificar Super Trunfo antes do combate normal
-    // =======================================================
     const resultadoSuperTrunfo = this.verificarSuperTrunfo(this.cartaAtualJogador, this.cartaAtualBot);
 
     if (resultadoSuperTrunfo === 'JOGADOR') {
-      // JOGADOR vence por Super Trunfo
       let msg = `★ SUPER TRUNFO ACIONADO! VITÓRIA AUTOMÁTICA com ${this.cartaAtualJogador.nome}!`;
       this.deckJogador.push(this.cartaAtualJogador);
       this.deckJogador.push(this.cartaAtualBot);
@@ -123,9 +236,9 @@ export class PartidaComponent implements OnInit {
         this.deckEmpate = [];
       }
       this.mensagemSistema = `> ${msg}`;
+      this.turnoAtual = 'JOGADOR';
 
     } else if (resultadoSuperTrunfo === 'BOT') {
-      // BOT vence por Super Trunfo
       let msg = `★ SUPER TRUNFO INIMIGO! O BOT venceu automaticamente com ${this.cartaAtualBot.nome}!`;
       this.deckBot.push(this.cartaAtualBot);
       this.deckBot.push(this.cartaAtualJogador);
@@ -135,83 +248,156 @@ export class PartidaComponent implements OnInit {
         this.deckEmpate = [];
       }
       this.mensagemSistema = `> ${msg}`;
+      this.turnoAtual = 'BOT';
 
     } else {
-      // =======================================================
-      // 2º — COMBATE NORMAL (compara atributos)
-      // =======================================================
       const valorJogador = Number(this.cartaAtualJogador[atributo]);
       const valorBot = Number(this.cartaAtualBot[atributo]);
 
       if (valorJogador > valorBot) {
-        // JOGADOR VENCE O TURNO
         let msg = `VITÓRIA! Seu ${nomeAtributo} (${valorJogador}) superou o Bot (${valorBot}).`;
-        
         this.deckJogador.push(this.cartaAtualJogador);
         this.deckJogador.push(this.cartaAtualBot);
 
-        // Regra "Empate Leva Tudo"
         if (this.deckEmpate.length > 0) {
           msg += ` E VOCÊ CONQUISTOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
           this.deckJogador.push(...this.deckEmpate);
-          this.deckEmpate = []; // Esvazia o pote
+          this.deckEmpate = [];
         }
         
         this.mensagemSistema = `> ${msg}`;
+        this.turnoAtual = 'JOGADOR';
 
       } else if (valorBot > valorJogador) {
-        // BOT VENCE O TURNO
         let msg = `FALHA CRÍTICA! O Bot superou seu ${nomeAtributo} (${valorJogador} vs ${valorBot}).`;
-        
         this.deckBot.push(this.cartaAtualBot);
         this.deckBot.push(this.cartaAtualJogador);
 
-        // Regra "Empate Leva Tudo"
         if (this.deckEmpate.length > 0) {
           msg += ` O BOT LEVOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
           this.deckBot.push(...this.deckEmpate);
-          this.deckEmpate = []; // Esvazia o pote
+          this.deckEmpate = [];
         }
 
         this.mensagemSistema = `> ${msg}`;
+        this.turnoAtual = 'BOT';
 
       } else {
-        // EMPATE
         this.mensagemSistema = `> EMPATE DE SISTEMA! (${valorJogador} vs ${valorBot}) As cartas vão para o pote central.`;
-        
-        // As cartas vão para o "monte deitado"
         this.deckEmpate.push(this.cartaAtualJogador);
         this.deckEmpate.push(this.cartaAtualBot);
       }
     }
 
-    // Espera 3.5 segundos para o jogador ler o resultado, depois limpa a mesa
     setTimeout(() => {
       this.recolherCartas();
-    }, 3500);
+    }, 1500);
   }
 
-  // Ação 3 (Automática): Limpa a mesa para o próximo turno
   recolherCartas(): void {
     this.cartaAtualJogador = null;
     this.cartaAtualBot = null;
     this.superTrunfoAtivado = false;
     
-    if (this.deckJogador.length === 0 || this.deckBot.length === 0) {
+    const totalJogador = this.deckJogador.length + this.maoJogador.length;
+
+    if (totalJogador === 0 || this.deckBot.length === 0) {
       this.finalizarJogo();
     } else {
-      this.mensagemSistema = '> TURNO ENCERRADO. COMPRE UMA NOVA CARTA.';
-      this.faseAtual = 'COMPRAR';
+      this.preencherMao();
+      
+      // O jogador sempre escolhe a carta e o atributo em todas as rodadas
+      this.turnoAtual = 'JOGADOR';
+      this.mensagemSistema = '> SEU TURNO. SELECIONE UMA CARTA DA MÃO.';
+      this.faseAtual = 'ESCOLHER_CARTA';
     }
   }
 
   finalizarJogo(): void {
     this.jogoAcabou = true;
     
-    if (this.deckJogador.length > 0) {
+    const totalJogador = this.deckJogador.length + this.maoJogador.length;
+    if (totalJogador > 0 && this.deckBot.length === 0) {
+      this.vencedor = 'JOGADOR';
       this.mensagemSistema = '> VITÓRIA ABSOLUTA! VOCÊ DOMINOU O PROTOCOLO KODEXIA!';
-    } else {
+    } else if (this.deckBot.length > 0 && totalJogador === 0) {
+      this.vencedor = 'BOT';
       this.mensagemSistema = '> DERROTA! A INTELIGÊNCIA ARTIFICIAL VENCEU O CONFLITO.';
+    }
+
+    if (this.vencedor === 'JOGADOR') {
+      this.registrarVitoria();
+    } else if (this.vencedor === 'BOT') {
+      this.registrarVitoriaBot();
+    }
+  }
+
+  salvarNome(): void {
+    this.editandoNome = false;
+    if (!this.nomeJogador || this.nomeJogador.trim() === '') {
+      this.nomeJogador = 'JOGADOR 1';
+    }
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('nomeJogador', this.nomeJogador);
+      
+      this.vitorias = 0;
+      this.vitoriasBot = 0;
+      localStorage.setItem('vitoriasJogador', '0');
+      localStorage.setItem('vitoriasBot', '0');
+      this.atualizarTrofeu();
+      this.atualizarTrofeuBot();
+    }
+  }
+
+  registrarVitoria(): void {
+    this.vitorias++;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('vitoriasJogador', this.vitorias.toString());
+    }
+    this.atualizarTrofeu();
+  }
+
+  registrarVitoriaBot(): void {
+    this.vitoriasBot++;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('vitoriasBot', this.vitoriasBot.toString());
+    }
+    this.atualizarTrofeuBot();
+  }
+
+  atualizarTrofeu(): void {
+    if (this.vitorias >= 10) {
+      this.trofeu = '💎 Diamante';
+    } else if (this.vitorias >= 6) {
+      this.trofeu = '🥇 Ouro';
+    } else if (this.vitorias >= 3) {
+      this.trofeu = '🥈 Prata';
+    } else if (this.vitorias >= 1) {
+      this.trofeu = '🥉 Bronze';
+    } else {
+      this.trofeu = '🪨 Iniciante';
+    }
+  }
+
+  atualizarTrofeuBot(): void {
+    if (this.vitoriasBot >= 10) {
+      this.trofeuBot = '💎 Diamante';
+    } else if (this.vitoriasBot >= 6) {
+      this.trofeuBot = '🥇 Ouro';
+    } else if (this.vitoriasBot >= 3) {
+      this.trofeuBot = '🥈 Prata';
+    } else if (this.vitoriasBot >= 1) {
+      this.trofeuBot = '🥉 Bronze';
+    } else {
+      this.trofeuBot = '🪨 Iniciante';
+    }
+  }
+
+  jogarNovamente(): void {
+    if (this.deckInicial && this.deckInicial.length > 0) {
+      this.iniciarJogo([...this.deckInicial]);
+    } else {
+      this.voltarParaMenu();
     }
   }
 

@@ -11,11 +11,14 @@
   </div>
 
   <div *ngIf="jogoAcabou" class="fim-de-jogo-painel">
-    <h2 class="texto-final" [class.vitoria]="deckJogador.length > 0">
-      {{ deckJogador.length > 0 ? '🏆 SUCESSO DO SISTEMA' : '☠️ FALHA CRÍTICA' }}
+    <h2 class="texto-final" [class.vitoria]="vencedor === 'JOGADOR'">
+      {{ vencedor === 'JOGADOR' ? '🏆 SUCESSO DO SISTEMA' : '☠️ FALHA CRÍTICA' }}
     </h2>
-    <p class="subtexto-final">Operação Encerrada.</p>
-    <button class="btn-acao-final" (click)="voltarParaMenu()">🔙 VOLTAR À BASE CENTRAL</button>
+    <p class="subtexto-final">{{ vencedor === 'JOGADOR' ? 'Vencedor: JOGADOR 1' : 'Vencedor: MÁQUINA' }}</p>
+    <div style="display: flex; gap: 20px;">
+      <button class="btn-acao-final" (click)="jogarNovamente()">🔄 REVANCHE</button>
+      <button class="btn-acao-final" (click)="voltarParaMenu()">🔙 VOLTAR À BASE CENTRAL</button>
+    </div>
   </div>
 
   <div class="layout-batalha" *ngIf="!jogoAcabou">
@@ -23,19 +26,30 @@
     <div class="painel-lateral p1">
       <div class="info-jogador">
         <div class="icone-mao">🖐️</div>
-        <h2 class="nome-jogador">JOGADOR 1</h2>
+        <h2 class="nome-jogador" *ngIf="!editandoNome" (click)="editandoNome = true" title="Clique para alterar o nome" style="cursor: pointer;">
+          {{ nomeJogador }} ✎
+        </h2>
+        
+        <input *ngIf="editandoNome" 
+               type="text" 
+               class="input-nome-jogador" 
+               [(ngModel)]="nomeJogador" 
+               (blur)="salvarNome()" 
+               (keyup.enter)="salvarNome()"
+               maxlength="15" 
+               autofocus>
+        <div class="trofeu-jogador">
+          <span>🏆 Vitórias: {{ vitorias }}</span> | <span>Rank: {{ trofeu }}</span>
+        </div>
       </div>
 
       <div class="zona-monte">
-        <div class="monte-cartas" 
-             [class.interativo]="faseAtual === 'COMPRAR'"
-             [class.brilhando]="faseAtual === 'COMPRAR'"
-             (click)="puxarCartas()">
+        <div class="monte-cartas">
           <div class="carta-verso">
             <span class="logo-verso">KODEXIA</span>
           </div>
         </div>
-        <div class="contador-cartas">CARTAS: {{ deckJogador.length }}</div>
+        <div class="contador-cartas">CARTAS: {{ totalCartasJogador }}</div>
       </div>
     </div>
 
@@ -55,9 +69,9 @@
 
         <div class="slot-carta slot-p2">
           
-          <div *ngIf="faseAtual === 'COMPRAR'" class="placeholder-holografico inimigo">MODO<br>ESPERA</div>
+          <div *ngIf="faseAtual === 'ESCOLHER_CARTA'" class="placeholder-holografico inimigo">MODO<br>ESPERA</div>
           
-          <div *ngIf="faseAtual === 'ESCOLHER'" class="janela-so menu-ataque">
+          <div *ngIf="faseAtual === 'ESCOLHER' || faseAtual === 'DEFENDER'" class="janela-so menu-ataque">
             <div class="header-so">🔴 🟡 🟢 ANALISADOR.bat</div>
             <div class="body-so">
               <h3 class="titulo-ataque">VETORES DE ATAQUE:</h3>
@@ -71,7 +85,7 @@
             </div>
           </div>
 
-          <app-carta-exibicao *ngIf="faseAtual === 'COMPARAR' && cartaAtualBot" [carta]="cartaAtualBot"></app-carta-exibicao>
+          <app-carta-exibicao *ngIf="(faseAtual === 'COMPARAR' || faseAtual === 'DEFENDER') && cartaAtualBot" [carta]="cartaAtualBot"></app-carta-exibicao>
 
         </div>
       </div>
@@ -92,6 +106,9 @@
       <div class="info-jogador">
         <div class="icone-mao">🤖</div>
         <h2 class="nome-jogador inimigo-texto">MÁQUINA</h2>
+        <div class="trofeu-jogador">
+          <span>🏆 Vitórias: {{ vitoriasBot }}</span> | <span>Rank: {{ trofeuBot }}</span>
+        </div>
       </div>
 
       <div class="zona-monte">
@@ -100,12 +117,61 @@
             <span class="logo-verso">KODEXIA</span>
           </div>
         </div>
-        <div class="contador-cartas inimigo-texto">CARTAS: {{ deckBot.length }}</div>
+        <div class="contador-cartas">RESTANTES: {{ totalCartasBot }}</div>
       </div>
     </div>
 
   </div>
 
-  <button class="btn-fuga" routerLink="/inicio">🔙 ABORTAR SIMULAÇÃO</button>
+  <!-- ============================================== -->
+  <!-- MÃO DO JOGADOR (RODAPÉ)                        -->
+  <!-- ============================================== -->
+  <div class="rodape-mao-cartas" *ngIf="!jogoAcabou">
+    <div class="carta-na-mao" 
+         *ngFor="let carta of maoJogador; let i = index" 
+         (click)="selecionarCartaDaMao(i)"
+         [class.pode-jogar]="faseAtual === 'ESCOLHER_CARTA' || faseAtual === 'DEFENDER'">
+      <app-carta-exibicao [carta]="carta"></app-carta-exibicao>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODO BOSS RASCUNHO (O Terminal Hacker)         -->
+  <!-- ============================================== -->
+  <div class="layout-boss-terminal" *ngIf="isModoBoss && !jogoAcabou">
+    
+    <div class="boss-arena">
+      <div class="status-box jogador">
+        <h2 class="nome">ZERO (SISTEMA)</h2>
+        <div class="barra-hp"><div class="hp-fill fill-jogador" [style.width.%]="jogadorHP"></div></div>
+        <span class="hp-texto">INTEGRIDADE: {{ jogadorHP }}%</span>
+      </div>
+
+      <div class="status-box inimigo">
+        <h2 class="nome boss-glitch">⚠️ ANOMALIA: CARTA JAVA ⚠️</h2>
+        <div class="barra-hp"><div class="hp-fill fill-boss" [style.width.%]="bossHP"></div></div>
+        <span class="hp-texto">PODER: {{ bossHP }}%</span>
+      </div>
+    </div>
+
+    <div class="terminal-container">
+      <div class="terminal-historico">
+        <p class="log-antigo">> BOOT SEQUENCE INITIATED...</p>
+        <p class="log-antigo">> SCANNING FOR VULNERABILITIES...</p>
+        <p class="log-recente">> [WARNING] ANOMALY DETECTED IN SECTOR 7G.</p>
+        <p class="codigo-fonte">
+          [ CODIGO CORROMPIDO ]
+        </p>
+      </div>
+
+      <div class="terminal-input-area">
+        <div class="input-line">
+          <span class="prompt-symbol">C:\KODEXIA></span>
+          <input type="text" class="terminal-input" placeholder="DIGITE O SCRIPT DE DEFESA..." autofocus>
+          <button class="btn-executar">EXECUTAR_</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
