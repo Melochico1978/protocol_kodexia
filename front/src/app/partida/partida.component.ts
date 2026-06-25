@@ -148,10 +148,13 @@ export class PartidaComponent implements OnInit {
       }
 
       this.cartaAtualJogador = this.maoJogador.splice(index, 1)[0];
-      this.cartaAtualBot = this.deckBot.shift() || null;
+      
+      // Inteligência Artificial Avançada do Bot
+      this.cartaAtualBot = this.escolherCartaBotInteligente(this.cartaAtualJogador);
+      
       this.superTrunfoAtivado = false;
       
-      this.mensagemSistema = '> CARTA CARREGADA. SELECIONE O VETOR DE ATAQUE.';
+      this.mensagemSistema = '> CARTA REGISTRADA. MÁQUINA EM MODO DE ANÁLISE... SELECIONE O VETOR DE ATAQUE.';
       this.faseAtual = 'ESCOLHER';
     } else if (this.faseAtual === 'DEFENDER') {
       this.cartaAtualJogador = this.maoJogador.splice(index, 1)[0];
@@ -161,6 +164,76 @@ export class PartidaComponent implements OnInit {
         this.batalhar(this.atributoAtaqueBot, this.nomeAtributoAtaqueBot);
       }
     }
+  }
+
+  private escolherCartaBotInteligente(cartaJogador: Carta): Carta {
+    if (this.deckBot.length === 0) return null as any;
+
+    // A máquina "olha" secretamente para as 3 primeiras cartas do seu deck (como se fosse uma mão)
+    const profundidade = Math.min(3, this.deckBot.length);
+    
+    // 1. SACRIFÍCIO TÁTICO: Se o jogador jogou uma carta Lendária (Super Trunfo)
+    if (cartaJogador.lendaria) {
+      // Tenta achar uma carta do grupo 'A' para anular o Super Trunfo
+      let indexGrupoA = this.deckBot.findIndex((c, i) => i < profundidade && c.grupo === 'A');
+      if (indexGrupoA !== -1) return this.deckBot.splice(indexGrupoA, 1)[0];
+      
+      // Se não tem grupo A, a máquina SABE que vai perder. Ela sacrifica sua PIOR carta para preservar as fortes.
+      let piorIndex = 0;
+      let menorMedia = Infinity;
+      for (let i = 0; i < profundidade; i++) {
+        const c = this.deckBot[i];
+        const media = (Number(c.performance) + Number(c.sintaxe) + Number(c.seguranca) + Number(c.longevidade) + Number(c.popularidade) + Number(c.abstracao) + Number(c.versatilidade)) / 7;
+        if (media < menorMedia && !c.lendaria) { // Nunca sacrifica sua própria lendária à toa
+          menorMedia = media;
+          piorIndex = i;
+        }
+      }
+      return this.deckBot.splice(piorIndex, 1)[0];
+    }
+
+    // 2. DEFESA PREDITIVA: Identificar qual é o atributo mais forte do jogador (provável ataque)
+    const atributos: (keyof Carta)[] = ['performance', 'sintaxe', 'seguranca', 'longevidade', 'popularidade', 'abstracao', 'versatilidade'];
+    let melhorAtributoJogador: keyof Carta = 'performance';
+    let maiorValorJogador = 0;
+
+    for (const attr of atributos) {
+      const valor = Number(cartaJogador[attr]) || 0;
+      if (valor > maiorValorJogador) {
+        maiorValorJogador = valor;
+        melhorAtributoJogador = attr;
+      }
+    }
+
+    // A máquina tenta encontrar a carta que ganha do atributo mais forte do jogador
+    let melhorIndexBot = 0;
+    let maiorValorBot = -1;
+
+    for (let i = 0; i < profundidade; i++) {
+      const valorCartaBot = Number(this.deckBot[i][melhorAtributoJogador]) || 0;
+      if (valorCartaBot > maiorValorBot) {
+        maiorValorBot = valorCartaBot;
+        melhorIndexBot = i;
+      }
+    }
+
+    // Se a máquina perceber que TODAS as opções perdem feio, ela recorre ao sacrifício tático.
+    if (maiorValorBot < maiorValorJogador) {
+        let piorIndex = 0;
+        let menorMedia = Infinity;
+        for (let i = 0; i < profundidade; i++) {
+            const c = this.deckBot[i];
+            const media = (Number(c.performance) + Number(c.sintaxe) + Number(c.seguranca) + Number(c.longevidade) + Number(c.popularidade) + Number(c.abstracao) + Number(c.versatilidade)) / 7;
+            if (media < menorMedia && !c.lendaria) {
+                menorMedia = media;
+                piorIndex = i;
+            }
+        }
+        return this.deckBot.splice(piorIndex, 1)[0];
+    }
+
+    // A máquina achou uma defesa digna e a utiliza!
+    return this.deckBot.splice(melhorIndexBot, 1)[0];
   }
 
   iniciarTurnoBot(): void {
@@ -255,31 +328,49 @@ export class PartidaComponent implements OnInit {
       const valorBot = Number(this.cartaAtualBot[atributo]);
 
       if (valorJogador > valorBot) {
-        let msg = `VITÓRIA! Seu ${nomeAtributo} (${valorJogador}) superou o Bot (${valorBot}).`;
+        let diff = valorJogador - valorBot;
+        let msg = `> BOT_EXEC_ERROR: Falha na barreira de ${nomeAtributo}.`;
+        if (diff > 30) {
+          msg = `> ERRO CRÍTICO: Defesas aniquiladas! O ataque de ${valorJogador} humilhou a IA (${valorBot}).`;
+        } else if (diff < 5) {
+          msg = `> SOBRECARGA: A máquina quase bloqueou seu ataque (${valorJogador} vs ${valorBot}). Recalibrando...`;
+        } else {
+          msg = `> SUCESSO: Seu ataque em ${nomeAtributo} (${valorJogador}) superou os escudos do Bot (${valorBot}).`;
+        }
+        
         this.deckJogador.push(this.cartaAtualJogador);
         this.deckJogador.push(this.cartaAtualBot);
 
         if (this.deckEmpate.length > 0) {
-          msg += ` E VOCÊ CONQUISTOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
+          msg += ` + EXTRAÇÃO DOS RECURSOS ACUMULADOS (${this.deckEmpate.length})!`;
           this.deckJogador.push(...this.deckEmpate);
           this.deckEmpate = [];
         }
         
-        this.mensagemSistema = `> ${msg}`;
+        this.mensagemSistema = msg;
         this.turnoAtual = 'JOGADOR';
 
       } else if (valorBot > valorJogador) {
-        let msg = `FALHA CRÍTICA! O Bot superou seu ${nomeAtributo} (${valorJogador} vs ${valorBot}).`;
+        let diff = valorBot - valorJogador;
+        let msg = `> MÁQUINA VENCEU: Padrão de ataque ineficiente em ${nomeAtributo}.`;
+        if (diff > 30) {
+          msg = `> BOT_EXEC: Padrão humano pífio. Bloqueio absoluto (${valorBot} vs ${valorJogador}).`;
+        } else if (diff < 5) {
+          msg = `> BOT_EXEC: Margem de risco detectada. Sobrevivência por eficiência calculada (${valorBot} vs ${valorJogador}).`;
+        } else {
+          msg = `> FALHA TÁTICA: A Inteligência Artificial esmagou seu ataque de ${valorJogador} com ${valorBot}.`;
+        }
+        
         this.deckBot.push(this.cartaAtualBot);
         this.deckBot.push(this.cartaAtualJogador);
 
         if (this.deckEmpate.length > 0) {
-          msg += ` O BOT LEVOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
+          msg += ` + A MÁQUINA ASSIMILOU OS DADOS EM EMPATE (${this.deckEmpate.length})!`;
           this.deckBot.push(...this.deckEmpate);
           this.deckEmpate = [];
         }
 
-        this.mensagemSistema = `> ${msg}`;
+        this.mensagemSistema = msg;
         this.turnoAtual = 'BOT';
 
       } else {
