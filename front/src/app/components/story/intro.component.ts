@@ -103,7 +103,9 @@ export class StoryIntroComponent implements OnInit, OnDestroy {
     this.currentFullText = this.currentSlideData().text;
 
     // Inicia o som
-    this.typingAudio.play().catch(e => console.log('O navegador bloqueou o autoplay', e));
+    this.typingAudio.play().catch(e => {
+      // Ignora erro de autoplay do navegador
+    });
 
     this.typeInterval = setInterval(() => {
       if (this.charIndex < this.currentFullText.length) {

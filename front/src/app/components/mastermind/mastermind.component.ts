@@ -51,8 +51,6 @@ export class MastermindComponent implements OnInit {
       const randomIndex = Math.floor(Math.random() * this.availableColors.length);
       code.push(this.availableColors[randomIndex]);
     }
-    // Para debug (se quiser ver no console):
-    // console.log('Secret Code:', code);
     return code;
   }
 
