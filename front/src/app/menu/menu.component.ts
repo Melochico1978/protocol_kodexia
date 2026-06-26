@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { RouterModule, Router } from '@angular/router'; 
-
+import { LoadingService } from '../services/loading.service';
 @Component({
   selector: 'app-menu',
   standalone: true,
@@ -15,7 +15,15 @@ export class MenuComponent {
   menuAtual: 'principal' | 'duelo' = 'principal';
   efeitoScanline: boolean = false; // Controla a "onda" de transição
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private loadingService: LoadingService) {}
+
+  iniciarModoHistoria() {
+    this.loadingService.adicionarItemLoading('inicializando-campanha');
+    setTimeout(() => {
+      this.loadingService.removerItemLoading('inicializando-campanha');
+      this.router.navigate(['/story/intro']);
+    }, 2500);
+  }
 
   navegar(rota: string) {
     this.router.navigate([`/${rota}`]);

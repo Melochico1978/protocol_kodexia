@@ -1,0 +1,288 @@
+.map-container { 
+  height: 100vh; 
+  width: 100vw;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  
+  /* Removemos todo aquele background-image gigante e deixamos transparente! */
+  background: transparent; 
+
+  font-family: 'VT323', monospace; 
+  position: relative;
+  overflow: hidden;
+}
+
+.janela-so { 
+  background: rgba(13, 2, 33, 0.95); 
+  border: 2px solid #00f3ff; 
+  border-radius: 8px; 
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); 
+}
+
+.header-so { 
+  background: rgba(0, 243, 255, 0.1); 
+  border-bottom: 2px solid #00f3ff; 
+  padding: 10px 20px; 
+}
+
+.janela-mapa { 
+  width: 900px; 
+  max-width: 95%; 
+  height: 80vh; 
+  display: flex; 
+  flex-direction: column; 
+  z-index: 10;          /* Aumentamos o z-index do painel central */
+  position: relative;   /* Necessário para o z-index funcionar */
+}
+
+.flex-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+.btn-voltar { 
+  background: transparent; 
+  border: 1px solid #00f3ff; 
+  color: #00f3ff; 
+  padding: 5px 15px; 
+  font-family: 'VT323', monospace; 
+  font-size: 18px; 
+  cursor: pointer; 
+  transition: 0.3s; 
+}
+
+.btn-voltar:hover { 
+  background: #00f3ff; 
+  color: black; 
+}
+
+.titulo-mapa { 
+  font-size: 24px; 
+  color: #00ff41; 
+  letter-spacing: 2px; 
+}
+
+.layout-fases { 
+  flex: 1; 
+  padding: 40px; 
+  position: relative; 
+  overflow-y: auto; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 40px; 
+  align-items: center; 
+}
+
+.linha-conexao { 
+  position: absolute; 
+  width: 4px; 
+  background: rgba(0, 243, 255, 0.2); 
+  left: 50%; 
+  top: 40px; 
+  bottom: 40px; 
+  transform: translateX(-50%); 
+  z-index: 0; 
+}
+
+.fase-row { 
+  width: 100%; 
+  display: flex; 
+  justify-content: center; 
+  z-index: 1; 
+}
+
+.fase-item { 
+  display: flex; 
+  align-items: center; 
+  gap: 30px; 
+  width: 100%; 
+  max-width: 650px; 
+}
+
+/* Transforma toda a linha da fase liberada em área clicável e adiciona feedback visual */
+.fase-item.liberada {
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.fase-item.liberada:hover {
+  background-color: rgba(0, 243, 255, 0.05); /* Leve iluminação de fundo no hover */
+}
+
+.fase-info { 
+  flex: 1; 
+  color: white; 
+}
+
+.fase-info h3 { 
+  font-size: 26px; 
+  margin: 0; 
+  color: #00f3ff; 
+  transition: 0.3s; 
+}
+
+.fase-item.liberada:hover .fase-info h3 { 
+  color: white; 
+}
+
+.fase-info p { 
+  font-size: 16px; 
+  margin: 5px 0 0 0; 
+  color: #888; 
+  font-family: sans-serif; 
+}
+
+.fase-icone { 
+  width: 70px; 
+  height: 70px; 
+  border-radius: 50%; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 28px; 
+  background: #0d0221; 
+  border: 4px solid; 
+  position: relative; 
+}
+
+.fase-icone.liberado { 
+  border-color: #00f3ff; 
+  color: #00f3ff; 
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.5); 
+  cursor: pointer; 
+  transition: transform 0.2s; 
+}
+
+.fase-icone.liberado:hover { 
+  transform: scale(1.1); 
+}
+
+.fase-icone.bloqueado { 
+  border-color: #555; 
+  color: #555; 
+}
+
+.ping { 
+  position: absolute; 
+  inset: -4px; 
+  border-radius: 50%; 
+  border: 2px solid #fcee0a; 
+  opacity: 0.2; 
+  animation: mapPing 2s infinite; 
+}
+
+@keyframes mapPing { 
+  100% { transform: scale(1.5); opacity: 0; } 
+}
+
+.fase-status { 
+  flex: 1; 
+  font-size: 20px; 
+}
+
+.liberado-txt { 
+  color: #fcee0a; 
+}
+
+.bloqueado-txt { 
+  color: #555; 
+}
+
+.fase-item.bloqueada { 
+  opacity: 0.5; 
+}
+
+/* =========================================
+   MECÂNICA DA JOANINHA VOADORA (EASTER EGG)
+   ========================================= */
+.flying-bug {
+  font-size: 28px;
+  position: fixed;
+  
+  top: 0;
+  left: 0;
+  
+  z-index: 2;
+  cursor: crosshair; 
+  user-select: none;
+  filter: drop-shadow(0 0 8px #ff003c); 
+  animation: flyAround 30s linear infinite alternate; 
+}
+
+.flying-bug:active {
+  transform: scale(0.6);
+  filter: drop-shadow(0 0 20px #ff003c);
+}
+
+/* Nova rota de voo: Limites ajustados para 5vw e 85vw para não vazar a tela */
+@keyframes flyAround {
+  0%   { transform: translate(5vw, 60vh) rotate(45deg); }   /* Sai da lateral esquerda */
+  20%  { transform: translate(40vw, 5vh) rotate(135deg); }  /* Bate no teto */
+  40%  { transform: translate(85vw, 50vh) rotate(225deg); } /* Bate na lateral direita */
+  60%  { transform: translate(50vw, 85vh) rotate(315deg); } /* Bate no chão */
+  80%  { transform: translate(5vw, 20vh) rotate(45deg); }   /* Bate na lateral esquerda de novo */
+  100% { transform: translate(80vw, 5vh) rotate(135deg); }  /* Bate no teto do outro lado */
+}
+
+/* =========================================
+   ESTRUTURA DE INVASÃO DO VÍRUS
+   ========================================= */
+.hacker-jumpscare {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: strobeEffect 0.1s infinite; /* Efeito de flash na tela inteira */
+}
+
+.glitch-face {
+  width: 35vw;
+  max-width: 350px;
+  animation: violentZoom 0.25s ease-out forwards;
+}
+
+.evil-face {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 25px #ff003c);
+  animation: evilLaughTremor 0.15s infinite alternate;
+}
+
+.hacker-text {
+  color: #ff003c;
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-top: 2.5rem;
+  text-shadow: 0 0 20px #ff003c;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+@keyframes strobeEffect {
+  0%   { background-color: #000; }
+  49%  { background-color: #000; }
+  50%  { background-color: #1a0005; }
+  99%  { background-color: #1a0005; }
+  100% { background-color: #4a0000; }
+}
+
+@keyframes violentZoom {
+  0% { transform: scale(0.2); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes evilLaughTremor {
+  0% { transform: translate(2px, 2px) scale(1); }
+  100% { transform: translate(-2px, -2px) scale(1.08); }
+}

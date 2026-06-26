@@ -1,0 +1,56 @@
+<app-fundo-cibernetico></app-fundo-cibernetico>
+
+<div class="map-container">
+  
+  <div class="janela-so janela-mapa" *ngIf="!isHacked()">
+    <div class="header-so flex-header">
+      <button class="btn-voltar" (click)="router.navigate(['/inicio'])">< VOLTAR À BASE</button>
+      <span class="titulo-mapa">MAPA DO SISTEMA [ SETOR: 1.0 - LÓGICA BÁSICA ]</span>
+    </div>
+    
+    <div class="body-so layout-fases">
+      <div class="linha-conexao"></div>
+      
+      <div *ngFor="let fase of fases; let i = index" class="fase-row">
+        
+        <div *ngIf="(i + 1) <= nivelAtualLiberado()" class="fase-item liberada" (click)="acessarNivel(fase.id)">
+          <div class="fase-info text-right">
+            <h3>{{ fase.titulo }}</h3>
+            <p>{{ fase.subtitulo }}</p>
+          </div>
+          <div class="fase-icone liberado">
+            <div class="ping" *ngIf="(i + 1) === nivelAtualLiberado()"></div>
+            <span>{{ fase.numero }}</span>
+          </div>
+          <div class="fase-status liberado-txt">
+            {{ (i + 1) < nivelAtualLiberado() ? '[ CONCLUÍDO ]' : '[ EM PROGRESSO ]' }}
+          </div>
+        </div>
+
+        <div *ngIf="(i + 1) > nivelAtualLiberado()" class="fase-item bloqueada">
+          <div class="fase-info text-right">
+            <h3>{{ fase.titulo }}</h3>
+            <p>{{ fase.subtitulo }}</p>
+          </div>
+          <div class="fase-icone bloqueado">🔒</div>
+          <div class="fase-status bloqueado-txt">[ BLOQUEADO ]</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="flying-bug" *ngIf="!isHacked()" (click)="atacarBug()">🐞</div>
+
+  <div class="hacker-jumpscare" *ngIf="isHacked()">
+    <div class="glitch-face">
+      <svg viewBox="0 0 100 100" class="evil-face">
+        <polygon points="20,45 40,30 45,45" fill="#ff003c"/>
+        <polygon points="80,45 60,30 55,45" fill="#ff003c"/>
+        <polygon points="10,65 25,75 35,65 50,80 65,65 75,75 90,65 80,85 50,95 20,85" fill="#ff003c"/>
+      </svg>
+    </div>
+    <div class="hacker-text">HA HA HA! SISTEMA COMPROMETIDO.</div>
+  </div>
+
+</div>

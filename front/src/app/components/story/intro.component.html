@@ -1,0 +1,30 @@
+<app-fundo-cibernetico></app-fundo-cibernetico>
+
+<div class="intro-container" (click)="advance()" tabindex="0">
+  <div class="janela-so janela-dialogo" [ngClass]="getBorderColor()">
+    
+    <div class="header-so">
+      <span>🔴 🟡 🟢 TERMINAL_COMUNICACAO.exe</span>
+      <button (click)="skipIntro($event)" class="btn-pular">PULAR >></button>
+    </div>
+
+    <div class="body-so layout-dialogo">
+      <div class="avatar-box">
+        <div class="avatar-imagem-container" [ngClass]="getIconGlow()">
+          <img [src]="getImagePath()" alt="Avatar" class="avatar-img">
+        </div>
+        <div class="nome-speaker" [ngClass]="getTextColor()">[{{ currentSlideData().speaker }}]</div>
+      </div>
+
+      <div class="texto-box">
+        <p class="texto-maquina">
+          {{ displayedText() }}<span class="cursor-blink" *ngIf="!isTypingDone()">_</span>
+        </p>
+        <p class="dica-avanco" *ngIf="isTypingDone()">
+          [ Pressione ENTER ou Clique para avançar ]
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>

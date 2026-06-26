@@ -17,5 +17,11 @@ export const routes: Routes = [
   { path: 'desconectado', component: DesconectadoComponent }, 
   { path: 'ajuda', component: AjudaComponent },
   { path: 'mastermind', component: MastermindComponent },
+  
+  // === ROTAS DO MODO HISTÓRIA ===
+  { path: 'story/intro', loadComponent: () => import('./components/story/intro.component').then(m => m.StoryIntroComponent) },
+  { path: 'story/map', loadComponent: () => import('./components/story/story-map.component').then(m => m.StoryMapComponent) },
+  { path: 'story/level/:id', loadComponent: () => import('./components/level/level.component').then(m => m.LevelComponent) },
+
   { path: '**', redirectTo: '' }, 
 ];
