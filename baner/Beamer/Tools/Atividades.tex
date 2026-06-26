@@ -1,0 +1,32 @@
+\usepackage{microtype}
+\usepackage{roboto}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage{tcolorbox}
+
+
+\newtcolorbox[auto counter, number within=section]{Constative}[3]{%
+  enhanced,
+  size=minimal, left=3.0cm, top=3mm, toprule=2pt,
+  colframe=#3, colbacktitle=#3, colback=white,
+  fontupper=\sffamily\scriptsize, title=#2,
+  attach boxed title to top left={yshift=-\tcboxedtitleheight},
+  center title, minipage boxed title=2.5cm,
+  fonttitle=\sffamily\robotocondensed\bfseries\small,
+  boxed title style={%
+    size=minimal, boxsep=4pt, bottom=5mm,
+    frame code={%
+      \path[fill=tcbcolback]
+      (frame.north west) -- ([yshift=2mm]frame.south west) --
+      ([xshift=2mm]frame.south west) -- (frame.south east) --
+      (frame.north east) -- cycle;
+      \path[fill=white, draw=tcbcolback, line width=1pt]
+      ([xshift=-15mm-0.5pt]frame.south east) circle [radius=5mm]
+      node [font=\sffamily\small] {#1};
+    },
+    interior engine=empty
+  },
+  frame code={%
+    \path[fill=tcbcolframe](frame.north west) rectangle ([yshift=-3pt]frame.north east);
+  }
+}

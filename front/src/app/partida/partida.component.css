@@ -1,3 +1,11 @@
+body, .batalha-master-container {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24'%3E%3Cpath fill='%2300f3ff' stroke='%23000' stroke-width='1.5' d='M9 2h4v7h2V6h3v7h2v5l-3 4H9l-4-5v-6h4V2z'/%3E%3Crect x='10' y='4' width='2' height='2' fill='%23ff003c'/%3E%3C/svg%3E") 9 2, crosshair !important;
+}
+
+button, .carta-na-mao, .btn-atributo, .nome-jogador {
+  cursor: pointer !important;
+}
+
 .batalha-master-container {
   min-height: 100vh;
   display: flex;
@@ -18,8 +26,34 @@
   z-index: 2;
   background-size: 100% 2px, 3px 100%;
   pointer-events: none; /* Não interfere no clique */
+  animation: scanlinesMove 15s linear infinite;
 }
 
+@keyframes scanlinesMove {
+  0% { background-position: 0 0, 0 0; }
+  100% { background-position: 0 100vh, 0 0; }
+}
+
+.glitch-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: white; opacity: 0.8; z-index: 9999;
+  pointer-events: none;
+  animation: flashGlitch 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  mix-blend-mode: overlay;
+}
+@keyframes flashGlitch {
+  0% { opacity: 0.9; background: white; }
+  50% { opacity: 0.5; background: red; transform: translateX(10px) skewX(20deg); }
+  100% { opacity: 0; background: transparent; }
+}
+
+.cursor-pisca {
+  animation: piscar 1s infinite;
+}
+@keyframes piscar {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
 
 .header-batalha {
   text-align: center;
@@ -43,12 +77,10 @@
   background: rgba(0, 0, 0, 0.8);
   padding: 10px 20px;
   border-left: 4px solid #00ff41;
-  display: inline-block;
-  position: absolute;
-  top: 30px;
-  right: 30px;
-  max-width: 350px;
-  text-align: left;
+  display: block;
+  margin: 10px auto 0 auto;
+  max-width: 600px;
+  text-align: center;
   box-shadow: 0 0 10px rgba(0, 255, 65, 0.4);
   animation: glitchTilt 4s infinite linear alternate-reverse;
   z-index: 10;
@@ -74,7 +106,7 @@
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-  padding-bottom: 250px; /* Reserva espaço para a mão de cartas do rodapé */
+  padding-bottom: 120px; /* Reduzido para evitar que empurre a tela e crie scroll */
 }
 
 /* === PAINÉIS LATERAIS (P1 e P2) === */
@@ -241,11 +273,21 @@
   z-index: 10;
 }
 
-.zona-embate { display: flex; justify-content: center; align-items: center; gap: 40px; margin-bottom: 60px; width: 100%; }
+.zona-embate { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 10px; width: 100%; }
 
 .slot-carta {
   width: 350px; height: 500px; display: flex;
   align-items: center; justify-content: center; position: relative;
+  transform: scale(0.70); /* Reduz o tamanho das cartas centrais para caber na tela */
+  margin: -70px -50px; /* Compensa o espaço deixado pelo scale */
+}
+
+.slot-carta app-carta-exibicao {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.slot-carta app-carta-exibicao:hover {
+  filter: drop-shadow(0 0 20px #00f3ff) brightness(1.2);
+  transform: translateY(-15px) scale(1.05);
 }
 
 .divisor-vs { 
@@ -522,7 +564,7 @@
 /* === MAO DO JOGADOR (ESTILO YU-GI-OH COM EFEITO DE LEQUE) === */
 .rodape-mao-cartas {
   position: fixed;
-  bottom: 0px;
+  bottom: -20px; /* Desce um pouco para dar mais espaco na tela */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -567,4 +609,27 @@
 @keyframes comprarCartaDesce {
   0% { transform: translateY(-400px) scale(0.65); opacity: 0; }
   100% { /* Deixa a matemática do leque assumir no fim da animação */ opacity: 1; }
+}
+
+.btn-audio {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: rgba(13, 2, 33, 0.8);
+  border: 1px solid #00f3ff;
+  color: #00f3ff;
+  padding: 10px 15px;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+  z-index: 100;
+}
+
+.btn-audio:hover {
+  background: #00f3ff;
+  color: black;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
 }

@@ -1,0 +1,66 @@
+
+% Numerar as figuras em Caption
+\setbeamertemplate{caption}[numbered]
+
+ %Justificar Texto
+\usepackage{ragged2e}
+\usepackage{etoolbox}
+\apptocmd{\frame}{}{\justifying}{} % Allow optional arguments after frame.
+
+%\definecolor{Azul}{RGB}{0,0,250}
+\definecolor{Azul}{rgb}{0,0,1}
+\definecolor{Verde}{rgb}{0,1,0}
+\definecolor{Red}{rgb}{1,0,0}
+\definecolor{Orange}{rgb}{0.9,0.4,0.8}
+\definecolor{aqua}{rgb}{0.0, 1.0, 1.0}
+\definecolor{aquamarine}{rgb}{0.5, 1.0, 0.83}
+\definecolor{arsenic}{rgb}{0.23, 0.27, 0.29}
+
+\usepackage{xcolor}
+
+%\usepackage[dvipsnames]{xcolor}
+\usepackage{multirow}
+
+% Numeração arabiga em Footnote Beamer
+\renewcommand\thempfootnote{\arabic{mpfootnote}}
+% Fonte do footnote
+\setbeamerfont{footnote}{size=\tiny}
+
+
+\usepackage[hang]{footmisc}
+\setlength{\footnotemargin}{3mm}
+
+%\def\setnotebodyfont
+%{\switchtobodyfont[tiny]\setupinterlinespace[15]} 
+
+
+% TColorBox
+\usecolortheme{whale}
+\usecolortheme{orchid}
+%\usepackage{tcolorbox}
+\usepackage[most]{tcolorbox}
+%\tcbset{colback=red!5!white,colframe=red!75!black}
+\usepackage{etoolbox}
+\AtBeginEnvironment{tcolorbox}{\footnotesize}
+
+\usepackage{multicol,lipsum}
+
+% Desabilitra avisos
+\usepackage{silence}
+%Disable all warnings issued by latex starting with "You have..."
+\WarningFilter{latex}{You have requested}
+
+
+% Alterar simbolos no Itemize
+
+%\renewcommand{\labelitemi}{$\bullet$}
+%\renewcommand{\litemii}{$\cdot$}
+%\renewcommand{\litemiii}{$\diamond$}
+%\renewcommand{\litemiv}{$\ast$}
+
+% Configuraçao do Itemize
+\def\labelitemi{$\bullet$}
+\usepackage{enumitem}
+\setlist[itemize]{align=parleft,left=-2pt..1em}
+
+

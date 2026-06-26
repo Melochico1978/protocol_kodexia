@@ -1,0 +1,92 @@
+<div class="mastermind-wrapper">
+  
+  <div class="terminal-header">
+    <button class="btn-voltar" (click)="voltarParaMenu()">&lt; VOLTAR</button>
+    <div class="terminal-text" [ngClass]="{'sucesso': gameStatus === 'WON', 'erro': gameStatus === 'LOST'}">
+      {{ mensagemSistema }}
+    </div>
+  </div>
+
+  <div class="board-container">
+    
+    <!-- Linhas Anteriores (Histórico de Tentativas) -->
+    <div class="board-row" *ngFor="let guess of guesses; let i = index">
+      <div class="row-number">{{ i + 1 | number:'2.0-0' }}</div>
+      
+      <div class="guess-pegs">
+        <div class="peg" *ngFor="let color of guess.colors" [style.backgroundColor]="color"></div>
+      </div>
+
+      <div class="feedback-pegs">
+        <div class="feedback-peg" *ngFor="let fPeg of getFeedbackPegs(guess.blacks, guess.whites)" [ngClass]="fPeg"></div>
+      </div>
+    </div>
+
+    <!-- Linha Atual (Onde o jogador está montando a senha) -->
+    <div class="board-row active-row" *ngIf="gameStatus === 'PLAYING'">
+      <div class="row-number active">{{ guesses.length + 1 | number:'2.0-0' }}</div>
+      
+      <div class="guess-pegs">
+        <div class="peg selectable" 
+             *ngFor="let color of currentGuess; let idx = index" 
+             [style.backgroundColor]="color ? color : 'transparent'"
+             [ngClass]="{'selected-slot': selectedColorIndex === idx}"
+             (click)="selectPin(idx)">
+        </div>
+      </div>
+
+      <div class="feedback-pegs">
+        <div class="feedback-peg empty"></div>
+        <div class="feedback-peg empty"></div>
+        <div class="feedback-peg empty"></div>
+        <div class="feedback-peg empty"></div>
+      </div>
+    </div>
+
+    <!-- Linhas Vazias (Preenchimento) -->
+    <div class="board-row empty-row" *ngFor="let _ of getEmptyRows()">
+      <div class="row-number">-</div>
+      <div class="guess-pegs">
+        <div class="peg empty"></div>
+        <div class="peg empty"></div>
+        <div class="peg empty"></div>
+        <div class="peg empty"></div>
+      </div>
+      <div class="feedback-pegs">
+        <div class="feedback-peg empty"></div>
+        <div class="feedback-peg empty"></div>
+        <div class="feedback-peg empty"></div>
+        <div class="feedback-peg empty"></div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Painel de Controles -->
+  <div class="controls-panel">
+    
+    <div class="color-palette" *ngIf="gameStatus === 'PLAYING'">
+      <div class="palette-peg" 
+           *ngFor="let color of availableColors" 
+           [style.backgroundColor]="color"
+           (click)="setColor(color)">
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-action" *ngIf="gameStatus === 'PLAYING'" (click)="submitGuess()">ENVIAR SEQUÊNCIA</button>
+      
+      <div class="game-over-actions" *ngIf="gameStatus !== 'PLAYING'">
+        <button class="btn-action btn-restart" (click)="iniciarJogo()">REINICIAR PROTOCOLO</button>
+        <div class="secret-reveal">
+          <p>SENHA CORRETA:</p>
+          <div class="guess-pegs">
+            <div class="peg" *ngFor="let sColor of secretCode" [style.backgroundColor]="sColor"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

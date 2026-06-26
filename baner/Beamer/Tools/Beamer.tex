@@ -1,0 +1,48 @@
+
+\mode<presentation>
+    {
+    \usetheme{Warsaw} 
+    %\usetheme{Madrid}
+    \usefonttheme{professionalfonts} 
+    \setbeamertemplate{itemize item}{$\blacksquare$}
+    \setbeamertemplate{itemize subitem}{$\blacktriangleright$}
+    }
+
+% Personalização do Warsaw Theme
+
+% -------------------------
+% Beamer Fontes
+% -------------------------
+\changefontsizes{10pt}
+\setbeamerfont{title}{size=\small}
+\setbeamerfont{author}{size=\small}
+\setbeamerfont{frametitle}{size=\small}
+\setbeamerfont{block title}{size=\small}
+\setbeamerfont{footline}{series=\tiny}
+
+% How to insert page number in Beamer navigation symbols?
+
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
+\setbeamercolor{section in head/foot}{fg=white}
+\setbeamercolor{subsection in head/foot}{fg=white}
+%\setbeamercolor{footline}{fg=white, bg=darkgray}
+% Colocar indices de avaço no head da pagina
+
+\defbeamertemplate*{headline}{}
+{
+    \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}{section in head/foot}
+    \vskip2pt\insertnavigation{\paperwidth}\vskip4pt
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[colsep=1.5pt]{middle separation line head}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+    \end{beamercolorbox}
+}

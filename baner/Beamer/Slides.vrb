@@ -1,0 +1,22 @@
+\frametitle{}
+\begin{Constative}{A-06}{Avaliação}{blue}
+Aquecimento no desenvolvimento do TCC
+\vspace{5mm}
+\begin{enumerate}[label=(\alph*),start=1]
+\itemsep1mm
+\item Quais são os principais elementos textuais de um artigo científico, segundo a aula?
+% Resposta:** A aula organiza a estrutura textual do artigo em: **título, subtítulo, resumo, palavras-chave, introdução, objetivos, descrição do problema, referencial teórico, resultados e conclusões**. Essa sequência mostra que a escrita científica não é apenas redação livre, mas uma composição formal orientada por funções discursivas bem definidas.
+\item Como o resumo deve ser estruturado metodologicamente?
+% Resposta: O resumo deve seguir a sequência: **contexto, gap, propósito, resultados e conclusões**. Em termos científicos, isso significa: primeiro situar o tema; depois explicitar a lacuna de conhecimento; em seguida declarar o objetivo do estudo; posteriormente sintetizar os principais achados; e, por fim, enunciar a conclusão central. Essa organização torna o resumo semanticamente coerente e metodologicamente legível.
+
+\item O que significa organizar uma pesquisa por “blocos lógicos”?
+% Resposta:Significa decompor o problema de pesquisa em **núcleos conceituais articulados**, convertendo cada núcleo em descritores de busca. Na aula, isso aparece como estratégia de **pesquisa semântica**, em que conceitos relacionados são agrupados para formar consultas mais robustas. Em vez de buscar palavras soltas, o pesquisador estrutura o problema em blocos conceituais, o que aumenta precisão, rastreabilidade e consistência metodológica.
+
+\item Como se constrói uma string booleana coerente para pesquisa semântica?
+% Resposta: A construção segue uma lógica combinatória: * usa-se **OR** para reunir sinônimos, variantes ou termos próximos dentro do mesmo bloco conceitual;    * usa-se **AND** para conectar blocos conceituais diferentes que precisam aparecer simultaneamente; eventualmente, usam-se expressões entre aspas para preservar termos compostos. A aula exemplifica isso ao combinar blocos como **informação quântica relativística**, **sistemas quânticos abertos**, **ruído/decoerência** e **efeito Unruh/Bogoliubov/Hawking** em uma única string composta.
+
+\item Quais questões a aula propõe para avaliar o aquecimento do desenvolvimento do TCC?
+% Resposta:** A aula propõe questões operacionais centrais, tais como:    * como transformar uma ideia ampla em **tema, objeto, problema e dados** bem delimitados;  * como converter uma pergunta em linguagem comum para **linguagem científica adequada à pesquisa semântica**;  * como mapear descritores, organizar blocos lógicos e construir uma **string booleana coerente**; quais critérios indicam que a pesquisa semântica está bem construída;  * como integrar **metodologia, evidências, ética e LGPD** quando a pesquisa envolve dados de pessoas.      Essas perguntas funcionam como matriz diagnóstica do amadurecimento metodológico do projeto.
+
+\end{enumerate}
+\end{Constative}

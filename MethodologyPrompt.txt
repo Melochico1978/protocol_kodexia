@@ -1,0 +1,25 @@
+Analise a metodologia do TCC apresentado e verifique se existe coerência entre:
+
+problema -> objetivos -> referencial teórico -> procedimentos -> dados -> análise -> resultados -> conclusões.
+
+Para cada elemento:
+
+a.) indique a evidência encontrada no texto e sua localização;
+b.) classifique como adequado, parcial ou inadequado;
+c.) identifique lacunas, inconsistências ou contradições;
+d.) explique brevemente como o problema pode ser corrigido.
+
+Verifique especialmente se:
+
+a.) os objetivos respondem ao problema;
+b.) os conceitos foram transformados em indicadores ou critérios observáveis;
+c.) os dados e instrumentos são adequados;
+d.) os procedimentos podem ser executados e repetidos;
+e.) a análise responde aos objetivos;
+f.) os resultados estão relacionados ao referencial teórico;
+g.) as conclusões são sustentadas pelas evidências.
+
+Ao final, apresente um parecer classificando a metodologia como:
+
+a.) validada, validada com ajustes, parcialmente validada ou não validada.
+b.) Finalize com uma tabela contendo: falha identificada, consequência e correção necessária.

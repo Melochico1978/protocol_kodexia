@@ -1,0 +1,128 @@
+\usepackage{amssymb}% \varnothing
+\usepackage{latexsym}
+
+\usepackage[geometry]{ifsym}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{latexsym}
+\usepackage{relsize}
+\usepackage{color,graphicx}
+\usepackage{xfrac}
+
+
+%\usepackage{boisik}
+%\usepackage{lmodern}% http://ctan.org/pkg/lm
+%\usepackage{amsmath}
+
+\usepackage{stmaryrd}
+%\SetSymbolFont{stmry}{bold}{U}{stmry}{m}{n}
+
+\newtheorem{mydescription}{Descrição}[section]
+\usepackage{calc}
+\usepackage{enumitem}
+\SetLabelAlign{parright}{\parbox[t]{\labelwidth}{\raggedleft#1}}
+
+\usepackage{listings}
+\usepackage{array,tabularx}
+\usepackage{colortbl}
+%\usepackage[table]{xcolor}
+
+% FIGURE
+
+\usepackage[font=scriptsize,skip=2pt]{caption}
+
+\usepackage{tabularx} 
+\usepackage{xcolor}
+\newcommand{\cor}{\textcolor}
+\usepackage{media9}
+\usepackage{comment}
+
+%LaTeX Font Warning: Font shape `OT1/cmr/m/n
+%Timeline for How to remove the warnings “Font shape `
+\usepackage{anyfontsize}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{framed}
+
+%\usepackage[lighttt]{lmodern}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily, keywordstyle=\bfseries}
+
+\usepackage{multicol}
+\usepackage{parskip}
+\usepackage{pxfonts}
+\usepackage{graphics}
+\usepackage{pstricks}
+
+% Texto justificado
+\usepackage{ragged2e}
+\usepackage{colortbl}
+\usepackage{comment}
+
+% ---------------------------------------------------
+% Set font size for footnotes
+
+%\makeatletter
+%\renewcommand\footnotesize{%
+%   \@setfontsize\scriptsize\@ixpt{7}%
+%   \abovedisplayskip 8\p@ \@plus2\p@ \@minus4\p@
+%   \abovedisplayshortskip \z@ \@plus\p@
+%   \belowdisplayshortskip 4\p@ \@plus2\p@ \@minus2\p@
+%   \def\@listi{\leftmargin\leftmargini
+%               \topsep 4\p@ \@plus2\p@ \@minus2\p@
+%               \parsep 2\p@ \@plus\p@ \@minus\p@
+%               \itemsep \parsep}
+%   \belowdisplayskip \abovedisplayskip
+%}
+%\makeatother
+
+% Set font size for footnotes
+%\renewcommand{\footnotesize}{\scriptsize}
+
+%You can use arbitrary font sizes within LaTeX, not only the default ones 
+% (\normalsize, \Large, \footnote size, &c.). The command for a font size of 9pt would be:
+
+\renewcommand{\footnotesize}{\fontsize{6pt}{9pt}\selectfont}
+
+%The second value is value for the interline skip for that size. 
+%Usually it is about 20 % more than the nominal size.
+% ---------------------------------------------------
+%\AtBeginDocument{\fontsize{8}{10}\selectfont}
+
+\UseRawInputEncoding
+%\usepackage{ae,lmodern}
+% Tabelas TcolorBox
+
+
+\makeatother
+
+%\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+%\tcbset{beamer without segmentation/.style={%
+%  beamer,segmentation code=,  interior titled code={{\tcb@spec{beamer@color}\tcb@drawwithtitle@path}\tcb@drawspec@T},  interior code={{\tcb@spec{beamer@color}\tcb@drawwithouttitle@path}}}}
+
+
+\newcommand{\PR}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\PC}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\CH}[1]{\ensuremath{\left\{#1\right\}}}
+
+
+%\newcommand\scaledfrac[2]{\scalebox{2}{\sfrac{#1}{#2}}}
+
+%\newcommand{cmd}[args][opt]{def}
+%\newtheorem{Exemplo}{Exemplo}[section]
+% Closed” (square) root symbol
+
+\usepackage{letltxmacro}
+\makeatletter
+\let\oldr@@t\r@@t
+\def\r@@t#1#2{%
+\setbox0=\hbox{$\oldr@@t#1{#2\,}$}\dimen0=\ht0
+\advance\dimen0-0.2\ht0
+\setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+{\box0\lower0.4pt\box2}}
+\LetLtxMacro{\oldsqrt}{\sqrt}
+\renewcommand*{\sqrt}[2][\ ]{\oldsqrt[#1]{#2}}
+\makeatother
+
+

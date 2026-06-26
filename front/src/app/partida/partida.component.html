@@ -1,10 +1,15 @@
 <div class="batalha-master-container" style="font-family: 'VT323', monospace;">
+  <div class="glitch-overlay" *ngIf="mostrarGlitch"></div>
 
   <button class="btn-fuga" (click)="voltarParaMenu()">[X] ABORTAR SIMULAÇÃO</button>
+  
+  <button class="btn-audio" (click)="toggleAudio()">
+    {{ audioAtivo ? '🔊 SOM: ON' : '🔇 SOM: OFF' }}
+  </button>
 
   <div class="header-batalha">
     <h1 class="titulo-cyberpunk"> [ SIMULAÇÃO VS. IA ] </h1>
-    <p class="log-sistema" [class.super-trunfo-msg]="superTrunfoAtivado">{{ mensagemSistema }}</p>
+    <p class="log-sistema" [class.super-trunfo-msg]="superTrunfoAtivado">{{ mensagemSistemaDisplay }}<span class="cursor-pisca">_</span></p>
   </div>
 
   <!-- Banner Super Trunfo -->
@@ -53,6 +58,14 @@
         </div>
         <div class="contador-cartas">CARTAS: {{ totalCartasJogador }}</div>
       </div>
+
+      <div class="zona-monte" *ngIf="deckEmpate.length > 0 && turnoAtual === 'JOGADOR'" style="margin-top: 40px;">
+        <div class="monte-cartas horizontal">
+          <div class="carta-verso">EMPATE</div>
+        </div>
+        <div class="contador-cartas empate-texto">EM DISPUTA: {{ deckEmpate.length }}</div>
+      </div>
+
     </div>
 
 
@@ -92,14 +105,7 @@
         </div>
       </div>
 
-      <div class="zona-empate" *ngIf="deckEmpate.length > 0">
-        <div class="monte-empate-container">
-          <div class="monte-cartas horizontal">
-            <div class="carta-verso">EMPATE</div>
-          </div>
-          <div class="contador-cartas empate-texto">EM DISPUTA: {{ deckEmpate.length }}</div>
-        </div>
-      </div>
+      <!-- Zona de Empate agora fica nas laterais dependendo do turno -->
 
     </div>
 
@@ -121,6 +127,14 @@
         </div>
         <div class="contador-cartas">RESTANTES: {{ totalCartasBot }}</div>
       </div>
+
+      <div class="zona-monte" *ngIf="deckEmpate.length > 0 && turnoAtual === 'BOT'" style="margin-top: 40px;">
+        <div class="monte-cartas horizontal">
+          <div class="carta-verso inimigo-verso">EMPATE</div>
+        </div>
+        <div class="contador-cartas empate-texto" style="border-color: #ff003c; color: #ff003c;">EM DISPUTA: {{ deckEmpate.length }}</div>
+      </div>
+
     </div>
 
   </div>

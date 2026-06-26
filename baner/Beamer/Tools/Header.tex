@@ -1,0 +1,134 @@
+%\usepackage{beamerhighlight}
+%\usepackage{pgf, pgfpages}
+%\usepackage{colortbl}
+%\usepackage{color}
+%\usepackage{pdfpages}
+%\usepackage[absolute,overlay]{textpos}
+%\usepackage{url}
+%\usepackage{graphicx}
+
+% Acentos em modo matemático
+\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{enumitem}
+%\usepackage{wasysym}
+%usepackage[squaren]{SIunits}
+
+\input{Tools/Beleza.tex}
+\input{Tools/Packages.tex}
+\input{Tools/Head.tex}
+%\input{Tools/C++.tex}
+\input{Tools/Python3.tex}
+%\input{Tools/Haskell.tex}
+%\input{Tools/Hugs.tex}
+\input{Tools/Atividades.tex}
+
+% ****** Intertext like command in enumerate environment?
+
+\usepackage{enumitem}
+\usepackage{exercises}
+
+% ---------------------------------
+% Floor Ceil Math
+% ---------------------------------
+\usepackage{relsize}
+
+% -------------------------
+% Comandos matematicos
+% ***************************
+%\newcommand{\BigMath}[1] {\mathlarger{\mathlarger{\mathlarger{#1}}}} 
+%\newcommand{\LargeMath}[1] {\mathlarger{\mathlarger{#1}}} 
+%\newcommand{\largeMath}[1] {\mathlarger{#1}}
+\newcommand{\BigMath}[1] {\mathlarger{\mathlarger{\mathlarger{\mathlarger{\mathlarger{\mathlarger{#1}}}}}}} 
+\newcommand{\LargeMath}[1] {\mathlarger{\mathlarger{#1}}} 
+\newcommand{\largeMath}[1] {\mathlarger{#1}}
+
+% Símbolos matemáticos
+
+\newcommand{\SMath}[2]{\scalebox{#1}{#2}}
+%\newcommand{\largeMath}[1] {\mathlarger{#1}}
+%$\scalebox{1.2}{f(3) = 32 + 7 = 16}$ \\
+
+\usepackage{enumerate}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+% ---------------------------------
+% Fancy Atividades
+% ---------------------------------
+
+\usepackage{microtype}
+\usepackage{roboto}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+
+\usepackage{tikz}
+%\def\checkmark {\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
+\def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (0.25,0) -- (0.5,0.7) -- (0.25,0.15) -- cycle;} 
+
+%Package microtype Warning: Unable to apply patch
+\let\CheckCommand\providecommand
+\usepackage{microtype}
+
+% Colored itemize
+%\usepackage{beamerhighlight}
+
+% description
+\usepackage{calc}  
+\usepackage{enumitem}
+
+\newcommand*{\listnum}{\sffamily\robotoblack\color{cyan!10! black}}
+\newcommand*{\textlistnum}[1]{\begingroup\listnum #1\endgroup}
+
+\setlist[enumerate,1]{label=\listnum\arabic*}
+\setlist[enumerate,2]{label=\listnum\alph*, leftmargin=1.5em}
+\newcommand\setItemnumber[1]{\setcounter{enum\romannumeral\@enumdepth}{\numexpr#1-1\relax}}
+\SetLabelAlign{parright}{\parbox[t]{\labelwidth}{\raggedleft#1}}
+
+% ---------------------------------
+% Fancy Atividades
+% ---------------------------------
+
+\newcommand{\BR}{\rowcolor{blue}}
+\newcommand{\GR}{\rowcolor{green!85!yellow}}
+\newcommand{\Aula}{\rowcolor{green}}
+\newcommand{\Feriado}{\rowcolor{blue!45!white}}
+\newcommand{\Prova}{\rowcolor{red}}
+\newcommand{\Anuncios}{\rowcolor{gray!60!black}}
+\newcommand{\CR}{\rowcolor{black!20!white}}
+\newcommand{\Projeto}{\rowcolor{yellow!12!green}}
+\newcommand{\WT}[1]{\textcolor{White}{#1}}
+\newcommand{\BT}[1]{\textcolor{Blue}{#1}}
+\newcommand{\RT}[1]{\textcolor{red}{#1}}
+\newcommand{\GT}[1]{\textcolor{green!45!yellow}{#1}}
+%\newcommand{\TXT}{\rowcolor{lightgray}}
+
+
+
+% Package microtype Warning: Unable to apply patch `footnote' 
+
+\let\CheckCommand\providecommand
+\usepackage{microtype}
+
+% ---------------------------------
+% Fancy Tables
+% ---------------------------------
+
+\usepackage{booktabs}
+\usepackage{colortbl}
+\usepackage{xfrac}
+\newcommand{\AltLinha}[1]{\renewcommand{\arraystretch}{#1}}
+
+\let\clipbox\relax
+\usepackage{adjustbox}
+
+% Animação LaTeX
+\usepackage{animate}
+\usepackage{graphics}
+
+% Diagrama BNF
+\usepackage{syntax}
+%\setlength{\grammarparsep}{10pt plus 1pt minus 1pt} % increase separation between rules
+%\setlength{\grammarindent}{10em} % increase separation between LHS/RHS 
+\usepackage{tikz}

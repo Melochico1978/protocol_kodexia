@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -13,7 +13,7 @@ import { CartaExibicaoComponent } from '../components/carta-exibicao/carta-exibi
   templateUrl: './partida.component.html',
   styleUrl: './partida.component.css'
 })
-export class PartidaComponent implements OnInit {
+export class PartidaComponent implements OnInit, OnDestroy {
   
   faseAtual: 'ESCOLHER_CARTA' | 'ESCOLHER' | 'COMPARAR' | 'DEFENDER' = 'ESCOLHER_CARTA';
   turnoAtual: 'JOGADOR' | 'BOT' = 'JOGADOR';
@@ -31,7 +31,11 @@ export class PartidaComponent implements OnInit {
   atributoAtaqueBot: keyof Carta | null = null;
   nomeAtributoAtaqueBot: string | null = null;
 
-  mensagemSistema: string = '> PROTOCOLO DE COMBATE INICIADO. COMPRE UMA CARTA.';
+  mensagemSistema: string = '';
+  mensagemSistemaDisplay: string = '';
+  private typewriterInterval: any;
+  mostrarGlitch: boolean = false;
+
   jogoAcabou: boolean = false;
   superTrunfoAtivado: boolean = false;
   vencedor: 'JOGADOR' | 'BOT' | null = null;
@@ -46,6 +50,12 @@ export class PartidaComponent implements OnInit {
   isModoBoss: boolean = false;
   jogadorHP: number = 100;
   bossHP: number = 100;
+
+  audioAtivo: boolean = false;
+  private audioCtx: any = null;
+  private oscillator: any = null;
+  private gainNode: any = null;
+  private beepInterval: any;
 
   get totalCartasJogador(): number {
     return this.deckJogador.length + this.maoJogador.length + (this.cartaAtualJogador ? 1 : 0);
@@ -115,7 +125,7 @@ export class PartidaComponent implements OnInit {
     this.rodadaAtual = 1;
     this.turnoAtual = 'JOGADOR';
     this.faseAtual = 'ESCOLHER_CARTA';
-    this.mensagemSistema = '> SELECIONE UMA CARTA DA SUA MÃO.';
+    this.escreverMensagemSistema('> SELECIONE UMA CARTA DA SUA MÃO.');
     this.mostrarOverlay('INICIAR PARTIDA');
   }
 
@@ -140,6 +150,13 @@ export class PartidaComponent implements OnInit {
 
   selecionarCartaDaMao(index: number): void {
     if (this.jogoAcabou) return;
+    
+    const cartaSelecionada = this.maoJogador[index];
+    if (cartaSelecionada && cartaSelecionada.lendaria) {
+      this.tocarSomLendaria();
+    } else {
+      this.tocarSomClique();
+    }
 
     if (this.faseAtual === 'ESCOLHER_CARTA') {
       if (this.maoJogador.length === 0 || this.deckBot.length === 0) {
@@ -154,7 +171,7 @@ export class PartidaComponent implements OnInit {
       
       this.superTrunfoAtivado = false;
       
-      this.mensagemSistema = '> CARTA REGISTRADA. MÁQUINA EM MODO DE ANÁLISE... SELECIONE O VETOR DE ATAQUE.';
+      this.escreverMensagemSistema('> CARTA REGISTRADA. MÁQUINA EM MODO DE ANÁLISE... SELECIONE O VETOR DE ATAQUE.');
       this.faseAtual = 'ESCOLHER';
     } else if (this.faseAtual === 'DEFENDER') {
       this.cartaAtualJogador = this.maoJogador.splice(index, 1)[0];
@@ -266,14 +283,14 @@ export class PartidaComponent implements OnInit {
     this.atributoAtaqueBot = melhorAtributo.chave;
     this.nomeAtributoAtaqueBot = melhorAtributo.nome;
     
-    this.mensagemSistema = `> ATAQUE INIMIGO: O Bot atacou com ${this.nomeAtributoAtaqueBot}. Escolha uma carta para DEFENDER!`;
+    this.escreverMensagemSistema(`> ATAQUE INIMIGO: O Bot atacou com ${this.nomeAtributoAtaqueBot}. Escolha uma carta para DEFENDER!`);
     this.faseAtual = 'DEFENDER';
   }
 
   private verificarSuperTrunfo(carta1: Carta, carta2: Carta): 'JOGADOR' | 'BOT' | null {
     if (carta1.lendaria) {
       if (carta2.grupo === 'A') {
-        this.mensagemSistema = '> ⚠️ SUPER TRUNFO ANULADO! A carta adversária é do Grupo A! Combate normal iniciado...';
+        this.escreverMensagemSistema('> ⚠️ SUPER TRUNFO ANULADO! A carta adversária é do Grupo A! Combate normal iniciado...');
         return null;
       }
       this.superTrunfoAtivado = true;
@@ -282,7 +299,7 @@ export class PartidaComponent implements OnInit {
 
     if (carta2.lendaria) {
       if (carta1.grupo === 'A') {
-        this.mensagemSistema = '> ⚠️ SUPER TRUNFO ANULADO! Sua carta é do Grupo A! Combate normal iniciado...';
+        this.escreverMensagemSistema('> ⚠️ SUPER TRUNFO ANULADO! Sua carta é do Grupo A! Combate normal iniciado...');
         return null;
       }
       this.superTrunfoAtivado = true;
@@ -293,6 +310,7 @@ export class PartidaComponent implements OnInit {
   }
 
   batalhar(atributo: keyof Carta, nomeAtributo: string): void {
+    this.tocarSomClique();
     if ((this.faseAtual !== 'ESCOLHER' && this.faseAtual !== 'DEFENDER') || !this.cartaAtualJogador || !this.cartaAtualBot) return;
 
     this.faseAtual = 'COMPARAR';
@@ -308,7 +326,8 @@ export class PartidaComponent implements OnInit {
         this.deckJogador.push(...this.deckEmpate);
         this.deckEmpate = [];
       }
-      this.mensagemSistema = `> ${msg}`;
+      this.escreverMensagemSistema(`> ${msg}`);
+      this.dispararGlitch();
       this.turnoAtual = 'JOGADOR';
 
     } else if (resultadoSuperTrunfo === 'BOT') {
@@ -320,7 +339,8 @@ export class PartidaComponent implements OnInit {
         this.deckBot.push(...this.deckEmpate);
         this.deckEmpate = [];
       }
-      this.mensagemSistema = `> ${msg}`;
+      this.escreverMensagemSistema(`> ${msg}`);
+      this.dispararGlitch();
       this.turnoAtual = 'BOT';
 
     } else {
@@ -347,7 +367,8 @@ export class PartidaComponent implements OnInit {
           this.deckEmpate = [];
         }
         
-        this.mensagemSistema = msg;
+        this.escreverMensagemSistema(msg);
+        this.dispararGlitch();
         this.turnoAtual = 'JOGADOR';
 
       } else if (valorBot > valorJogador) {
@@ -370,16 +391,18 @@ export class PartidaComponent implements OnInit {
           this.deckEmpate = [];
         }
 
-        this.mensagemSistema = msg;
+        this.escreverMensagemSistema(msg);
+        this.dispararGlitch();
         this.turnoAtual = 'BOT';
 
       } else {
-        this.mensagemSistema = `> EMPATE DE SISTEMA! (${valorJogador} vs ${valorBot}) As cartas vão para o pote central.`;
+        this.escreverMensagemSistema(`> EMPATE DE SISTEMA! (${valorJogador} vs ${valorBot}) As cartas vão para o pote central.`);
+        this.dispararGlitch();
         this.deckEmpate.push(this.cartaAtualJogador);
         this.deckEmpate.push(this.cartaAtualBot);
       }
     }
-
+    
     setTimeout(() => {
       this.recolherCartas();
     }, 1500);
@@ -399,7 +422,7 @@ export class PartidaComponent implements OnInit {
       
       // O jogador sempre escolhe a carta e o atributo em todas as rodadas
       this.turnoAtual = 'JOGADOR';
-      this.mensagemSistema = '> SEU TURNO. SELECIONE UMA CARTA DA MÃO.';
+      this.escreverMensagemSistema('> SEU TURNO. SELECIONE UMA CARTA DA MÃO.');
       this.faseAtual = 'ESCOLHER_CARTA';
     }
   }
@@ -410,10 +433,10 @@ export class PartidaComponent implements OnInit {
     const totalJogador = this.deckJogador.length + this.maoJogador.length;
     if (totalJogador > 0 && this.deckBot.length === 0) {
       this.vencedor = 'JOGADOR';
-      this.mensagemSistema = '> VITÓRIA ABSOLUTA! VOCÊ DOMINOU O PROTOCOLO KODEXIA!';
+      this.escreverMensagemSistema('> VITÓRIA ABSOLUTA! VOCÊ DOMINOU O PROTOCOLO KODEXIA!');
     } else if (this.deckBot.length > 0 && totalJogador === 0) {
       this.vencedor = 'BOT';
-      this.mensagemSistema = '> DERROTA! A INTELIGÊNCIA ARTIFICIAL VENCEU O CONFLITO.';
+      this.escreverMensagemSistema('> DERROTA! A INTELIGÊNCIA ARTIFICIAL VENCEU O CONFLITO.');
     }
 
     if (this.vencedor === 'JOGADOR') {
@@ -494,5 +517,195 @@ export class PartidaComponent implements OnInit {
 
   voltarParaMenu(): void {
     this.router.navigate(['/']);
+  }
+
+  ngOnDestroy(): void {
+    this.pararAudio();
+  }
+
+  toggleAudio(): void {
+    if (this.audioAtivo) {
+      this.pararAudio();
+    } else {
+      this.iniciarAudio();
+    }
+  }
+
+  iniciarAudio(): void {
+    if (typeof window === 'undefined') return;
+    this.audioAtivo = true;
+    
+    const AudioContextClass = (window as any).AudioContext || (window as any).webkitAudioContext;
+    if (!this.audioCtx) {
+      this.audioCtx = new AudioContextClass();
+    }
+    
+    // Melodia Retrô (Estilo Mario/Zelda 8-bits)
+    const melodia = [
+      392.00, 392.00, 392.00, 329.63, 261.63, 261.63, 329.63, 392.00, // G G G E C C E G
+      440.00, 440.00, 440.00, 392.00, 349.23, 349.23, 392.00, 440.00, // A A A G F F G A
+      392.00, 329.63, 261.63, 329.63, 392.00, 329.63, 261.63, 196.00, // G E C E G E C G(baixo)
+      261.63, 261.63, 293.66, 329.63, 261.63, 0,      0,      0       // C C D E C (pausa)
+    ];
+
+    const baixo = [
+      130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, // C
+      174.61, 174.61, 174.61, 174.61, 174.61, 174.61, 174.61, 174.61, // F
+      130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, // C
+      196.00, 196.00, 196.00, 196.00, 130.81, 130.81, 130.81, 130.81  // G -> C
+    ];
+
+    let passo = 0;
+
+    // Loop de música (Sequenciador simples)
+    this.beepInterval = setInterval(() => {
+      if (!this.audioCtx) return;
+      
+      const t = this.audioCtx.currentTime;
+      const freqMelodia = melodia[passo];
+      const freqBaixo = baixo[passo];
+
+      // Canal 1: Melodia (Onda Quadrada - Clássico Nintendinho)
+      if (freqMelodia > 0) {
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        osc.type = 'square';
+        osc.frequency.value = freqMelodia;
+        
+        // Envelope "Staccato" retro (curto e seco)
+        gain.gain.setValueAtTime(0.04, t);
+        gain.gain.setValueAtTime(0, t + 0.12);
+        
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.15);
+      }
+
+      // Canal 2: Baixo (Onda Triângulo - Clássico NES Bass)
+      if (freqBaixo > 0) {
+        const bassOsc = this.audioCtx.createOscillator();
+        const bassGain = this.audioCtx.createGain();
+        bassOsc.type = 'triangle';
+        bassOsc.frequency.value = freqBaixo;
+        
+        bassGain.gain.setValueAtTime(0.06, t);
+        bassGain.gain.setValueAtTime(0, t + 0.16);
+        
+        bassOsc.connect(bassGain);
+        bassGain.connect(this.audioCtx.destination);
+        bassOsc.start(t);
+        bassOsc.stop(t + 0.18);
+      }
+
+      passo = (passo + 1) % melodia.length;
+    }, 180); // Velocidade (Tempo) da música
+  }
+
+  pararAudio(): void {
+    this.audioAtivo = false;
+    if (this.beepInterval) {
+      clearInterval(this.beepInterval);
+      this.beepInterval = null;
+    }
+  }
+
+  tocarSomClique(): void {
+    if (!this.audioAtivo || !this.audioCtx) return;
+    const osc = this.audioCtx.createOscillator();
+    const gain = this.audioCtx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, this.audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1200, this.audioCtx.currentTime + 0.1);
+    
+    gain.gain.setValueAtTime(0.1, this.audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + 0.1);
+    
+    osc.connect(gain);
+    gain.connect(this.audioCtx.destination);
+    
+    osc.start();
+    osc.stop(this.audioCtx.currentTime + 0.1);
+  }
+
+  tocarSomLendaria(): void {
+    if (!this.audioAtivo || !this.audioCtx) return;
+    
+    // Arpejo rápido ascendente (Power-up clássico 8-bit)
+    const notas = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+    
+    notas.forEach((freq, i) => {
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      
+      osc.type = 'square'; 
+      osc.frequency.value = freq;
+      
+      const startTime = this.audioCtx.currentTime + (i * 0.08); 
+      
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(0.1, startTime + 0.02);
+      gain.gain.linearRampToValueAtTime(0, startTime + 0.08);
+      
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      
+      osc.start(startTime);
+      osc.stop(startTime + 0.1);
+    });
+  }
+
+  dispararGlitch(): void {
+    this.mostrarGlitch = true;
+    setTimeout(() => {
+      this.mostrarGlitch = false;
+    }, 200);
+  }
+
+  escreverMensagemSistema(msg: string): void {
+    this.mensagemSistema = msg;
+    this.mensagemSistemaDisplay = '';
+    let i = 0;
+    
+    if (this.typewriterInterval) clearInterval(this.typewriterInterval);
+    
+    this.tocarSomDigitacao(msg.length * 30);
+    
+    this.typewriterInterval = setInterval(() => {
+      if (i < msg.length) {
+        this.mensagemSistemaDisplay += msg.charAt(i);
+        i++;
+      } else {
+        clearInterval(this.typewriterInterval);
+      }
+    }, 30); // 30ms por letra
+  }
+
+  tocarSomDigitacao(duracaoMs: number = 300): void {
+    if (!this.audioAtivo || !this.audioCtx) return;
+    
+    let startTime = this.audioCtx.currentTime;
+    let endTime = startTime + (duracaoMs / 1000);
+    
+    for (let t = startTime; t < endTime; t += 0.05) {
+      if (Math.random() > 0.3) {
+        const osc = this.audioCtx.createOscillator();
+        const gain = this.audioCtx.createGain();
+        
+        osc.type = 'triangle';
+        osc.frequency.value = 400 + Math.random() * 200; 
+        
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.05, t + 0.01);
+        gain.gain.linearRampToValueAtTime(0, t + 0.03);
+        
+        osc.connect(gain);
+        gain.connect(this.audioCtx.destination);
+        
+        osc.start(t);
+        osc.stop(t + 0.04);
+      }
+    }
   }
 }

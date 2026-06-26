@@ -1,0 +1,390 @@
+\documentclass[aspectratio=169,usenames,dvipsnames,compress]{beamer}
+
+\input{Tools/Basicos.tex}
+\input{Tools/Tikz}
+\input{Tools/Beamer}
+\input{Tools/Header}
+%\captionsetup{font=scriptsize}
+\captionsetup{font={scriptsize,it}, % scriptsize + itálico, por exemplo
+  %labelfont=bf,          % negrito na etiqueta (Figura 1, Tabela 2)
+  labelsep=colon         % separador entre número e texto
+}
+
+\usepackage[font={scriptsize,it},skip=5pt]{caption}
+
+
+
+
+\author{ Prof. Alberto Pena Lara}
+\title{Aula No 08/15 : Plano de Trabalho}
+
+\begin{document}
+
+\section{Agenda}
+
+\begin{frame}[plain]
+\vspace{-2mm}
+\maketitle
+\vspace{-3mm}
+
+\centering {\scriptsize{29 de abril de 2026}}\\
+
+\vspace{4mm}
+
+\begin{columns}
+
+\begin{column}{0.3\textwidth}
+
+\tcbset{left=2mm, top=2mm, right=2mm, bottom=2mm,center title}
+\tcbset{toptitle=0.5mm, bottomtitle=0.5mm, boxrule=0.1mm, boxsep=0.15mm}
+\tcbset{fonttitle=\scriptsize,colframe=blue!55!black}
+\begin{tcolorbox}[fit to height=2cm,title= Agenda]
+\begin{itemize} 
+\itemsep1mm
+\item Blocos logicos
+\item O9erações
+\item Estrutura Textual
+\item Resumo
+\end{itemize}
+\end{tcolorbox}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}{}
+
+\tikzstyle{naveqs} = [text width=70mm, fill=blue,  minimum height=20mm, rounded corners]
+\tikzstyle{Aviso} = [text width=48mm, fill=green, minimum height=6mm, rounded corners, align=center] 
+\tikzstyle{Visto} = [text width=48mm, fill=gray, text=white, minimum height=6mm, rounded corners, align=center] 
+
+
+\begin{tikzpicture}
+\node (naveq) [naveqs] {};
+\path (naveq.center)+(0.2,0.55) node[anchor=center, xshift=8mm, text=white] {Elaboração do Projeto};
+%\path (naveq.east)+(0.1, 0.5) node[anchor=west, text=blue] {\Large{\bf{Semiótica}}};
+\path (naveq.east)+(0,-0.4) node (INS) [Aviso] {Pesquisa Semântica};
+%\path (naveq.east)+(0, -1.1) node (INS) [greenRect,text width=68mm] {Estrutura Textual};
+%\path (naveq.east)+(0, -1.8) node (INS) [greenRect,text width=48mm] {Exemplo concreto};
+\end{tikzpicture}
+\end{frame}
+
+
+
+% ***********************************************
+
+\begin{frame}{Conceitos}
+
+\begin{columns}
+\begin{column}{0.9\textwidth}
+
+\begin{figure}[ht]
+\centering
+%\begin{tikzpicture}[>=Latex, line width=0.9pt,scale=0.5]
+\begin{tikzpicture}[
+    scale=0.5,
+    transform shape,
+    >=Latex,
+    line width=0.9pt,
+    every node/.style={font=\scriptsize}
+]
+
+
+\def\rx{0.20}
+\def\ry{0.62}
+\def\Lone{1.95}
+\def\Ltwo{1.75}
+\def\Lthr{1.65}
+\def\Lfor{1.70}
+
+
+% Cilindro 1
+\coordinate (A1) at (0,0);
+\draw (A1) ellipse ({\rx} and {\ry});
+\draw (-\rx+0.2,\ry) -- ({\Lone-\rx},\ry);
+\draw (-\rx+0.2,-\ry) -- ({\Lone-\rx},-\ry);
+\draw ({\Lone-\rx},\ry) arc[start angle=90,end angle=-90,x radius={\rx},y radius={\ry}];
+
+% Cilindro 2
+\coordinate (A2) at (3.8,0);
+\draw (A2) ellipse ({\rx} and {\ry});
+\draw ({4-\rx},\ry) -- ({3.8+\Ltwo-\rx},\ry);
+\draw ({4-\rx},-\ry) -- ({3.8+\Ltwo-\rx},-\ry);
+\draw ({3.8+\Ltwo-\rx},\ry) arc[start angle=90,end angle=-90,x radius={\rx},y radius={\ry}];
+
+% Cilindro 3
+\coordinate (A3) at (7.2,0);
+\draw (A3) ellipse ({\rx} and {\ry});
+\draw ({7.4-\rx},\ry) -- ({7.2+\Lthr-\rx},\ry);
+\draw ({7.4-\rx},-\ry) -- ({7.2+\Lthr-\rx},-\ry);
+\draw ({7.2+\Lthr-\rx},\ry) arc[start angle=90,end angle=-90,x radius={\rx},y radius={\ry}];
+
+% Cilindro 4
+\coordinate (A4) at (10.5,0);
+\draw[line width=1.2pt] (A4) ellipse ({\rx} and {\ry});
+\draw[line width=1.2pt] ({10.7-\rx},\ry) -- ({10.5+\Lfor-\rx},\ry);
+\draw[line width=1.2pt] ({10.7-\rx},-\ry) -- ({10.5+\Lfor-\rx},-\ry);
+\draw[line width=1.2pt] ({10.5+\Lfor-\rx},\ry) arc[start angle=90,end angle=-90,x radius={\rx},y radius={\ry}];
+
+% Conectores
+\draw[->] ({\Lone+0.15},0) -- ({3.8-0.45},0);
+\draw[->] ({3.8+\Ltwo+0.10},0) -- ({7.2-0.45},0);
+\draw[->] ({7.2+\Lthr+0.10},0) -- ({10.5-0.45},0);
+
+% Rótulos
+\node[font=\Large] at (0.8,1.5) {Blocos lógicos};
+\node[font=\Large, align=center] at (4.8,-1.8) {Pesquisa\\Semântica};
+\node[font=\Large] at (7.9,1.5) {Artigos};
+\node[font=\Large, align=center] at (11.4,-1.8) {Mineirar\\Dados};
+\end{tikzpicture}
+\vspace{5mm}
+\caption{Representação esquemática do pipeline.}
+\end{figure}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}{}
+
+\tikzstyle{naveqs} = [text width=70mm, fill=blue,  minimum height=20mm, rounded corners]
+\tikzstyle{Aviso} = [text width=48mm, fill=green, minimum height=6mm, rounded corners, align=center] 
+\tikzstyle{Visto} = [text width=48mm, fill=gray, text=white, minimum height=6mm, rounded corners, align=center] 
+
+
+\begin{tikzpicture}
+\node (naveq) [naveqs] {};
+\path (naveq.center)+(0.2,0.55) node[anchor=center, xshift=8mm, text=white] {Elaboração do Projeto};
+%\path (naveq.east)+(0.1, 0.5) node[anchor=west, text=blue] {\Large{\bf{Semiótica}}};
+\path (naveq.east)+(0,-0.4) node (INS)  [Visto] {Pesquisa Semântica};
+\path (naveq.east)+(0, -1.1) node (INS) [Aviso] {Blocos Lógicos};
+%\path (naveq.east)+(0, -1.8) node (INS) [greenRect,text width=48mm] {Exemplo concreto};
+\end{tikzpicture}
+\end{frame}
+
+
+% ***********************************************
+
+\begin{frame}{Blocos de Pesquisa}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+
+\tcbset{left=1mm, top=1mm, right=1mm, bottom=1mm}
+\tcbset{toptitle=0.5mm, bottomtitle=0.5mm, boxrule=0.1mm, boxsep=0.15mm}
+\tcbset{colframe=blue,coltitle=white}
+\tcbset{fonttitle=\scriptsize,fontupper=\large}
+\tcbset{segmentation style={solid, blue, opacity=1 ,line width=0.1mm}}
+
+\begin{tcolorbox}[fit to height=3     cm, title= Ruído como perda de coerênc] 
+
+(coherence OR decoherence OR "dephasing noise" OR "amplitude damping")
+AND ("open quantum systems" OR Lindblad OR "quantum operations")
+
+\tcbsubtitle{Relatividade como fonte de ruído efetivo}
+
+("relativistic quantum information" OR "observer-dependent particles")
+AND ("Unruh effect" OR "Bogoliubov transformations" OR "thermal state")
+AND ("entanglement degradation" OR "non-inertial frames")
+
+\end{tcolorbox}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ***********************************************
+
+\begin{frame}{Blocos de Pesquisa}
+
+\begin{columns}
+\begin{column}{0.6\textwidth}
+
+\tcbset{left=1mm, top=1mm, right=1mm, bottom=1mm}
+\tcbset{toptitle=0.5mm, bottomtitle=0.5mm, boxrule=0.1mm, boxsep=0.15mm}
+\tcbset{colframe=blue,coltitle=white}
+\tcbset{fonttitle=\scriptsize,fontupper=\large}
+\tcbset{segmentation style={solid, blue, opacity=1 ,line width=0.1mm}}
+
+\begin{tcolorbox}[fit to height=3cm, title= String composta recomendada] 
+
+("relativistic quantum information" OR "quantum information in curved spacetime")
+AND
+("open quantum systems" OR "quantum operations" OR "Stinespring dilation" OR Lindblad)
+AND
+(decoherence OR noise OR thermalization OR "entanglement degradation")
+AND
+("Unruh effect" OR "Bogoliubov transformations" OR acceleration OR horizons OR Hawking)
+\end{tcolorbox}
+\end{column}
+\end{columns}
+\end{frame}
+
+% ***********************************************
+
+\begin{frame}{}
+
+\tikzstyle{naveqs} = [text width=70mm, fill=blue,  minimum height=20mm, rounded corners]
+\tikzstyle{Aviso} = [text width=48mm, fill=green, minimum height=6mm, rounded corners, align=center] 
+\tikzstyle{Visto} = [text width=48mm, fill=gray, text=white, minimum height=6mm, rounded corners, align=center] 
+\begin{tikzpicture}
+\node (naveq) [naveqs] {};
+\path (naveq.center)+(0.2,0.55) node[anchor=center, xshift=8mm, text=white] {Elaboração do Projeto};
+%\path (naveq.east)+(0.1, 0.5) node[anchor=west, text=blue] {\Large{\bf{Semiótica}}};
+\path (naveq.east)+(0,-0.4) node (INS)  [Visto] {Pesquisa Semântica};
+\path (naveq.east)+(0, -1.1) node (INS) [Aviso] {Blocos Lógicos};
+\path (naveq.east)+(0, -1.8) node (INS) [Aviso] {Operações};
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Resultados em CSV, Bibtex, Json}
+
+\begin{columns}
+\begin{column}{0.9\textwidth}
+
+{\tiny
+\begin{verbatim}
+  @article{Blackburn2016,
+  author    = {Blackburn, James A. and Cirillo, Matteo and Gr{\o}nbech-Jensen, Niels},
+  title     = {A survey of classical and quantum interpretations of experiments on 
+  Josephson junctions at very low temperatures},
+  journal   = {Physics Reports},
+  year      = {2016},
+  volume    = {611},
+  pages     = {1--34}
+}
+
+@article{Koch2007,
+  author    = {Koch, Jens and Yu, Terri M. and Gambetta, Jay and Houck, A. A. and Schuster, D.
+  I. and Majer, J. and Blais, Alexandre and Devoret, M. H. and Girvin, S. M. and Schoelkopf, R. J.},
+  title     = {Charge-insensitive qubit design derived from the Cooper pair box},
+  journal   = {Physical Review A},
+  year      = {2007},
+  volume    = {76},
+  pages     = {042319}
+}
+
+@book{Nakahara2008,
+  author    = {Nakahara, Mikio and Ohmi, Tetsuo},
+  title     = {Quantum Computing: From Linear Algebra to Physical Realizations},
+  year      = {2008},
+  publisher = {CRC Press},
+  address   = {Boca Raton},
+  isbn      = {978-0-7503-0983-7}
+}
+\end{verbatim}
+}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{}
+
+\tikzstyle{naveqs} = [text width=70mm, fill=blue,  minimum height=20mm, rounded corners]
+\tikzstyle{Aviso} = [text width=48mm, fill=green, minimum height=6mm, rounded corners, align=center] 
+\tikzstyle{Visto} = [text width=48mm, fill=gray, text=white, minimum height=6mm, rounded corners, align=center] 
+\begin{tikzpicture}
+\node (naveq) [naveqs] {};
+\path (naveq.center)+(0.2,0.55) node[anchor=center, xshift=8mm, text=white] {Elaboração do Projeto};
+%\path (naveq.east)+(0.1, 0.5) node[anchor=west, text=blue] {\Large{\bf{Semiótica}}};
+\path (naveq.east)+(0,-0.4) node (INS)  [Visto] {Pesquisa Semântica};
+\path (naveq.east)+(0, -1.1) node (INS) [Visto] {Blocos Lógicos};
+\path (naveq.east)+(0, -1.8) node (INS) [Visto] {Operações};
+\path (naveq.east)+(0, -2.5) node (INS) [Aviso] {Estrutura Textual};
+\end{tikzpicture}
+\end{frame}
+
+
+% ***********************************************
+
+\begin{frame}{Blocos de Pesquisa}
+
+\begin{columns}
+\begin{column}{0.3\textwidth}
+
+\tcbset{left=1mm, top=1mm, right=1mm, bottom=1mm}
+\tcbset{toptitle=0.5mm, bottomtitle=0.5mm, boxrule=0.1mm, boxsep=0.15mm}
+\tcbset{colframe=blue,coltitle=white}
+\tcbset{fonttitle=\scriptsize,fontupper=\large}
+\tcbset{segmentation style={solid, blue, opacity=1 ,line width=0.1mm}}
+
+\begin{tcolorbox}[fit to height=4cm, title= Artigo] 
+
+\begin{itemize}
+\itemsep1mm
+\item Titulo
+\item Subtítulo
+\item Resumo
+\item Palavras chaves
+\item Introdução
+\item Objetivos
+\item Descrição do problema
+\item Referencial Teórico
+\item Resultados
+\item Conclusões
+\end{itemize}
+
+\end{tcolorbox}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+
+
+\begin{frame}
+\frametitle{Metodologia}
+
+\begin{columns}
+\begin{column}{0.7\textwidth}
+
+\tcbset{left=2mm, top=1mm, right=1mm, bottom=1mm,center title}
+\tcbset{toptitle=0.5mm, bottomtitle=0.5mm, boxrule=0.1mm, boxsep=0.15mm}
+\tcbset{fonttitle=\normalsize,colframe=blue,coltitle=white}
+\tcbset{segmentation style={solid, blue, opacity=1 ,line width=0.1mm}}
+
+\begin{tcolorbox}[fit to height=7cm,title={Resumo}]
+
+\textcolor{red}{Contexto}. \textcolor{blue}{Gap}.  \textcolor{violet}{Propósito}.  \textcolor{green!80!black}{Resultados}. \textcolor{cyan}{Conclusões}
+
+\tcbline
+
+
+\textcolor{red}{A elaboração do Trabalho de Conclusão de Curso (TCC) representa um componente curricular obrigatório que visa consolidar competências investigativas e argumentativas dos estudantes no ensino superior. Contudo, a produção do TCC envolve múltiplas exigências metodológicas, cognitivas e operacionais, cujo atendimento satisfatório ainda se mostra um desafio significativo para a maioria dos discentes.} 
+\textcolor{blue}{Apesar da ampla normatização institucional sobre a estrutura do TCC, observa-se carência de estudos que integrem, de forma sistemática, os diversos fatores objetivos que comprometem a qualidade dos trabalhos finais, especialmente no que se refere à articulação entre aspectos técnicos, argumentativos e operacionais.} \textcolor{violet}{Esta disciplina tem como objetivo identificar e descrever os principais fatores objetivos que dificultam a redação, apresentação e defesa do TCC, considerando tanto os aspectos estruturais da produção científica quanto as competências metodológicas exigidas ao longo do processo.} \textcolor{green!50!black}{A análise identificou nove categorias principais de dificuldades: delimitação temática inadequada; formulação imprecisa do problema de pesquisa; definição deficiente dos objetivos; uso de referencial teórico não científico; escolha metodológica incompatível; ausência de planejamento e cronograma; desconhecimento das normas acadêmicas; lacunas na coesão textual e argumentação científica; falhas na articulação entre teoria e dados.} \textcolor{cyan}{Tais dificuldades estão associadas a insuficiências formativas na escrita acadêmica, no raciocínio científico e na gestão do processo investigativo. Os dados indicam que o êxito na elaboração do TCC depende da integração de competências científicas, metodológicas e organizacionais, requerendo suporte institucional contínuo e estratégias pedagógicas específicas para o desenvolvimento da autonomia investigativa e da proficiência discursiva dos estudantes.}
+\end{tcolorbox}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{}
+\begin{Constative}{A-06}{Avaliação}{blue}
+Aquecimento no desenvolvimento do TCC
+\vspace{5mm}
+\begin{enumerate}[label=(\alph*),start=1]
+\itemsep1mm
+\item Quais são os principais elementos textuais de um artigo científico, segundo a aula?
+% Resposta:** A aula organiza a estrutura textual do artigo em: **título, subtítulo, resumo, palavras-chave, introdução, objetivos, descrição do problema, referencial teórico, resultados e conclusões**. Essa sequência mostra que a escrita científica não é apenas redação livre, mas uma composição formal orientada por funções discursivas bem definidas. 
+\item Como o resumo deve ser estruturado metodologicamente?
+% Resposta: O resumo deve seguir a sequência: **contexto, gap, propósito, resultados e conclusões**. Em termos científicos, isso significa: primeiro situar o tema; depois explicitar a lacuna de conhecimento; em seguida declarar o objetivo do estudo; posteriormente sintetizar os principais achados; e, por fim, enunciar a conclusão central. Essa organização torna o resumo semanticamente coerente e metodologicamente legível. 
+
+\item O que significa organizar uma pesquisa por “blocos lógicos”?
+% Resposta:Significa decompor o problema de pesquisa em **núcleos conceituais articulados**, convertendo cada núcleo em descritores de busca. Na aula, isso aparece como estratégia de **pesquisa semântica**, em que conceitos relacionados são agrupados para formar consultas mais robustas. Em vez de buscar palavras soltas, o pesquisador estrutura o problema em blocos conceituais, o que aumenta precisão, rastreabilidade e consistência metodológica. 
+
+\item Como se constrói uma string booleana coerente para pesquisa semântica?
+% Resposta: A construção segue uma lógica combinatória: * usa-se **OR** para reunir sinônimos, variantes ou termos próximos dentro do mesmo bloco conceitual;    * usa-se **AND** para conectar blocos conceituais diferentes que precisam aparecer simultaneamente; eventualmente, usam-se expressões entre aspas para preservar termos compostos. A aula exemplifica isso ao combinar blocos como **informação quântica relativística**, **sistemas quânticos abertos**, **ruído/decoerência** e **efeito Unruh/Bogoliubov/Hawking** em uma única string composta. 
+
+\item Quais questões a aula propõe para avaliar o aquecimento do desenvolvimento do TCC?
+% Resposta:** A aula propõe questões operacionais centrais, tais como:    * como transformar uma ideia ampla em **tema, objeto, problema e dados** bem delimitados;  * como converter uma pergunta em linguagem comum para **linguagem científica adequada à pesquisa semântica**;  * como mapear descritores, organizar blocos lógicos e construir uma **string booleana coerente**; quais critérios indicam que a pesquisa semântica está bem construída;  * como integrar **metodologia, evidências, ética e LGPD** quando a pesquisa envolve dados de pessoas.      Essas perguntas funcionam como matriz diagnóstica do amadurecimento metodológico do projeto. 
+
+\end{enumerate}
+\end{Constative}
+\end{frame}
+
+\end{document}
