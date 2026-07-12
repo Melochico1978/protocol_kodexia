@@ -1,4 +1,4 @@
-<div class="level-container">
+<div class="level-container" *ngIf="currentLevelData">
   <div class="header-nivel">
     <button class="btn-acao btn-voltar" (click)="router.navigate(['/story/map'])"><< ABORTAR MISSÃO</button>
     <span class="titulo-nivel">SISTEMA CENTRAL — NODE 0{{ levelId }}</span>
@@ -11,30 +11,24 @@
       <div class="body-so flex-col-between">
         <div>
           <span class="badge-obj">OBJETIVO PRIMÁRIO</span>
-          <h3 style="color: white; font-size: 28px; margin-bottom: 15px; margin-top: 5px;">Autenticação Master</h3>
+          <h3 style="color: white; font-size: 28px; margin-bottom: 15px; margin-top: 5px;">{{ currentLevelData.titulo }}</h3>
           <p style="font-size: 20px; line-height: 1.4; color: #ccc;">
-            Precisamos usar o novo registro master enviado pelo professor para acessar o terminal por completo e seguirmos em frente!
-            Em Java, devemos definir explicitamente o tipo de cada dado. Nossa missão é criar três variáveis para autenticar o login:
+            {{ currentLevelData.contexto }}
           </p>
-          <ul style="font-size: 18px; color: #ccc; margin-top: 10px; line-height: 1.5;">
-            <li>Uma <span style="color: #00f3ff;">String</span> chamada <span style="color: #00f3ff;">nome</span> com o valor <span style="color: #00ff41;">"Zero N"</span>.</li>
-            <li>Um número inteiro (<span style="color: #fcee0a;">int</span>) chamado <span style="color: #fcee0a;">registro</span> com o valor <span style="color: #00ff41;">404</span>.</li>
-            <li>Uma <span style="color: #00f3ff;">String</span> chamada <span style="color: #00f3ff;">seguranca</span> com o valor <span style="color: #00ff41;">"Fluffy"</span>.</li>
-          </ul>
+          <div [innerHTML]="currentLevelData.instrucoesHtml"></div>
 
           <div class="caixa-dica mt-4">
             <span style="color: #888;">Dica de Sintaxe:</span><br>
-            <span style="color: #00ff41;">String variavelTexto = "Texto";</span><br>
-            <span style="color: #00ff41;">int variavelNumero = 10;</span>
+            <div [innerHTML]="currentLevelData.dicaSyntaxHtml"></div>
           </div>
         </div>
 
         <div class="mentor-box mt-4">
           <div class="mentor-icone">
-            <img src="assets/images/miraberto.jpeg" alt="Prof. Miraberto" class="mentor-img">
+            <img [src]="currentLevelData.mentorImg" [alt]="currentLevelData.mentor" class="mentor-img">
           </div>
           <div class="mentor-fala">
-            <strong>MIRABERTO:</strong> "Ah, a verificação de duas etapas... Fui eu quem configurei isso há anos. Quem diria que o nome do meu cachorro-robô, Fluffy, seria a chave mestra? Lembre-se: textos levam aspas, números não! E feche cada linha com ;"
+            <strong>{{ currentLevelData.mentor }}:</strong> {{ currentLevelData.mentorFala }}
           </div>
         </div>
       </div>
@@ -57,21 +51,21 @@
         </div>
 
         <div class="terminal-saida">
-          <p style="color: #888;">> AGUARDANDO CREDENCIAIS DE ACESSO...</p>
+          <p style="color: #888;">> AGUARDANDO SCRIPT DE COMPILAÇÃO...</p>
           
           <div *ngIf="executionState() === 'executing'" style="color: #fcee0a;" class="piscar">
-            <p>> VERIFICANDO BANCO DE DADOS E RESPOSTA DE SEGURANÇA...</p>
+            <p>> COMPILANDO CÓDIGO E TESTANDO ANOMALIAS...</p>
           </div>
 
           <div *ngIf="executionState() === 'success'" style="color: #00ff41; margin-top: 10px;">
-            <p style="color: #00f3ff;">> ACESSO MASTER CONCEDIDO.</p>
-            <p style="text-shadow: 0 0 10px #00ff41;">> BEM-VINDO, ZERO N. PROTOCOLO DE RASTREIO ATIVADO.</p>
+            <p style="color: #00f3ff;">> AUTENTICAÇÃO CONFIRMADA.</p>
+            <p style="text-shadow: 0 0 10px #00ff41;">> NÓ DE BLOQUEIO QUEBRADO.</p>
             <p>> RETORNANDO AO MAPA DO SISTEMA...</p>
           </div>
 
           <div *ngIf="executionState() === 'error'" style="color: #ff003c; margin-top: 10px;">
-            <p>> ACESSO NEGADO. CREDENCIAIS INVÁLIDAS.</p>
-            <p style="color: #ccc;">Dica: Verifique se declarou 'nome', 'registro' e 'seguranca' corretamente com seus respectivos tipos (String e int) e valores.</p>
+            <p>> COMPILAÇÃO FALHOU. SINTAXE INCORRETA.</p>
+            <p style="color: #ccc;">{{ currentLevelData.erroMsg }}</p>
           </div>
         </div>
 

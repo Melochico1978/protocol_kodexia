@@ -60,9 +60,9 @@ export class GerenciarCartasComponent implements OnInit {
   editarCarta(carta: Carta): void {
     this.modoEdicao = true;
     this.cartaEmEdicao = carta;
-    // Copia os dados da carta para o formulário
+    
     this.novaCarta = { ...carta };
-    // Rola a tela para o topo (formulário)
+    
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 

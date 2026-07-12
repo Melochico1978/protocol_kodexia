@@ -20,7 +20,7 @@ export class SelecaoDeckComponent implements OnInit {
   
   filtroGrupo: string = 'TODOS';
   
-  // ALFABETO COMPLETO ADICIONADO AQUI:
+  
   grupos: string[] = [
     'TODOS', 
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 

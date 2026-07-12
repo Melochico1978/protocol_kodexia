@@ -15,7 +15,22 @@ import { CartaExibicaoComponent } from '../components/carta-exibicao/carta-exibi
 })
 export class PartidaComponent implements OnInit, OnDestroy {
   
-  faseAtual: 'ESCOLHER_CARTA' | 'ESCOLHER' | 'COMPARAR' | 'DEFENDER' = 'ESCOLHER_CARTA';
+  faseAtual: 'INTRO' | 'ESCOLHER_CARTA' | 'ESCOLHER' | 'COMPARAR' | 'DEFENDER' = 'INTRO';
+
+  // --- INTRO MIRABERTO ---
+  introSlides = [
+    { text: '"Conexão estabelecida. Bem-vindo à Arena de Duelo Cibernético do Protocol Kodexia, agente."', speaker: 'PROF. MIRABERTO' },
+    { text: '"Aqui, cada carta é um Núcleo de IA Heurística. Linguagens de programação com poderes reais, compactadas em código vivo."', speaker: 'PROF. MIRABERTO' },
+    { text: '"As regras são simples: escolha uma carta da sua mão, selecione um vetor de ataque — um dos 7 atributos — e compare contra a Máquina."', speaker: 'PROF. MIRABERTO' },
+    { text: '"Fique atento às cartas Lendárias do Grupo A. Elas ativam o SUPER TRUNFO e vencem qualquer batalha... a menos que o oponente também tenha uma do Grupo A."', speaker: 'PROF. MIRABERTO' },
+    { text: '"Eu estarei monitorando tudo daqui do laboratório. Não me decepcione, agente. O destino das IAs depende de suas escolhas."', speaker: 'PROF. MIRABERTO' },
+    { text: '> SISTEMAS CALIBRADOS. PROTOCOLO DE DUELO INICIALIZADO. BOA SORTE, AGENTE.', speaker: 'SISTEMA' },
+  ];
+  introSlideIndex: number = 0;
+  introDisplayedText: string = '';
+  introIsTypingDone: boolean = false;
+  private introTypeInterval: any = null;
+  private introCharIndex: number = 0;
   turnoAtual: 'JOGADOR' | 'BOT' = 'JOGADOR';
   rodadaAtual: number = 1;
 
@@ -79,17 +94,73 @@ export class PartidaComponent implements OnInit, OnDestroy {
       this.atualizarTrofeuBot();
     }
 
+    // Iniciar intro do Miraberto
+    this.faseAtual = 'INTRO';
+    this.introSlideIndex = 0;
+    this.iniciarIntroTyping();
+  }
+
+  // --- MÉTODOS DA INTRO MIRABERTO ---
+  get introSlideAtual() {
+    return this.introSlides[this.introSlideIndex];
+  }
+
+  iniciarIntroTyping(): void {
+    if (this.introTypeInterval) clearInterval(this.introTypeInterval);
+    this.introDisplayedText = '';
+    this.introIsTypingDone = false;
+    this.introCharIndex = 0;
+    const fullText = this.introSlideAtual.text;
+
+    this.introTypeInterval = setInterval(() => {
+      if (this.introCharIndex < fullText.length) {
+        this.introDisplayedText += fullText.charAt(this.introCharIndex);
+        this.introCharIndex++;
+      } else {
+        this.introIsTypingDone = true;
+        clearInterval(this.introTypeInterval);
+      }
+    }, 30);
+  }
+
+  avancarIntro(): void {
+    if (!this.introIsTypingDone) {
+      // Completar texto atual instantaneamente
+      clearInterval(this.introTypeInterval);
+      this.introDisplayedText = this.introSlideAtual.text;
+      this.introIsTypingDone = true;
+    } else {
+      if (this.introSlideIndex < this.introSlides.length - 1) {
+        this.introSlideIndex++;
+        this.iniciarIntroTyping();
+      } else {
+        this.finalizarIntro();
+      }
+    }
+  }
+
+  pularIntro(event: Event): void {
+    event.stopPropagation();
+    this.finalizarIntro();
+  }
+
+  finalizarIntro(): void {
+    if (this.introTypeInterval) clearInterval(this.introTypeInterval);
+    this.carregarDeckEIniciar();
+  }
+
+  private carregarDeckEIniciar(): void {
     const deckSelecionado = this.cartaService.getDeck();
 
     if (deckSelecionado.length >= 8 && deckSelecionado.length % 2 === 0) {
       this.deckInicial = [...deckSelecionado];
       this.iniciarJogo([...this.deckInicial]);
     } else {
-      // Se não escolheu um deck (ou escolheu menos de 8), puxa todas as cartas do servidor para testar
+      
       this.cartaService.getCartas().subscribe({
         next: (cartas) => {
           if (cartas.length >= 8) {
-            // Se for ímpar, descartamos 1 carta para a divisão ficar perfeita
+            
             const limite = cartas.length % 2 === 0 ? cartas.length : cartas.length - 1;
             this.deckInicial = cartas.slice(0, limite);
             this.iniciarJogo(this.deckInicial);
@@ -166,7 +237,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
 
       this.cartaAtualJogador = this.maoJogador.splice(index, 1)[0];
       
-      // Inteligência Artificial Avançada do Bot
+      
       this.cartaAtualBot = this.escolherCartaBotInteligente(this.cartaAtualJogador);
       
       this.superTrunfoAtivado = false;
@@ -186,22 +257,22 @@ export class PartidaComponent implements OnInit, OnDestroy {
   private escolherCartaBotInteligente(cartaJogador: Carta): Carta {
     if (this.deckBot.length === 0) return null as any;
 
-    // A máquina "olha" secretamente para as 3 primeiras cartas do seu deck (como se fosse uma mão)
+    
     const profundidade = Math.min(3, this.deckBot.length);
     
-    // 1. SACRIFÍCIO TÁTICO: Se o jogador jogou uma carta Lendária (Super Trunfo)
+    
     if (cartaJogador.lendaria) {
-      // Tenta achar uma carta do grupo 'A' para anular o Super Trunfo
+      
       let indexGrupoA = this.deckBot.findIndex((c, i) => i < profundidade && c.grupo === 'A');
       if (indexGrupoA !== -1) return this.deckBot.splice(indexGrupoA, 1)[0];
       
-      // Se não tem grupo A, a máquina SABE que vai perder. Ela sacrifica sua PIOR carta para preservar as fortes.
+      
       let piorIndex = 0;
       let menorMedia = Infinity;
       for (let i = 0; i < profundidade; i++) {
         const c = this.deckBot[i];
         const media = (Number(c.performance) + Number(c.sintaxe) + Number(c.seguranca) + Number(c.longevidade) + Number(c.popularidade) + Number(c.abstracao) + Number(c.versatilidade)) / 7;
-        if (media < menorMedia && !c.lendaria) { // Nunca sacrifica sua própria lendária à toa
+        if (media < menorMedia && !c.lendaria) { 
           menorMedia = media;
           piorIndex = i;
         }
@@ -209,7 +280,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
       return this.deckBot.splice(piorIndex, 1)[0];
     }
 
-    // 2. DEFESA PREDITIVA: Identificar qual é o atributo mais forte do jogador (provável ataque)
+    
     const atributos: (keyof Carta)[] = ['performance', 'sintaxe', 'seguranca', 'longevidade', 'popularidade', 'abstracao', 'versatilidade'];
     let melhorAtributoJogador: keyof Carta = 'performance';
     let maiorValorJogador = 0;
@@ -222,7 +293,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
       }
     }
 
-    // A máquina tenta encontrar a carta que ganha do atributo mais forte do jogador
+    
     let melhorIndexBot = 0;
     let maiorValorBot = -1;
 
@@ -234,7 +305,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Se a máquina perceber que TODAS as opções perdem feio, ela recorre ao sacrifício tático.
+    
     if (maiorValorBot < maiorValorJogador) {
         let piorIndex = 0;
         let menorMedia = Infinity;
@@ -249,7 +320,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
         return this.deckBot.splice(piorIndex, 1)[0];
     }
 
-    // A máquina achou uma defesa digna e a utiliza!
+    
     return this.deckBot.splice(melhorIndexBot, 1)[0];
   }
 
@@ -420,7 +491,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
     } else {
       this.preencherMao();
       
-      // O jogador sempre escolhe a carta e o atributo em todas as rodadas
+      
       this.turnoAtual = 'JOGADOR';
       this.escreverMensagemSistema('> SEU TURNO. SELECIONE UMA CARTA DA MÃO.');
       this.faseAtual = 'ESCOLHER_CARTA';
@@ -521,6 +592,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.pararAudio();
+    if (this.introTypeInterval) clearInterval(this.introTypeInterval);
   }
 
   toggleAudio(): void {
@@ -540,24 +612,24 @@ export class PartidaComponent implements OnInit, OnDestroy {
       this.audioCtx = new AudioContextClass();
     }
     
-    // Melodia Retrô (Estilo Mario/Zelda 8-bits)
+    
     const melodia = [
-      392.00, 392.00, 392.00, 329.63, 261.63, 261.63, 329.63, 392.00, // G G G E C C E G
-      440.00, 440.00, 440.00, 392.00, 349.23, 349.23, 392.00, 440.00, // A A A G F F G A
-      392.00, 329.63, 261.63, 329.63, 392.00, 329.63, 261.63, 196.00, // G E C E G E C G(baixo)
-      261.63, 261.63, 293.66, 329.63, 261.63, 0,      0,      0       // C C D E C (pausa)
+      392.00, 392.00, 392.00, 329.63, 261.63, 261.63, 329.63, 392.00, 
+      440.00, 440.00, 440.00, 392.00, 349.23, 349.23, 392.00, 440.00, 
+      392.00, 329.63, 261.63, 329.63, 392.00, 329.63, 261.63, 196.00, 
+      261.63, 261.63, 293.66, 329.63, 261.63, 0,      0,      0       
     ];
 
     const baixo = [
-      130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, // C
-      174.61, 174.61, 174.61, 174.61, 174.61, 174.61, 174.61, 174.61, // F
-      130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, // C
-      196.00, 196.00, 196.00, 196.00, 130.81, 130.81, 130.81, 130.81  // G -> C
+      130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 
+      174.61, 174.61, 174.61, 174.61, 174.61, 174.61, 174.61, 174.61, 
+      130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 130.81, 
+      196.00, 196.00, 196.00, 196.00, 130.81, 130.81, 130.81, 130.81  
     ];
 
     let passo = 0;
 
-    // Loop de música (Sequenciador simples)
+    
     this.beepInterval = setInterval(() => {
       if (!this.audioCtx) return;
       
@@ -565,14 +637,14 @@ export class PartidaComponent implements OnInit, OnDestroy {
       const freqMelodia = melodia[passo];
       const freqBaixo = baixo[passo];
 
-      // Canal 1: Melodia (Onda Quadrada - Clássico Nintendinho)
+      
       if (freqMelodia > 0) {
         const osc = this.audioCtx.createOscillator();
         const gain = this.audioCtx.createGain();
         osc.type = 'square';
         osc.frequency.value = freqMelodia;
         
-        // Envelope "Staccato" retro (curto e seco)
+        
         gain.gain.setValueAtTime(0.04, t);
         gain.gain.setValueAtTime(0, t + 0.12);
         
@@ -582,7 +654,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
         osc.stop(t + 0.15);
       }
 
-      // Canal 2: Baixo (Onda Triângulo - Clássico NES Bass)
+      
       if (freqBaixo > 0) {
         const bassOsc = this.audioCtx.createOscillator();
         const bassGain = this.audioCtx.createGain();
@@ -599,7 +671,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
       }
 
       passo = (passo + 1) % melodia.length;
-    }, 180); // Velocidade (Tempo) da música
+    }, 180); 
   }
 
   pararAudio(): void {
@@ -632,7 +704,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
   tocarSomLendaria(): void {
     if (!this.audioAtivo || !this.audioCtx) return;
     
-    // Arpejo rápido ascendente (Power-up clássico 8-bit)
+    
     const notas = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
     
     notas.forEach((freq, i) => {
@@ -679,7 +751,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
       } else {
         clearInterval(this.typewriterInterval);
       }
-    }, 30); // 30ms por letra
+    }, 30); 
   }
 
   tocarSomDigitacao(duracaoMs: number = 300): void {

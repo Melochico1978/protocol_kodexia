@@ -2,7 +2,7 @@
   height: 100vh; 
   display: flex; 
   flex-direction: column; 
-  background: transparent; /* Deixa o Fundo Cibernético aparecer */
+  background: transparent; 
   font-family: 'VT323', monospace; 
   position: relative;
   z-index: 10;
@@ -78,7 +78,7 @@
   flex: 1; 
   display: flex; 
   flex-direction: column; 
-  /* Removido o overflow: hidden; global para não travar os painéis */
+  
 }
 
 .painel-instrucao { 
@@ -174,7 +174,7 @@
   display: flex; 
   position: relative; 
   background: #050508; 
-  overflow: hidden; /* Mantém o editor de código contido */
+  overflow: hidden; 
 }
 
 .linhas-numeros { 
@@ -223,14 +223,12 @@
   50% { opacity: 0; } 
 }
 
-/* =========================================
-   SCROLLBAR CIBERNÉTICA (PAINEL E TERMINAL)
-   ========================================= */
+
 .painel-instrucao .body-so {
-  overflow-y: auto; /* Ativa a rolagem vertical */
+  overflow-y: auto; 
 }
 
-/* Scroll Customizado para combinar com o tema */
+
 .painel-instrucao .body-so::-webkit-scrollbar,
 .terminal-saida::-webkit-scrollbar,
 .codigo-input::-webkit-scrollbar {

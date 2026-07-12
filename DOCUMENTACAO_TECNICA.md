@@ -298,7 +298,7 @@ interface CartaTrunfo {
 ```typescript
 @Injectable({ providedIn: 'root' })
 export class CartaService {
-  private apiUrl = 'http://localhost:3000/cartas';
+  private apiUrl = '[URL_DA_API]/cartas';
   private deckSelecionado: Carta[] = [];
   
   constructor(private http: HttpClient) {}
@@ -441,14 +441,14 @@ atualizarDesign(): CartaTrunfo {
 ### JSON Server Configuration
 
 **Porta:** 3000  
-**Base URL:** http://localhost:3000  
+**Base URL:** [URL_DA_API]  
 **Arquivo:** db.json
 
 #### Endpoints
 
 **GET - Buscar todas as cartas**
 ```http
-GET http://localhost:3000/cartas
+GET [URL_DA_API]/cartas
 
 Response: 200 OK
 [
@@ -466,7 +466,7 @@ Response: 200 OK
 
 **POST - Criar nova carta**
 ```http
-POST http://localhost:3000/cartas
+POST [URL_DA_API]/cartas
 Content-Type: application/json
 
 Request:
@@ -495,7 +495,7 @@ Response: 201 Created
 
 **DELETE - Remover carta**
 ```http
-DELETE http://localhost:3000/cartas/1
+DELETE [URL_DA_API]/cartas/1
 
 Response: 200 OK
 ```

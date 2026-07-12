@@ -13,15 +13,16 @@ export const routes: Routes = [
   { path: 'inicio', component: InicioComponent },
   { path: 'mesa', component: PartidaComponent },
   { path: 'crud', component: GerenciarCartasComponent },
-  { path: 'deck', component: SelecaoDeckComponent }, // A nova rota da Seleção de Deck
+  { path: 'deck', component: SelecaoDeckComponent }, 
   { path: 'desconectado', component: DesconectadoComponent }, 
   { path: 'ajuda', component: AjudaComponent },
   { path: 'mastermind', component: MastermindComponent },
   
-  // === ROTAS DO MODO HISTÓRIA ===
+  
   { path: 'story/intro', loadComponent: () => import('./components/story/intro.component').then(m => m.StoryIntroComponent) },
   { path: 'story/map', loadComponent: () => import('./components/story/story-map.component').then(m => m.StoryMapComponent) },
   { path: 'story/level/:id', loadComponent: () => import('./components/level/level.component').then(m => m.LevelComponent) },
+  { path: 'story/breaker', loadComponent: () => import('./components/cyber-code-breaker/cyber-code-breaker.component').then(m => m.CyberCodeBreakerComponent) },
 
   { path: '**', redirectTo: '' }, 
 ];

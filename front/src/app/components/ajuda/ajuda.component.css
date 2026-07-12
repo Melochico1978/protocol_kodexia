@@ -1,6 +1,6 @@
 .ajuda-master-container {
   height: 100vh; width: 100vw;
-  background: transparent; /* Permite ver o fundo de letras/grid */
+  background: transparent; 
   padding: 30px;
   display: flex;
   flex-direction: column;
@@ -16,7 +16,7 @@
   margin: 0 auto; width: 100%;
 }
 
-/* JANELAS COM ESTILO DE BORDA NEON (IGUAL ÀS CARTAS) */
+
 .janela-so {
   background: linear-gradient(rgba(13, 2, 33, 0.95), rgba(13, 2, 33, 0.95)) padding-box,
               linear-gradient(135deg, #00d2ff 0%, #8a2be2 100%) border-box;
@@ -34,17 +34,17 @@
   letter-spacing: 1px;
 }
 
-/* DIMINUIÇÃO DA JANELA PRINCIPAL */
-.janela-principal { flex: 1.8; } /* Era 2.5, agora está mais equilibrada */
+
+.janela-principal { flex: 1.8; } 
 
 .conteudo-dinamico { padding: 25px; color: white; overflow-y: auto; }
 
-/* PAINEL DE BOTÕES */
+
 .painel-botoes { flex: 1; display: flex; flex-direction: column; gap: 15px; }
 
 .btn-janela {
   cursor: pointer; transition: 0.3s;
-  /* Borda roxa neon para os botões secundários */
+  
   background: linear-gradient(rgba(13, 2, 33, 0.95), rgba(13, 2, 33, 0.95)) padding-box,
               linear-gradient(135deg, #b026ff 0%, #ff003c 100%) border-box;
 }

@@ -38,7 +38,7 @@ export class EasterEggComponent implements OnInit, OnDestroy {
     if (this.sub) {
       this.sub.unsubscribe();
     }
-    // Safety cleanup
+    
     if (typeof document !== 'undefined') {
       document.body.classList.remove('barrel-roll');
     }

@@ -16,7 +16,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   background: radial-gradient(circle at center, rgba(13, 2, 33, 0.8) 0%, rgba(5, 1, 15, 0.95) 100%);
 }
 
-/* CRT Scanlines Overlay - Estética visual apenas */
+
 .batalha-master-container::before {
   content: " ";
   display: block;
@@ -25,7 +25,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
   z-index: 2;
   background-size: 100% 2px, 3px 100%;
-  pointer-events: none; /* Não interfere no clique */
+  pointer-events: none; 
   animation: scanlinesMove 15s linear infinite;
 }
 
@@ -97,19 +97,20 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   100% { transform: skew(0deg); color: #00ff41; text-shadow: none; }
 }
 
-/* === LAYOUT DOS 3 BLOCOS === */
+
 .layout-batalha {
   display: flex;
-  justify-content: space-between;
-  align-items: stretch;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
   flex: 1;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-  padding-bottom: 120px; /* Reduzido para evitar que empurre a tela e crie scroll */
+  padding-bottom: 120px; 
 }
 
-/* === PAINÉIS LATERAIS (P1 e P2) === */
+
 .painel-lateral {
   width: 200px;
   display: flex;
@@ -214,7 +215,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 }
 .inimigo-texto { color: #ff003c; border-color: #ff003c; }
 
-/* === MONTES DE CARTAS (Efeito 3D) === */
+
 .zona-monte { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 50px; }
 
 .monte-cartas {
@@ -265,7 +266,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 .contador-cartas { font-size: 22px; background: rgba(0, 0, 0, 0.8); padding: 5px 15px; border: 1px solid #00f3ff; border-radius: 20px; }
 .empate-texto { color: #f1c40f; border-color: #f1c40f; }
 
-/* === ARENA CENTRAL === */
+
 .arena-central {
   flex: 1; display: flex; flex-direction: column;
   justify-content: center; align-items: center; padding: 0 40px;
@@ -276,10 +277,12 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 .zona-embate { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 10px; width: 100%; }
 
 .slot-carta {
-  width: 350px; height: 500px; display: flex;
-  align-items: center; justify-content: center; position: relative;
-  transform: scale(0.70); /* Reduz o tamanho das cartas centrais para caber na tela */
-  margin: -70px -50px; /* Compensa o espaço deixado pelo scale */
+  width: 220px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
 .slot-carta app-carta-exibicao {
@@ -311,45 +314,61 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 
 .placeholder-holografico.inimigo { border-color: #ff003c; color: rgba(255, 0, 60, 0.4); background: rgba(255, 0, 60, 0.05); }
 
-/* === JANELA DE MENU DE ATRIBUTOS === */
+
 .janela-so.menu-ataque {
-  width: 100%; height: 100%; background: rgba(13, 2, 33, 0.85);
+  width: 100%; height: 100%; background: rgba(13, 2, 33, 0.95);
   border: 2px solid #f1c40f; border-radius: 15px; box-shadow: 0 0 30px rgba(241, 196, 15, 0.4);
   display: flex; flex-direction: column;
   backdrop-filter: blur(8px);
+  overflow: hidden;
 }
 
 .janela-so.menu-ataque .header-so {
   background: rgba(241, 196, 15, 0.2); border-bottom: 2px solid #f1c40f;
-  color: #f1c40f; padding: 10px; font-size: 18px;
+  color: #f1c40f; padding: 6px 10px; font-size: 15px;
   text-shadow: 0 0 5px #f1c40f;
   border-top-left-radius: 13px;
   border-top-right-radius: 13px;
   text-align: left;
 }
 
-.titulo-ataque { color: white; font-size: 20px; text-align: center; margin-top: 0; border-bottom: 1px dashed #f1c40f; padding-bottom: 5px; margin-bottom: 5px; }
+.titulo-ataque { 
+  color: white; 
+  font-size: 16px; 
+  text-align: center; 
+  margin: 2px 0; 
+  border-bottom: 1px dashed #f1c40f; 
+  padding-bottom: 2px; 
+}
 
-.janela-so.menu-ataque .body-so { padding: 15px; flex: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+.janela-so.menu-ataque .body-so { 
+  padding: 8px; 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 5px; 
+  justify-content: center; 
+}
 
 .btn-atributo {
-  background: rgba(0, 0, 0, 0.6); border: 1px solid #00f3ff; color: #00f3ff;
-  font-family: 'VT323', monospace; font-size: 18px; padding: 6px 10px; cursor: pointer;
+  background: rgba(0, 0, 0, 0.65); border: 1px solid #00f3ff; color: #00f3ff;
+  font-family: 'VT323', monospace; font-size: 15px; padding: 4px 8px; cursor: pointer;
   border-radius: 4px; transition: all 0.2s; text-align: left; display: flex; justify-content: space-between;
   box-shadow: inset 0 0 5px rgba(0, 243, 255, 0.2);
+  line-height: 1.2;
 }
 .btn-atributo:hover { 
   background: rgba(0, 243, 255, 0.2); color: #fff; 
-  transform: scale(1.03) translateX(5px); 
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.6), inset 0 0 10px rgba(0, 243, 255, 0.5); 
+  transform: scale(1.02) translateX(3px); 
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.6), inset 0 0 5px rgba(0, 243, 255, 0.5); 
   border-color: #fff;
 }
 
-/* === MONTE EMPATE === */
+
 .zona-empate { display: flex; flex-direction: column; align-items: center; }
 .monte-empate-container { display: flex; flex-direction: column; align-items: center; gap: 35px; margin-top: 20px; }
 
-/* === BOTÃO DE ABORTAR === */
+
 .btn-fuga {
   position: absolute; top: 30px; left: 30px; background: transparent;
   border: 2px solid #ff003c; color: #ff003c; padding: 10px 20px;
@@ -357,7 +376,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 }
 .btn-fuga:hover { background: #ff003c; color: black; }
 
-/* === TELA FINAL === */
+
 .fim-de-jogo-painel {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
   background: rgba(0, 0, 0, 0.8); border: 2px solid #00f3ff; border-radius: 20px; margin: 40px;
@@ -371,7 +390,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 }
 .btn-acao-final:hover { background: #00f3ff; color: black; }
 
-/* === SUPER TRUNFO — EFEITOS VISUAIS === */
+
 .super-trunfo-banner {
   text-align: center;
   font-size: 36px;
@@ -420,9 +439,9 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   to   { box-shadow: 0 0 24px #f1c40f; }
 }
 
-/* ========================================================= */
-/* === MODO BOSS TERMINAL === */
-/* ========================================================= */
+
+
+
 .layout-boss-terminal {
   flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; gap: 20px;
   margin-top: 50px;
@@ -505,7 +524,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 }
 .btn-executar:hover { background: #fff; }
 
-/* === OVERLAY GLITCH === */
+
 .overlay-cyberpunk {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -561,10 +580,10 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   100% { transform: translate(0); }
 }
 
-/* === MAO DO JOGADOR (ESTILO YU-GI-OH COM EFEITO DE LEQUE) === */
+
 .rodape-mao-cartas {
   position: fixed;
-  bottom: -20px; /* Desce um pouco para dar mais espaco na tela */
+  bottom: -20px; 
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -574,21 +593,21 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   width: 100%;
   padding-bottom: 10px;
   perspective: 1000px;
-  pointer-events: none; /* Evita que o container bloqueie os cliques da tela */
+  pointer-events: none; 
 }
 
 .carta-na-mao {
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s;
   cursor: default;
   transform-origin: bottom center;
-  margin: 0 -35px; /* Aumenta a sobreposição para focar no leque */
+  margin: 0 -35px; 
   filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.9));
   transform: scale(0.65);
   animation: comprarCartaDesce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
-  pointer-events: auto; /* Reativa o clique individual para as cartas */
+  pointer-events: auto; 
 }
 
-/* Efeito de Leque Matemático para 5 Cartas */
+
 .carta-na-mao:nth-child(1) { transform: scale(0.65) rotate(-10deg) translateY(20px); }
 .carta-na-mao:nth-child(2) { transform: scale(0.65) rotate(-5deg) translateY(5px); }
 .carta-na-mao:nth-child(3) { transform: scale(0.65) rotate(0deg) translateY(0px); z-index: 5;}
@@ -599,7 +618,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   cursor: pointer;
 }
 
-/* Hover: A carta levanta do leque e fica reta */
+
 .carta-na-mao.pode-jogar:hover {
   transform: scale(0.85) rotate(0deg) translateY(-80px) !important;
   z-index: 100 !important;
@@ -608,7 +627,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 
 @keyframes comprarCartaDesce {
   0% { transform: translateY(-400px) scale(0.65); opacity: 0; }
-  100% { /* Deixa a matemática do leque assumir no fim da animação */ opacity: 1; }
+  100% {  opacity: 1; }
 }
 
 .btn-audio {
@@ -633,3 +652,410 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   color: black;
   box-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
 }
+
+
+/* ======================================== */
+/* ====== INTRO MIRABERTO - ESTILOS ====== */
+/* ======================================== */
+
+.intro-miraberto-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: radial-gradient(ellipse at center, rgba(13, 2, 33, 0.95) 0%, rgba(0, 0, 0, 0.98) 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.intro-miraberto-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+              linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.04));
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+  z-index: 1;
+  animation: scanlinesMove 15s linear infinite;
+}
+
+.btn-pular-intro {
+  position: absolute;
+  top: 30px; right: 30px;
+  background: transparent;
+  border: 2px solid rgba(255, 0, 60, 0.6);
+  color: #ff003c;
+  padding: 10px 20px;
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 10;
+  letter-spacing: 2px;
+}
+.btn-pular-intro:hover {
+  background: #ff003c;
+  color: #000;
+  box-shadow: 0 0 20px rgba(255, 0, 60, 0.6);
+}
+
+.intro-painel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  max-width: 800px;
+  width: 90%;
+  z-index: 5;
+  animation: introFadeIn 0.8s ease-out;
+}
+
+@keyframes introFadeIn {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.intro-avatar-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.intro-avatar-moldura {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 3px solid #00ff41;
+  box-shadow: 0 0 30px rgba(0, 255, 65, 0.5),
+              0 0 60px rgba(0, 255, 65, 0.2),
+              inset 0 0 20px rgba(0, 255, 65, 0.1);
+  overflow: hidden;
+  animation: introAvatarPulso 3s ease-in-out infinite, introAvatarFlutuar 4s ease-in-out infinite;
+  position: relative;
+}
+
+.intro-avatar-moldura::after {
+  content: "";
+  position: absolute;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: conic-gradient(from 0deg, transparent 0%, rgba(0, 255, 65, 0.3) 25%, transparent 50%);
+  animation: introAvatarRotate 4s linear infinite;
+}
+
+.intro-avatar-sistema {
+  border-color: #00f3ff;
+  box-shadow: 0 0 30px rgba(0, 243, 255, 0.5),
+              0 0 60px rgba(0, 243, 255, 0.2),
+              inset 0 0 20px rgba(0, 243, 255, 0.1);
+}
+.intro-avatar-sistema::after {
+  background: conic-gradient(from 0deg, transparent 0%, rgba(0, 243, 255, 0.3) 25%, transparent 50%);
+}
+
+@keyframes introAvatarPulso {
+  0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 65, 0.5), 0 0 60px rgba(0, 255, 65, 0.2); }
+  50% { box-shadow: 0 0 50px rgba(0, 255, 65, 0.8), 0 0 90px rgba(0, 255, 65, 0.4); }
+}
+
+@keyframes introAvatarFlutuar {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes introAvatarRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.intro-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 1;
+}
+
+.intro-nome-speaker {
+  font-family: 'VT323', monospace;
+  font-size: 28px;
+  color: #00ff41;
+  letter-spacing: 4px;
+  text-shadow: 0 0 10px #00ff41, 0 0 20px rgba(0, 255, 65, 0.4);
+  text-transform: uppercase;
+}
+
+.intro-nome-sistema {
+  color: #00f3ff;
+  text-shadow: 0 0 10px #00f3ff, 0 0 20px rgba(0, 243, 255, 0.4);
+}
+
+.intro-dialogo-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.intro-dialogo-box {
+  background: rgba(0, 0, 0, 0.85);
+  border: 2px solid #00ff41;
+  border-radius: 8px;
+  padding: 25px 30px;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.2),
+              inset 0 0 30px rgba(0, 255, 65, 0.05);
+  position: relative;
+}
+
+.intro-dialogo-box::before {
+  content: "";
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 12px solid #00ff41;
+}
+
+.intro-dialogo-sistema {
+  border-color: #00f3ff;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.2),
+              inset 0 0 30px rgba(0, 243, 255, 0.05);
+}
+.intro-dialogo-sistema::before {
+  border-bottom-color: #00f3ff;
+}
+
+.intro-texto {
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  color: #e0e0e0;
+  line-height: 1.6;
+  margin: 0;
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.intro-indicador {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5px;
+}
+
+.intro-progresso {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 2px;
+}
+
+.intro-instrucao {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: #00ff41;
+  animation: introInstrucaoPisca 1.2s infinite;
+  letter-spacing: 1px;
+}
+
+@keyframes introInstrucaoPisca {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Particulas flutuantes */
+.intro-particulas {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.intro-particula {
+  position: absolute;
+  width: 3px; height: 3px;
+  background: #00ff41;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: introParticulaFlutuar 8s linear infinite;
+  box-shadow: 0 0 6px #00ff41;
+}
+
+.intro-particula:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 7s; }
+.intro-particula:nth-child(2) { left: 25%; animation-delay: 1s; animation-duration: 9s; }
+.intro-particula:nth-child(3) { left: 40%; animation-delay: 2s; animation-duration: 6s; }
+.intro-particula:nth-child(4) { left: 55%; animation-delay: 0.5s; animation-duration: 10s; }
+.intro-particula:nth-child(5) { left: 70%; animation-delay: 3s; animation-duration: 8s; }
+.intro-particula:nth-child(6) { left: 85%; animation-delay: 1.5s; animation-duration: 7s; }
+.intro-particula:nth-child(7) { left: 15%; animation-delay: 2.5s; animation-duration: 11s; }
+.intro-particula:nth-child(8) { left: 60%; animation-delay: 0.8s; animation-duration: 6.5s; }
+
+@keyframes introParticulaFlutuar {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-20vh) scale(1.5); opacity: 0; }
+}
+
+/* ======================================================= */
+/* RESPONSIVIDADE E ADAPTAÇÃO PARA TODOS OS MONITORES      */
+/* ======================================================= */
+
+/* Monitores menores e laptops comuns (menor que 1400px de largura) */
+@media screen and (max-width: 1400px) {
+  .layout-batalha {
+    max-width: 100%;
+    padding-bottom: 90px;
+    gap: 20px;
+  }
+  
+  .slot-carta {
+    transform: scale(0.9);
+  }
+  
+  .divisor-vs {
+    font-size: 38px;
+  }
+  
+  .painel-lateral {
+    width: 180px;
+    padding: 15px;
+  }
+  
+  .icone-mao {
+    font-size: 60px;
+  }
+  
+  .nome-jogador {
+    font-size: 24px;
+  }
+}
+
+/* Monitores de baixa altura ou janelas redimensionadas (altura menor que 850px) */
+@media screen and (max-height: 850px) {
+  .header-batalha {
+    margin-bottom: 10px;
+  }
+  
+  .titulo-cyberpunk {
+    font-size: 38px;
+    letter-spacing: 3px;
+  }
+  
+  .log-sistema {
+    font-size: 16px;
+    padding: 6px 12px;
+    margin-top: 5px;
+  }
+  
+  .layout-batalha {
+    padding-bottom: 70px;
+    gap: 15px;
+  }
+  
+  .slot-carta {
+    transform: scale(0.8);
+  }
+  
+  .divisor-vs {
+    font-size: 32px;
+  }
+  
+  .painel-lateral {
+    padding: 10px;
+    justify-content: space-around;
+  }
+  
+  .icone-mao {
+    font-size: 50px;
+  }
+  
+  .carta-na-mao {
+    transform: scale(0.55) !important;
+    margin: 0 -45px;
+  }
+  
+  .carta-na-mao:nth-child(1) { transform: scale(0.55) rotate(-10deg) translateY(20px) !important; }
+  .carta-na-mao:nth-child(2) { transform: scale(0.55) rotate(-5deg) translateY(5px) !important; }
+  .carta-na-mao:nth-child(3) { transform: scale(0.55) rotate(0deg) translateY(0px) !important; z-index: 5;}
+  .carta-na-mao:nth-child(4) { transform: scale(0.55) rotate(5deg) translateY(5px) !important; }
+  .carta-na-mao:nth-child(5) { transform: scale(0.55) rotate(10deg) translateY(20px) !important; }
+}
+
+/* Telas extremamente pequenas ou alturas reduzidas (laptops de 11 polegadas / modo compacto) */
+@media screen and (max-height: 720px), screen and (max-width: 1100px) {
+  .header-batalha {
+    margin-bottom: 5px;
+  }
+  
+  .titulo-cyberpunk {
+    font-size: 30px;
+    margin: 0 0 5px 0;
+  }
+  
+  .layout-batalha {
+    padding-bottom: 50px;
+    gap: 10px;
+  }
+  
+  .slot-carta {
+    transform: scale(0.7);
+  }
+  
+  .divisor-vs {
+    font-size: 26px;
+  }
+  
+  .painel-lateral {
+    width: 140px;
+    padding: 8px;
+  }
+  
+  .icone-mao {
+    font-size: 36px;
+  }
+  
+  .nome-jogador {
+    font-size: 18px;
+  }
+  
+  .trofeu-jogador {
+    font-size: 14px;
+    padding: 3px 6px;
+  }
+  
+  .carta-na-mao {
+    transform: scale(0.45) !important;
+    margin: 0 -55px;
+  }
+  
+  .carta-na-mao:nth-child(1) { transform: scale(0.45) rotate(-10deg) translateY(25px) !important; }
+  .carta-na-mao:nth-child(2) { transform: scale(0.45) rotate(-5deg) translateY(8px) !important; }
+  .carta-na-mao:nth-child(3) { transform: scale(0.45) rotate(0deg) translateY(0px) !important; z-index: 5;}
+  .carta-na-mao:nth-child(4) { transform: scale(0.45) rotate(5deg) translateY(8px) !important; }
+  .carta-na-mao:nth-child(5) { transform: scale(0.45) rotate(10deg) translateY(25px) !important; }
+  
+  .btn-fuga {
+    top: 15px;
+    left: 15px;
+    padding: 6px 12px;
+    font-size: 18px;
+  }
+  
+  .btn-audio {
+    top: 15px;
+    right: 15px;
+    padding: 6px 12px;
+    font-size: 18px;
+  }
+}
+

@@ -2,7 +2,7 @@ import { Component, AfterViewInit, ViewChild, ElementRef, HostListener } from '@
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { LoadingService } from '../../services/loading.service';
-import { MenuComponent } from '../../menu/menu.component'; // Verifique se o caminho bate com a sua pasta!
+import { MenuComponent } from '../../menu/menu.component'; 
 
 @Component({
   selector: 'app-inicio',

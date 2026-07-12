@@ -1,5 +1,43 @@
 <div class="batalha-master-container" style="font-family: 'VT323', monospace;">
   <div class="glitch-overlay" *ngIf="mostrarGlitch"></div>
+  <div class="intro-miraberto-overlay" *ngIf="faseAtual === 'INTRO'" (click)="avancarIntro()">
+    
+    <button class="btn-pular-intro" (click)="pularIntro($event)">[ PULAR >> ]</button>
+
+    <div class="intro-painel">
+      
+      <div class="intro-avatar-area">
+        <div class="intro-avatar-moldura" [class.intro-avatar-sistema]="introSlideAtual.speaker === 'SISTEMA'">
+          <img 
+            [src]="introSlideAtual.speaker === 'SISTEMA' ? 'assets/images/sisi.jpeg' : 'assets/images/miraberto.jpeg'" 
+            alt="Prof. Miraberto" 
+            class="intro-avatar-img"
+          />
+        </div>
+        <div class="intro-nome-speaker" [class.intro-nome-sistema]="introSlideAtual.speaker === 'SISTEMA'">
+          {{ introSlideAtual.speaker }}
+        </div>
+      </div>
+
+      <div class="intro-dialogo-area">
+        <div class="intro-dialogo-box" [class.intro-dialogo-sistema]="introSlideAtual.speaker === 'SISTEMA'">
+          <p class="intro-texto">{{ introDisplayedText }}<span class="cursor-pisca" *ngIf="!introIsTypingDone">_</span></p>
+        </div>
+        <div class="intro-indicador">
+          <span class="intro-progresso">{{ introSlideIndex + 1 }} / {{ introSlides.length }}</span>
+          <span class="intro-instrucao" *ngIf="introIsTypingDone">▶ CLIQUE PARA CONTINUAR</span>
+          <span class="intro-instrucao" *ngIf="!introIsTypingDone">▶ CLIQUE PARA COMPLETAR</span>
+        </div>
+      </div>
+
+    </div>
+    
+    <div class="intro-particulas">
+      <div class="intro-particula" *ngFor="let p of [1,2,3,4,5,6,7,8]"></div>
+    </div>
+
+  </div>
+  <!-- ====== FIM INTRO ====== -->
 
   <button class="btn-fuga" (click)="voltarParaMenu()">[X] ABORTAR SIMULAÇÃO</button>
   
@@ -12,7 +50,7 @@
     <p class="log-sistema" [class.super-trunfo-msg]="superTrunfoAtivado">{{ mensagemSistemaDisplay }}<span class="cursor-pisca">_</span></p>
   </div>
 
-  <!-- Banner Super Trunfo -->
+  
   <div *ngIf="superTrunfoAtivado" class="super-trunfo-banner">
     ★ SUPER TRUNFO ACIONADO ★
   </div>
@@ -74,8 +112,8 @@
       <div class="zona-embate">
         
         <div class="slot-carta slot-p1">
-          <div *ngIf="!cartaAtualJogador" class="placeholder-holografico">AGUARDANDO<br>CARTA</div>
-          <!-- Indicador de carta lendária -->
+          <div *ngIf="!cartaAtualJogador" class="placeholder-holografico">OUTRO JOGADOR</div>
+          
           <div *ngIf="cartaAtualJogador?.lendaria" class="badge-lendaria">★ LENDÁRIA</div>
           <app-carta-exibicao *ngIf="cartaAtualJogador" [carta]="cartaAtualJogador"></app-carta-exibicao>
         </div>
@@ -84,7 +122,7 @@
 
         <div class="slot-carta slot-p2">
           
-          <div *ngIf="faseAtual === 'ESCOLHER_CARTA'" class="placeholder-holografico inimigo">MODO<br>ESPERA</div>
+          <div *ngIf="faseAtual === 'ESCOLHER_CARTA'" class="placeholder-holografico inimigo">MÁQUINA</div>
           
           <div *ngIf="faseAtual === 'ESCOLHER' || faseAtual === 'DEFENDER'" class="janela-so menu-ataque">
             <div class="header-so">🔴 🟡 🟢 ANALISADOR.bat</div>
@@ -105,7 +143,7 @@
         </div>
       </div>
 
-      <!-- Zona de Empate agora fica nas laterais dependendo do turno -->
+      
 
     </div>
 
@@ -139,9 +177,9 @@
 
   </div>
 
-  <!-- ============================================== -->
-  <!-- MÃO DO JOGADOR (RODAPÉ)                        -->
-  <!-- ============================================== -->
+  
+  
+  
   <div class="rodape-mao-cartas" *ngIf="!jogoAcabou">
     <div class="carta-na-mao" 
          *ngFor="let carta of maoJogador; let i = index" 
@@ -151,9 +189,9 @@
     </div>
   </div>
 
-  <!-- ============================================== -->
-  <!-- MODO BOSS RASCUNHO (O Terminal Hacker)         -->
-  <!-- ============================================== -->
+  
+  
+  
   <div class="layout-boss-terminal" *ngIf="isModoBoss && !jogoAcabou">
     
     <div class="boss-arena">

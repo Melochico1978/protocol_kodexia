@@ -52,7 +52,7 @@
   color: #ff003c;
 }
 
-/* Tabuleiro */
+
 .board-container {
   width: 100%;
   max-width: 400px;
@@ -61,7 +61,7 @@
   border-radius: 8px;
   padding: 15px;
   display: flex;
-  flex-direction: column-reverse; /* Inverte a ordem para as tentativas mais novas ficarem embaixo ou vice-versa, dependendo do design. No Mastermind normal, a linha 1 fica embaixo, mas com flex-direction: column e ngFor normal, fica no topo. Para colocar a linha 1 no topo, não inverta. Deixarei column normal. */
+  flex-direction: column-reverse; 
   flex-direction: column;
   gap: 10px;
   box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.1);
@@ -156,12 +156,12 @@
 }
 
 .feedback-peg.white {
-  background: #ff003c; /* Usando vermelho para representar "cor certa, lugar errado" no lugar do branco puro para estética hacker */
+  background: #ff003c; 
   box-shadow: 0 0 5px #ff003c;
   border-color: #ff003c;
 }
 
-/* Controles */
+
 .controls-panel {
   width: 100%;
   max-width: 400px;

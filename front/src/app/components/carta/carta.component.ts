@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Carta } from '../../models/carta.model'; // Seu modelo original
-import { CartaTrunfo } from './shared/carta.interface'; // A interface visual
+import { Carta } from '../../models/carta.model'; 
+import { CartaTrunfo } from './shared/carta.interface'; 
 
 @Component({
   selector: 'app-carta',
@@ -11,10 +11,10 @@ import { CartaTrunfo } from './shared/carta.interface'; // A interface visual
   imports: [CommonModule]
 })
 export class CartaComponent implements OnInit, OnChanges {
-  // 1. Recebe a carta do banco de dados (que agora vem com valores 0-100)
+  
   @Input() cartaInput!: Carta;
 
-  // 2. A variável que o HTML usa para desenhar
+  
   carta!: CartaTrunfo;
 
   ngOnInit() {
@@ -30,7 +30,7 @@ export class CartaComponent implements OnInit, OnChanges {
       this.carta = {
         codigo: (this.cartaInput.grupo + '-' + this.cartaInput.codigo) as any,
         nome: this.cartaInput.nome.toUpperCase(),
-        imagemUrl: 'assets/images/placeholder.png',  // placeholder aqui
+        imagemUrl: 'assets/images/placeholder.png',  
         isSuperTrunfo: this.cartaInput.lendaria,
         mensagemSuperTrunfo: 'VENCE DE TODOS (EXCETO GRUPO A)',
         atributos: [

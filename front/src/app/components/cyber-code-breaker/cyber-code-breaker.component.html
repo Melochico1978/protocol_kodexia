@@ -1,0 +1,105 @@
+<div class="cyber-container">
+  <div class="top-bar">
+    <div class="glitch-title">CYBER CODE BREAKER</div>
+    <div class="level-info" style="font-size: 18px; color: #fff;">NÍVEL {{ activeLevel.id }} - {{ activeLevel.name }}</div>
+    <div class="health-bar-container">
+      <span style="color: #ff003c; font-weight: bold;">JOGADAS RESTANTES: {{ activeLevel.maxAttempts - guesses.length }} / {{ activeLevel.maxAttempts }}</span>
+      <div class="health-bar">
+        <div class="health-fill" [style.width.%]="((activeLevel.maxAttempts - guesses.length) / activeLevel.maxAttempts) * 100"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="game-panel">
+      <div class="history-board">
+        <div class="guess-row" *ngFor="let g of guesses">
+          <div class="code-slots">
+            <div class="slot filled" *ngFor="let cmd of g.code">{{ cmd }}</div>
+          </div>
+          <div class="feedback-pegs">
+            <div class="peg exact" *ngFor="let e of [].constructor(g.exact)" title="Acerto Total"></div>
+            <div class="peg partial" *ngFor="let p of [].constructor(g.partial)" title="Acerto Parcial"></div>
+            <div class="peg" *ngFor="let m of [].constructor(activeLevel.codeLength - g.exact - g.partial)"></div>
+          </div>
+        </div>
+        <div *ngIf="guesses.length === 0" style="color: #666; text-align: center; margin-top: 50px;">
+          NENHUMA TENTATIVA REGISTRADA NO NÓ ATUAL.
+        </div>
+      </div>
+
+      <div class="input-area" *ngIf="gameState() === 'PLAYING'">
+        <div style="margin-bottom: 15px; color: #ccc;">SELECIONE OS COMANDOS DISPONÍVEIS PARA MONTAR A SEQUÊNCIA (ARRASTE OU CLIQUE):</div>
+        
+        <div class="commands-palette">
+          <button class="cmd-btn" 
+                  *ngFor="let cmd of activeLevel.availableCommands" 
+                  draggable="true" 
+                  (dragstart)="onDragStart($event, cmd)"
+                  (click)="selectCommand(cmd)">
+            {{ cmd }}
+          </button>
+        </div>
+
+        <div class="action-row">
+          <div class="code-slots">
+            <div class="slot interactive" 
+                 *ngFor="let slot of currentGuess; let i = index" 
+                 [class.filled]="slot"
+                 [class.drag-over]="dragTargetIndex() === i"
+                 (dragover)="onDragOver($event, i)"
+                 (dragleave)="onDragLeave($event)"
+                 (drop)="onDrop($event, i)"
+                 (click)="clearCommand(i)"
+                 title="Clique para remover ou arraste algo aqui">
+              {{ slot || '_' }}
+            </div>
+          </div>
+          <button class="submit-btn" (click)="submitGuess()" [disabled]="currentGuess.includes(null!)">
+            EXECUTAR BYPASS
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="story-panel">
+      <div class="oracle-box">
+        <div class="oracle-avatar">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" stroke="#00ffff" stroke-width="4" fill="none"/>
+            <circle cx="50" cy="50" r="10" fill="#00ffff"/>
+          </svg>
+          <div style="font-size: 16px; margin-top: 10px;">ORACLE v1.0</div>
+        </div>
+        <div class="oracle-dialog">
+          <span>{{ oracleMessage() }}</span><span class="typing-cursor" *ngIf="isTyping()"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="abort-btn" style="position: absolute; bottom: 30px; right: 30px; z-index: 10;" (click)="voltarParaMapa()">ABORTAR INVASÃO</button>
+</div>
+
+<div class="overlay" [class.active]="gameState() === 'LEVEL_WON'">
+  <h2>FIREWALL QUEBRADO</h2>
+  <p style="color: #fff; margin-bottom: 30px; font-size: 20px;">Acesso ao Nível {{ activeLevel.id + 1 }} Concedido.</p>
+  <button (click)="nextLevel()">AVANÇAR PARA O PRÓXIMO NÓ</button>
+</div>
+
+<div class="overlay" [class.active]="gameState() === 'GAME_OVER'">
+  <h2 style="color: #ff003c; text-shadow: 0 0 30px #ff003c;">FALHA CRÍTICA</h2>
+  <p style="color: #fff; margin-bottom: 30px; font-size: 20px; white-space: pre-line;">
+    O sistema detectou sua presença. Bloqueado.
+    A senha correta era: [ {{ secretCode.join(' | ') }} ]
+  </p>
+  <button (click)="restartGame()" style="background: #ff003c;">REINICIAR TENTATIVA</button>
+</div>
+
+<div class="overlay" [class.active]="gameState() === 'GAME_WON'">
+  <h2>SISTEMA COMPROMETIDO</h2>
+  <p style="color: #fff; margin-bottom: 30px; font-size: 20px; max-width: 600px; text-align: center;">
+    Você chegou ao núcleo. O Protocol Kodexia agora domina a OmniCorp. O mundo virtual nunca mais será o mesmo.
+  </p>
+  <button (click)="voltarParaMapa()">RETORNAR AO MAPA DO SISTEMA</button>
+</div>

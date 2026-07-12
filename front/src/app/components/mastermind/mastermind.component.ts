@@ -17,7 +17,7 @@ interface Guess {
 })
 export class MastermindComponent implements OnInit {
 
-  // Cores disponíveis (temática cyberpunk/kodexia)
+  
   availableColors = ['#ff003c', '#00f0ff', '#00ff00', '#ffea00', '#bd00ff', '#ffffff'];
   
   secretCode: string[] = [];
@@ -25,7 +25,7 @@ export class MastermindComponent implements OnInit {
   maxGuesses = 10;
   
   currentGuess: string[] = [null!, null!, null!, null!];
-  selectedColorIndex: number = 0; // Índice do pino que o jogador está pintando (0 a 3)
+  selectedColorIndex: number = 0; 
 
   gameStatus: 'PLAYING' | 'WON' | 'LOST' = 'PLAYING';
   mensagemSistema: string = '> SISTEMA DE SEGURANÇA. DESCUBRA A SEQUÊNCIA (4 CORES).';
@@ -54,18 +54,18 @@ export class MastermindComponent implements OnInit {
     return code;
   }
 
-  // Define a cor selecionada na paleta
+  
   setColor(color: string): void {
     if (this.gameStatus !== 'PLAYING') return;
     
-    // Procura o próximo pino vazio ou altera o selecionado
+    
     this.currentGuess[this.selectedColorIndex] = color;
     
-    // Avança para o próximo automaticamente (cicla de 0 a 3)
+    
     this.selectedColorIndex = (this.selectedColorIndex + 1) % 4;
   }
 
-  // Permite selecionar um pino específico para alterar
+  
   selectPin(index: number): void {
     if (this.gameStatus !== 'PLAYING') return;
     this.selectedColorIndex = index;
@@ -74,7 +74,7 @@ export class MastermindComponent implements OnInit {
   submitGuess(): void {
     if (this.gameStatus !== 'PLAYING') return;
 
-    // Verifica se todos os pinos da tentativa atual foram preenchidos
+    
     if (this.currentGuess.some(c => c === null || c === undefined)) {
       this.mensagemSistema = '> ERRO: SEQUÊNCIA INCOMPLETA. PREENCHA OS 4 SLOTS.';
       return;
@@ -108,7 +108,7 @@ export class MastermindComponent implements OnInit {
     const guessCopy = [...guess];
     const secretCopy = [...secret];
 
-    // Passo 1: Encontrar acertos exatos (Blacks)
+    
     for (let i = 0; i < 4; i++) {
       if (guessCopy[i] === secretCopy[i]) {
         blacks++;
@@ -117,7 +117,7 @@ export class MastermindComponent implements OnInit {
       }
     }
 
-    // Passo 2: Encontrar acertos de cor na posição errada (Whites)
+    
     for (let i = 0; i < 4; i++) {
       if (guessCopy[i] !== 'MATCHED_GUESS') {
         const secretIndex = secretCopy.indexOf(guessCopy[i]);
@@ -131,13 +131,13 @@ export class MastermindComponent implements OnInit {
     return { blacks, whites };
   }
 
-  // Função auxiliar para gerar um array vazio para o ngFor baseado nos turnos restantes
+  
   getEmptyRows(): number[] {
     const emptyCount = Math.max(0, this.maxGuesses - this.guesses.length - (this.gameStatus === 'PLAYING' ? 1 : 0));
     return Array(emptyCount).fill(0);
   }
 
-  // Gera array de pinos de feedback (blacks, depois whites, depois vazios)
+  
   getFeedbackPegs(blacks: number, whites: number): string[] {
     const pegs = [];
     for(let i=0; i<blacks; i++) pegs.push('black');

@@ -10,9 +10,7 @@
 
 ---
 
-## 📋 PASSO A PASSO PARA EXECUTAR
 
-### ⚙️ Terminal 1: Backend Java (OPCIONAL - Apenas Demonstração)
 
 ```bash
 # Navegar para o backend
@@ -36,7 +34,7 @@ Maria recebeu 16 cartas.
 
 ---
 
-### 📡 Terminal 2: JSON Server (API Mock)
+
 
 ```bash
 # Navegar para o frontend
@@ -58,12 +56,12 @@ npx json-server --watch db.json --port 3000
   ｜ > )  ) >
   ｜ (  (  (
   ｜
-  ｜ Mock server is running at http://localhost:3000
+  ｜ Mock server is running at [URL_DA_API]
 ```
 
-✅ Servidor rodando em: **http://localhost:3000**  
+✅ Servidor rodando em: **[URL_DA_API]**  
 ✅ Banco de dados: **db.json**  
-✅ Endpoint: **GET/POST/DELETE http://localhost:3000/cartas**
+✅ Endpoint: **GET/POST/DELETE [URL_DA_API]/cartas**
 
 ---
 
@@ -81,8 +79,8 @@ npm start
 ```
 ✔ Compiled successfully.
 
-→ Local:        http://localhost:4200
-→ open http://localhost:4200/ in your browser
+→ Local:        [URL_DA_APLICACAO]
+→ open [URL_DA_APLICACAO]/ in your browser
 ```
 
 ---
@@ -91,7 +89,7 @@ npm start
 
 1. **Abra o navegador:**
    ```
-   http://localhost:4200
+   [URL_DA_APLICACAO]
    ```
 
 2. **Você verá:**
@@ -147,7 +145,7 @@ npm list
 npx json-server --watch db.json --port 3001
 
 # Depois editar em src/app/services/carta.service.ts:
-# apiUrl = 'http://localhost:3001/cartas'
+# apiUrl = '[URL_DA_API]/cartas'
 ```
 
 ### Porta 4200 já em uso?
@@ -175,7 +173,7 @@ javac -version
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    Browser (localhost:4200)                     │
+│                    Browser ([URL_DA_APLICACAO])                     │
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │ Angular Application (standalone components)             │   │
 │  │ ├─ Splash Screen                                        │   │
@@ -188,7 +186,7 @@ javac -version
                            │ HTTP Requests (RxJS Observables)
                            │
 ┌──────────────────────────▼──────────────────────────────────────┐
-│         JSON Server (localhost:3000)                             │
+│         JSON Server ([URL_DA_API])                             │
 │  ├─ GET /cartas - Buscar todas as cartas                        │
 │  ├─ POST /cartas - Criar nova carta                             │
 │  └─ DELETE /cartas/:id - Remover carta                          │

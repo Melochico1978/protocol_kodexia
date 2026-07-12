@@ -106,14 +106,14 @@ front/             ✔ 552 dependências
 cd "c:\Users\CHICO\Desktop\tcc kodexia\front"
 npm run start:server
 ```
-✅ Rodará em: http://localhost:3000
+✅ Rodará em: [URL_DA_API]
 
 **Terminal 2 - Angular Dev Server:**
 ```bash
 cd "c:\Users\CHICO\Desktop\tcc kodexia\front"
 npm start
 ```
-✅ Rodará em: http://localhost:4200
+✅ Rodará em: [URL_DA_APLICACAO]
 
 **Terminal 3 - Backend Demo (Opcional):**
 ```bash
@@ -138,7 +138,7 @@ cd "c:\Users\CHICO\Desktop\tcc kodexia\front"
 npm start
 ```
 
-**Acesso:** http://localhost:4200
+**Acesso:** [URL_DA_APLICACAO]
 
 ---
 

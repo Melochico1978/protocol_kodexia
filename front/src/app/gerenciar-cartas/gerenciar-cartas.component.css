@@ -1,10 +1,10 @@
-/* === CORREÇÃO GLOBAL PARA O CURSOR FUNCIONAR MELHOR === */
+
 body { 
   margin: 0; 
   padding: 0; 
 }
 
-/* === ESTILO DO NOVO TÍTULO === */
+
 .header-modo-criacao {
   text-align: center;
   padding-top: 30px;
@@ -21,7 +21,7 @@ body {
   margin: 0;
 }
 
-/* === AFASTAMENTO E LAYOUT DE 3 COLUNAS === */
+
 .oficina-container {
   display: flex;
   justify-content: center;
@@ -43,7 +43,7 @@ body {
   gap: 20px;
 }
 
-/* Larguras ajustadas para o layout de 3 colunas */
+
 .coluna-visualizador { 
   width: 480px; 
 }
@@ -54,7 +54,7 @@ body {
   width: 350px; 
 }
 
-/* === ESTILO DAS JANELAS CYBERPUNK === */
+
 .janela-so {
   background: rgba(13, 2, 33, 0.80); 
   border: 2px solid #00f3ff;
@@ -77,7 +77,7 @@ body {
   padding: 15px; 
 }
 
-/* === LADO ESQUERDO: VISUALIZADOR === */
+
 .janela-nome-carta { 
   text-align: left; 
   border-color: #00ff41; 
@@ -194,7 +194,7 @@ body {
 .btn-voltar { border-color: #00f3ff; color: #00f3ff; }
 .btn-voltar:hover { background: #00f3ff; color: black; }
 
-/* === DADOS BÁSICOS (MEIO) E SLIDERS (DIREITA) === */
+
 .form-dados { 
   display: flex; 
   flex-direction: column; 
@@ -231,7 +231,7 @@ body {
   margin-bottom: 2px; 
 }
 
-/* Customização da "Linha de Puxar" (Range Slider) */
+
 input[type=range] { 
   -webkit-appearance: none; 
   appearance: none; 
@@ -259,7 +259,7 @@ input[type=range]::-webkit-slider-runnable-track {
   border: 1px solid #555;
 }
 
-/* Customização da Barra de Rolagem Interna da Galeria (CSS Puro) */
+
 .galeria-wrapper::-webkit-scrollbar { 
   width: 8px; 
 }

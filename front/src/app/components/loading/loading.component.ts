@@ -1,4 +1,4 @@
-// src/app/components/loading/loading.component.ts
+
 import { Component, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoadingService } from '../../services/loading.service';

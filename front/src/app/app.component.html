@@ -1,3 +1,11 @@
+<button class="btn-fullscreen-global" (click)="toggleFullscreen()" title="Alternar Tela Cheia">
+  @if (isFullscreen) {
+    <span class="fs-icon">🗗</span> Sair da Tela Cheia
+  } @else {
+    <span class="fs-icon">🗖</span> Tela Cheia
+  }
+</button>
+
 <app-fundo-cibernetico></app-fundo-cibernetico>
 
 <app-loading></app-loading>

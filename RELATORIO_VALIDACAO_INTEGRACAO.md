@@ -163,7 +163,7 @@ Services:
 ## 4️⃣ PROTOCOLO DE COMUNICAÇÃO
 
 ### API REST (JSON Server)
-- **Base URL:** `http://localhost:3000`
+- **Base URL:** `[URL_DA_API]`
 - **Endpoint:** `/cartas`
 - **Porta:** 3000
 
@@ -198,7 +198,7 @@ DELETE /cartas/{id}
 ## 5️⃣ FLUXO DO JOGO
 
 ### Fase 1: Splash → Menu
-1. User abre http://localhost:4200
+1. User abre [URL_DA_APLICACAO]
 2. Splash Screen exibida (1-2 seg)
 3. Redirecionado para menu principal (Inicio)
 
@@ -289,7 +289,7 @@ npm run start:server  # Ou manualmente: npx json-server --watch db.json --port 3
 ```bash
 cd "c:\Users\CHICO\Desktop\tcc kodexia\front"
 npm start  # ng serve
-# Acesso: http://localhost:4200
+# Acesso: [URL_DA_APLICACAO]
 ```
 
 ---

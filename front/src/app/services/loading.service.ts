@@ -1,12 +1,12 @@
-// src/app/services/loading.service.ts
+
 import { Injectable, signal } from "@angular/core";
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoadingService {
-  private loadingItems: string[] = []; // Lista de coisas que estão sendo carregadas
-  isLoading = signal<boolean>(false); // Sinal para o estado de exibição
+  private loadingItems: string[] = []; 
+  isLoading = signal<boolean>(false); 
 
   constructor() {}
 

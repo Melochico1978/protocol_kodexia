@@ -9,7 +9,7 @@
 
   <div class="board-container">
     
-    <!-- Linhas Anteriores (Histórico de Tentativas) -->
+    
     <div class="board-row" *ngFor="let guess of guesses; let i = index">
       <div class="row-number">{{ i + 1 | number:'2.0-0' }}</div>
       
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <!-- Linha Atual (Onde o jogador está montando a senha) -->
+    
     <div class="board-row active-row" *ngIf="gameStatus === 'PLAYING'">
       <div class="row-number active">{{ guesses.length + 1 | number:'2.0-0' }}</div>
       
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <!-- Linhas Vazias (Preenchimento) -->
+    
     <div class="board-row empty-row" *ngFor="let _ of getEmptyRows()">
       <div class="row-number">-</div>
       <div class="guess-pegs">
@@ -62,7 +62,7 @@
     
   </div>
 
-  <!-- Painel de Controles -->
+  
   <div class="controls-panel">
     
     <div class="color-palette" *ngIf="gameStatus === 'PLAYING'">

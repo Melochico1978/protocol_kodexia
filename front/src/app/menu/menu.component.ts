@@ -11,9 +11,9 @@ import { LoadingService } from '../services/loading.service';
 })
 export class MenuComponent {
   
-  // Variável que controla qual menu aparece
+  
   menuAtual: 'principal' | 'duelo' = 'principal';
-  efeitoScanline: boolean = false; // Controla a "onda" de transição
+  efeitoScanline: boolean = false; 
 
   constructor(private router: Router, private loadingService: LoadingService) {}
 
@@ -34,15 +34,15 @@ export class MenuComponent {
   }
 
   trocarMenu(novoMenu: 'principal' | 'duelo') {
-    // Ativa a onda cibernética
+    
     this.efeitoScanline = true;
     
-    // Espera a onda passar (500ms) para trocar os botões
+    
     setTimeout(() => {
       this.menuAtual = novoMenu;
     }, 300);
 
-    // Remove a onda
+    
     setTimeout(() => {
       this.efeitoScanline = false;
     }, 600);

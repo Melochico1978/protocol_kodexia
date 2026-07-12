@@ -1,4 +1,4 @@
-/* === CONFIGURAÇÃO GLOBAL === */
+
 .deck-master-container {
   height: 100vh; 
   width: 100vw;
@@ -9,7 +9,7 @@
   background: transparent; 
 }
 
-/* === TOPO E TÍTULOS === */
+
 .header-selecao {
   text-align: center;
   height: 60px; 
@@ -31,7 +31,7 @@
 .azul-neon { color: #00f3ff; text-shadow: 0 0 15px #00f3ff; }
 .roxo-neon { color: #b026ff; text-shadow: 0 0 15px #b026ff; margin-left: 15px; }
 
-/* === LAYOUT CENTRAL === */
+
 .layout-central {
   max-width: 1300px; 
   width: 100%;
@@ -43,7 +43,7 @@
   overflow: hidden; 
 }
 
-/* === ESTILO DAS JANELAS CYBERPUNK === */
+
 .janela-so {
   background: rgba(13, 2, 33, 0.85); 
   border: 2px solid #00f3ff;
@@ -65,7 +65,7 @@
 
 .body-so { padding: 8px 15px; } 
 
-/* === JANELA 1: DECK ATUAL (Horizontal) === */
+
 .janela-fita { 
   border-color: #00ff41; 
   height: 110px; 
@@ -116,7 +116,7 @@
 .scroll-horizontal::-webkit-scrollbar-thumb { background: #00ff41; border-radius: 4px; }
 
 
-/* === JANELA 2: BANCO DE DADOS === */
+
 .janela-banco { 
   flex: 1; 
   display: flex;
@@ -144,7 +144,7 @@
   overflow-y: scroll; 
 }
 
-/* Scrollbar Cibernético do Banco de Cartas */
+
 .banco-grid::-webkit-scrollbar { width: 10px; }
 .banco-grid::-webkit-scrollbar-track { 
     background: rgba(0, 243, 255, 0.02); 
@@ -172,17 +172,15 @@
   font-weight: bold; font-size: 20px; z-index: 10; box-shadow: 0 0 15px #00ff41;
 }
 
-/* =========================================
-   FILTRO EXPANDIDO (O TECLADO DE LETRAS!)
-   ========================================= */
+
 .banco-filtros {
-  width: 320px; /* <--- A EXPANSÃO ACONTECE AQUI! Bem mais largo */
+  width: 320px; 
   border-left: 2px solid #00f3ff; 
   padding: 20px; 
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background: rgba(13, 2, 33, 0.4); /* Fundo um pouquinho mais escuro pra destacar */
+  background: rgba(13, 2, 33, 0.4); 
 }
 
 .titulo-filtro { 
@@ -197,7 +195,7 @@
 .botoes-filtro-container {
     display: flex; 
     flex-wrap: wrap; 
-    gap: 12px; /* Mais espaço entre os quadrados */
+    gap: 12px; 
     flex: 1;
     justify-content: center; 
     align-content: flex-start; 
@@ -205,19 +203,19 @@
     padding-right: 5px;
 }
 
-/* Caso o filtro tenha rolagem, será uma rolagem cibernética dourada */
+
 .botoes-filtro-container::-webkit-scrollbar { width: 6px; }
 .botoes-filtro-container::-webkit-scrollbar-track { background: rgba(241, 196, 15, 0.05); }
 .botoes-filtro-container::-webkit-scrollbar-thumb { background: #f1c40f; border-radius: 3px; }
 
-/* Botão Padrão: Quadrado Perfeito */
+
 .btn-filtro {
   background: rgba(0, 0, 0, 0.5); 
   border: 1px solid #00f3ff; 
   color: #00f3ff;
   font-family: 'VT323', monospace; 
   font-size: 24px; 
-  width: 45px;  /* Quadrados um pouco maiores */
+  width: 45px;  
   height: 45px; 
   padding: 0;   
   cursor: pointer; 
@@ -228,18 +226,18 @@
   align-items: center;
 }
 
-/* Botão "TODOS" ocupa a largura total da linha */
+
 .btn-filtro.btn-todos {
   width: 100%; 
   height: 50px;
   font-size: 22px;
-  margin-bottom: 10px; /* Dá um espacinho extra antes do alfabeto */
+  margin-bottom: 10px; 
 }
 
 .btn-filtro:hover { background: #00f3ff; color: black; }
 .btn-filtro.ativo { background: #00f3ff; color: black; font-weight: bold; box-shadow: 0 0 15px #00f3ff; }
 
-/* === JANELA 3: PAINEL DE GERENCIAMENTO === */
+
 .janela-controles { 
     border-color: #8a2be2; 
     height: 60px; 

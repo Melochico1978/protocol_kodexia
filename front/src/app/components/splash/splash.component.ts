@@ -1,4 +1,4 @@
-// src/app/components/splash/splash.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -11,7 +11,7 @@ export class SplashComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    // Manter a imagem por 5 segundos antes de redirecionar
+    
     setTimeout(() => {
       this.router.navigate(['/inicio']);
     }, 5000);

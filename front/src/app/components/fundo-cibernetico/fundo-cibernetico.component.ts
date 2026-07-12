@@ -34,7 +34,7 @@ export class FundoCiberneticoComponent implements OnInit {
       ctx.fillStyle = "rgba(13, 2, 33, 0.05)";
       ctx.fillRect(0, 0, c.width, c.height);
 
-      // Aqui está o verde clássico Matrix
+      
       ctx.fillStyle = "#00ff41"; 
       ctx.font = fontSize + "px 'Courier New'";
 

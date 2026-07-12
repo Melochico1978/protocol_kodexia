@@ -5,7 +5,7 @@
   align-items: center; 
   justify-content: center; 
   
-  /* Removemos todo aquele background-image gigante e deixamos transparente! */
+  
   background: transparent; 
 
   font-family: 'VT323', monospace; 
@@ -32,8 +32,8 @@
   height: 80vh; 
   display: flex; 
   flex-direction: column; 
-  z-index: 10;          /* Aumentamos o z-index do painel central */
-  position: relative;   /* Necessário para o z-index funcionar */
+  z-index: 10;          
+  position: relative;   
 }
 
 .flex-header { 
@@ -101,7 +101,7 @@
   max-width: 650px; 
 }
 
-/* Transforma toda a linha da fase liberada em área clicável e adiciona feedback visual */
+
 .fase-item.liberada {
   cursor: pointer;
   padding: 10px 20px;
@@ -110,7 +110,7 @@
 }
 
 .fase-item.liberada:hover {
-  background-color: rgba(0, 243, 255, 0.05); /* Leve iluminação de fundo no hover */
+  background-color: rgba(0, 243, 255, 0.05); 
 }
 
 .fase-info { 
@@ -196,9 +196,7 @@
   opacity: 0.5; 
 }
 
-/* =========================================
-   MECÂNICA DA JOANINHA VOADORA (EASTER EGG)
-   ========================================= */
+
 .flying-bug {
   font-size: 28px;
   position: fixed;
@@ -218,19 +216,17 @@
   filter: drop-shadow(0 0 20px #ff003c);
 }
 
-/* Nova rota de voo: Limites ajustados para 5vw e 85vw para não vazar a tela */
+
 @keyframes flyAround {
-  0%   { transform: translate(5vw, 60vh) rotate(45deg); }   /* Sai da lateral esquerda */
-  20%  { transform: translate(40vw, 5vh) rotate(135deg); }  /* Bate no teto */
-  40%  { transform: translate(85vw, 50vh) rotate(225deg); } /* Bate na lateral direita */
-  60%  { transform: translate(50vw, 85vh) rotate(315deg); } /* Bate no chão */
-  80%  { transform: translate(5vw, 20vh) rotate(45deg); }   /* Bate na lateral esquerda de novo */
-  100% { transform: translate(80vw, 5vh) rotate(135deg); }  /* Bate no teto do outro lado */
+  0%   { transform: translate(5vw, 60vh) rotate(45deg); }   
+  20%  { transform: translate(40vw, 5vh) rotate(135deg); }  
+  40%  { transform: translate(85vw, 50vh) rotate(225deg); } 
+  60%  { transform: translate(50vw, 85vh) rotate(315deg); } 
+  80%  { transform: translate(5vw, 20vh) rotate(45deg); }   
+  100% { transform: translate(80vw, 5vh) rotate(135deg); }  
 }
 
-/* =========================================
-   ESTRUTURA DE INVASÃO DO VÍRUS
-   ========================================= */
+
 .hacker-jumpscare {
   position: fixed;
   top: 0;
@@ -243,7 +239,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  animation: strobeEffect 0.1s infinite; /* Efeito de flash na tela inteira */
+  animation: strobeEffect 0.1s infinite; 
 }
 
 .glitch-face {

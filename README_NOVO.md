@@ -121,14 +121,14 @@ npm install
 cd front
 npm run start:server
 ```
-✅ API rodando em: http://localhost:3000
+✅ API rodando em: [URL_DA_API]
 
 **3. Iniciar Angular Dev Server (Terminal 2):**
 ```bash
 cd front
 npm start
 ```
-✅ Aplicação rodando em: http://localhost:4200
+✅ Aplicação rodando em: [URL_DA_APLICACAO]
 
 **4. (Opcional) Executar Backend Demo (Terminal 3):**
 ```bash
@@ -137,7 +137,7 @@ java Main
 ```
 
 ### Acessar o Jogo
-Abra seu navegador: **http://localhost:4200**
+Abra seu navegador: **[URL_DA_APLICACAO]**
 
 ---
 
@@ -220,7 +220,7 @@ Versatilidade:  100 ██████████
 
 ### Base URL
 ```
-http://localhost:3000
+[URL_DA_API]
 ```
 
 ### Endpoints

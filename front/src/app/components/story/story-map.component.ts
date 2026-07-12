@@ -16,10 +16,11 @@ export class StoryMapComponent implements OnInit {
   fases = [
     { id: '1', numero: '01', titulo: 'Inicialização', subtitulo: 'Fundamentos da Sintaxe' },
     { id: '2', numero: '02', titulo: 'Alocação de Memória', subtitulo: 'Variáveis e Tipos' },
-    { id: '3', numero: '03', titulo: 'Fluxo de Controle', subtitulo: 'Condicionais if/else' }
+    { id: '3', numero: '03', titulo: 'Fluxo de Controle', subtitulo: 'Condicionais if/else' },
+    { id: '4', numero: '04', titulo: 'Invasão de Firewall', subtitulo: 'Cyber Code Breaker' }
   ];
 
-  nivelAtualLiberado = signal<number>(1);
+  nivelAtualLiberado = signal<number>(4);
   bugHits = signal<number>(0);
   isHacked = signal<boolean>(false);
 
@@ -31,13 +32,17 @@ export class StoryMapComponent implements OnInit {
   }
 
   acessarNivel(id: string) {
-    this.router.navigate(['/story/level', id]);
+    if (id === '4') {
+      this.router.navigate(['/story/breaker']);
+    } else {
+      this.router.navigate(['/story/level', id]);
+    }
   }
 
   atacarBug() {
     this.bugHits.update(hits => hits + 1);
     
-    // Aciona o vírus no 3º clique
+    
     if (this.bugHits() >= 3) {
       this.ativarVirus();
     }
@@ -46,7 +51,7 @@ export class StoryMapComponent implements OnInit {
   private ativarVirus() {
     this.isHacked.set(true);
     
-    // Aguarda 2.5 segundos de pânico piscando na tela e joga pro /desconectado
+    
     setTimeout(() => {
       this.isHacked.set(false);
       this.bugHits.set(0);

@@ -45,7 +45,7 @@
   image-rendering: pixelated;
 }
 
-/* === ESTILO DO ERRO RETRO (Quando não há imagem) === */
+
 .placeholder-erro {
   text-align: center;
   color: #ff003c;
@@ -95,7 +95,7 @@
   100% { transform: translate(0); }
 }
 
-/* === ATRIBUTOS E BARRAS === */
+
 .atributos-lista {
   display: flex;
   flex-direction: column;
@@ -148,7 +148,7 @@
   text-align: right;
 }
 
-/* === CARTA LENDÁRIA === */
+
 .super-trunfo-box {
   border: 2px solid #ff0000;
   border-radius: 6px;

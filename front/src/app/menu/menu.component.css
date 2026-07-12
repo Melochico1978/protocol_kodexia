@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: center;
   font-family: 'VT323', monospace; 
-  /* === CURSOR NORMAL (Mão Aberta) === */
+  
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🖐️</text></svg>'), auto;
 }
 
@@ -41,7 +41,7 @@
   letter-spacing: 4px;
 }
 
-/* Adicionamos uma animação de Fade para o menu não aparecer do nada após a onda */
+
 .opcoes-menu {
   display: flex;
   flex-direction: column;
@@ -64,7 +64,7 @@
   justify-content: center;
   transition: all 0.4s ease;
   
-  /* === CURSOR DE MÃOZINHA PERSONALIZADO === */
+  
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">👆</text></svg>'), pointer !important;
 }
 
@@ -89,7 +89,7 @@
   align-items: center;
 }
 
-/* === A CAIXA EXPANDIDA === */
+
 .caixa-expandida {
   position: absolute;
   top: 50%;
@@ -115,7 +115,7 @@
   z-index: 100;
 }
 
-/* === ABA DE NAVEGADOR FALSA === */
+
 .caixa-expandida::before {
   content: "🔴 🟡 🟢   SYS.KODEXIA"; 
   position: absolute;
@@ -134,7 +134,7 @@
   box-sizing: border-box;
 }
 
-/* === ANIMAÇÃO DE SCANNER CIBERNÉTICO NA CAIXA === */
+
 .caixa-expandida::after {
   content: "";
   position: absolute;
@@ -153,9 +153,7 @@
   100% { top: 100%; }
 }
 
-/* =========================================
-   EFEITO DE TRANSIÇÃO (ONDA) DO SUB-MENU
-   ========================================= */
+
 .scanline-transicao {
   position: absolute;
   top: -10%;
@@ -175,7 +173,7 @@
   100% { top: 110%; opacity: 0; }
 }
 
-/* HOVERS DOS BOTÕES */
+
 .opcoes-menu:hover .opcao {
   transform: scale(0.85);
   opacity: 0.5;
@@ -188,21 +186,21 @@
   height: 250px; 
 }
 
-/* No Sub-menu não queremos expandir as caixas gigantes, então travamos a altura */
+
 .sub-menu:hover .opcao:hover {
   height: 60px;
 }
 
 .opcao:hover .conteudo-lista { opacity: 0; }
 
-/* Só mostra a caixa expandida se não for o sub-menu */
+
 .opcoes-menu:not(.sub-menu) .opcao:hover .caixa-expandida {
   opacity: 1;
   pointer-events: all;
   transform: translate(-50%, -50%) scale(1); 
 }
 
-/* No sub-menu, o conteúdo lista se mantém visível no hover com um efeito de brilho */
+
 .sub-menu .opcao:hover .conteudo-lista {
   opacity: 1;
   box-shadow: 0 0 20px #00f3ff;
@@ -225,11 +223,9 @@
   z-index: 101;
 }
 
-/* =========================================
-   MÁGICA DOS "GIFS" EM CSS PURO
-   ========================================= */
 
-/* DUELO: Nave e Laser */
+
+
 .anim-duelo {
   display: flex; align-items: center; justify-content: flex-start; padding-left: 20px; overflow: hidden;
 }
@@ -241,14 +237,14 @@
   100% { transform: translateX(120px); opacity: 0; } 
 }
 
-/* HISTÓRIA: Terminal Decrypting */
+
 .anim-historia {
   font-family: 'Courier New', monospace; font-weight: bold; color: #00ff41; text-shadow: 0 0 8px #00ff41;
 }
 .piscar { animation: blink 1s step-end infinite; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-/* CRIAÇÃO: Lápis rabiscando no papel */
+
 .anim-criacao { position: relative; }
 .papel { 
   width: 70px; height: 50px; background: rgba(255, 255, 255, 0.9); 
@@ -267,7 +263,7 @@
   100% { transform: translate(0, -20px); opacity: 0;} 
 }
 
-/* AJUDA: Engrenagens rodando */
+
 .anim-ajuda { position: relative; width: 80px; height: 80px; border: none; background: transparent;}
 .eng { position: absolute; line-height: 1; display: inline-block; filter: drop-shadow(0 0 5px #00f3ff); }
 .e1 { top: 0; left: 0; font-size: 35px; animation: girar 4s linear infinite; }
@@ -276,7 +272,7 @@
 @keyframes girar { 100% { transform: rotate(360deg); } }
 @keyframes girar-reverso { 100% { transform: rotate(-360deg); } }
 
-/* SAIR: Boneco correndo pra porta */
+
 .anim-sair { display: flex; width: 120px; justify-content: space-between; align-items: flex-end; border: none; background: transparent;}
 .porta { font-size: 45px; z-index: 2; }
 .boneco { 
@@ -291,9 +287,7 @@
   100% { transform: translateX(30px) scale(0.1); opacity: 0; } 
 }
 
-/* =========================================
-   BARRA DE ROLAGEM INTERNA DA CAIXA
-   ========================================= */
+
 .scrollbar-interna {
   position: absolute;
   right: 6px;

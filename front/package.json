@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "powershell -ExecutionPolicy Bypass -File kill-ports.ps1 && npx -y concurrently \"npx -y json-server db.json --port 3000\" \"ng serve\"",
+    "start:server": "npx -y json-server db.json --port 3000",
+    "start:angular": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

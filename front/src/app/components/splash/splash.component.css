@@ -1,12 +1,12 @@
-/* src/app/components/splash/splash.component.css */
+
 .splash-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #3e2723; /* Marrom escuro, cor predominante da imagem */
-  animation: fadeInSlow 3s ease-in-out forwards; /* Fade-in lento para aparição */
+  background-color: #3e2723; 
+  animation: fadeInSlow 3s ease-in-out forwards; 
   opacity: 0;
 }
 

@@ -12,7 +12,7 @@ import { Carta } from '../../models/carta.model';
 export class CartaExibicaoComponent {
   @Input({ required: true }) carta!: Carta;
 
-  // Função para calcular a largura da barrinha (0 a 100%)
+  
   getBarWidth(nota: number): string {
     return (nota * 10) + '%';
   }

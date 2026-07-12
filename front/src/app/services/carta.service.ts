@@ -7,7 +7,7 @@ import { Carta } from '../models/carta.model';
   providedIn: 'root'
 })
 export class CartaService {
-  private apiUrl = 'http://localhost:3000/cartas';
+  private apiUrl = '/api/cartas';
   private deckSelecionado: Carta[] = [];
 
   constructor(private http: HttpClient) { }

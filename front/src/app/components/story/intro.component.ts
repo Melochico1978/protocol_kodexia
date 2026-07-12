@@ -42,17 +42,17 @@ export class StoryIntroComponent implements OnInit, OnDestroy {
   private currentFullText = '';
   private charIndex = 0;
 
-  // Lógica do Áudio
-  private typingAudio = new Audio('assets/sounds/dialogo.mp3'); // COLOQUE SEU ARQUIVO AQUI!
+  
+  private typingAudio = new Audio('assets/sounds/dialogo.mp3'); 
 
   ngOnInit() { 
-    this.typingAudio.loop = true; // Faz o som repetir em loop enquanto digita
+    this.typingAudio.loop = true; 
     this.startTyping(); 
   }
   
   ngOnDestroy() { 
     if (this.typeInterval) clearInterval(this.typeInterval); 
-    this.pararAudio(); // Garante que o som pare ao sair da tela
+    this.pararAudio(); 
   }
 
   currentSlideData() { 
@@ -92,7 +92,7 @@ export class StoryIntroComponent implements OnInit, OnDestroy {
 
   private pararAudio() {
     this.typingAudio.pause();
-    this.typingAudio.currentTime = 0; // Volta o som do começo
+    this.typingAudio.currentTime = 0; 
   }
 
   startTyping() {
@@ -102,9 +102,9 @@ export class StoryIntroComponent implements OnInit, OnDestroy {
     this.charIndex = 0;
     this.currentFullText = this.currentSlideData().text;
 
-    // Inicia o som
+    
     this.typingAudio.play().catch(e => {
-      // Ignora erro de autoplay do navegador
+      
     });
 
     this.typeInterval = setInterval(() => {
@@ -114,7 +114,7 @@ export class StoryIntroComponent implements OnInit, OnDestroy {
       } else {
         this.isTypingDone.set(true);
         clearInterval(this.typeInterval);
-        this.pararAudio(); // Para o som quando terminar de digitar
+        this.pararAudio(); 
       }
     }, 30);
   }
@@ -128,7 +128,7 @@ export class StoryIntroComponent implements OnInit, OnDestroy {
 
   advance() {
     if (!this.isTypingDone()) {
-      // Se pular a digitação, exibe tudo e para o som
+      
       clearInterval(this.typeInterval);
       this.displayedText.set(this.currentFullText);
       this.isTypingDone.set(true);

@@ -6,7 +6,7 @@ import { CommonModule, Location } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './ajuda.component.html',
-  styleUrls: ['./ajuda.component.css'] // Corrigido para plural para evitar erros de compilação
+  styleUrls: ['./ajuda.component.css'] 
 })
 export class AjudaComponent {
   secaoAtiva: string = 'tutorial'; 
