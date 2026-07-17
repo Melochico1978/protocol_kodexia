@@ -1,3 +1,21 @@
 <div class="splash-container">
-  <img src="assets/images/splash.jpeg" alt="Super Trunfo Rally Splash Screen" />
+  <!-- Scanlines CRT e Barra de Escaneamento Laser -->
+  <div class="crt-scanline"></div>
+  <div class="laser-scanner"></div>
+
+  <div class="content-wrapper">
+    <div class="img-container">
+      <img src="assets/images/splash.jpeg" alt="Super Trunfo Rally Splash Screen" />
+    </div>
+
+    <!-- Barra de carregamento estilizada nova -->
+    <div class="loading-panel">
+      <div class="loading-text">
+        <span class="prefix">:: LOGIN_INFO //</span> {{ loadingMessage() }}
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+  </div>
 </div>

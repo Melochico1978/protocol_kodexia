@@ -68,8 +68,6 @@ export class PartidaComponent implements OnInit, OnDestroy {
 
   audioAtivo: boolean = false;
   private audioCtx: any = null;
-  private oscillator: any = null;
-  private gainNode: any = null;
   private beepInterval: any;
 
   get totalCartasJogador(): number {
@@ -80,17 +78,17 @@ export class PartidaComponent implements OnInit, OnDestroy {
     return this.deckBot.length + (this.cartaAtualBot ? 1 : 0);
   }
 
-  constructor(private cartaService: CartaService, private router: Router) {}
+  constructor(private readonly cartaService: CartaService, private readonly router: Router) {}
 
   ngOnInit(): void {
     if (this.isModoBoss) return;
 
     if (typeof window !== 'undefined' && window.localStorage) {
       this.nomeJogador = localStorage.getItem('nomeJogador') || 'JOGADOR 1';
-      this.vitorias = parseInt(localStorage.getItem('vitoriasJogador') || '0', 10);
+      this.vitorias = Number.parseInt(localStorage.getItem('vitoriasJogador') || '0', 10);
       this.atualizarTrofeu();
       
-      this.vitoriasBot = parseInt(localStorage.getItem('vitoriasBot') || '0', 10);
+      this.vitoriasBot = Number.parseInt(localStorage.getItem('vitoriasBot') || '0', 10);
       this.atualizarTrofeuBot();
     }
 
@@ -129,13 +127,11 @@ export class PartidaComponent implements OnInit, OnDestroy {
       clearInterval(this.introTypeInterval);
       this.introDisplayedText = this.introSlideAtual.text;
       this.introIsTypingDone = true;
+    } else if (this.introSlideIndex < this.introSlides.length - 1) {
+      this.introSlideIndex++;
+      this.iniciarIntroTyping();
     } else {
-      if (this.introSlideIndex < this.introSlides.length - 1) {
-        this.introSlideIndex++;
-        this.iniciarIntroTyping();
-      } else {
-        this.finalizarIntro();
-      }
+      this.finalizarIntro();
     }
   }
 
@@ -186,7 +182,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
     this.maoJogador = [];
     this.deckEmpate = [];
     
-    const embaralhado = [...deck].sort(() => Math.random() - 0.5);
+    const embaralhado = [...deck].sort(() => Math.random() - 0.5); // NOSONAR
     const metade = Math.floor(embaralhado.length / 2);
     
     this.deckJogador = embaralhado.slice(0, metade);
@@ -223,7 +219,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
     if (this.jogoAcabou) return;
     
     const cartaSelecionada = this.maoJogador[index];
-    if (cartaSelecionada && cartaSelecionada.lendaria) {
+    if (cartaSelecionada?.lendaria) {
       this.tocarSomLendaria();
     } else {
       this.tocarSomClique();
@@ -254,33 +250,31 @@ export class PartidaComponent implements OnInit, OnDestroy {
     }
   }
 
+  private escolherPiorCarta(profundidade: number): Carta {
+    let piorIndex = 0;
+    let menorMedia = Infinity;
+    for (let i = 0; i < profundidade; i++) {
+      const c = this.deckBot[i];
+      const media = (Number(c.performance) + Number(c.sintaxe) + Number(c.seguranca) + Number(c.longevidade) + Number(c.popularidade) + Number(c.abstracao) + Number(c.versatilidade)) / 7;
+      if (media < menorMedia && !c.lendaria) {
+        menorMedia = media;
+        piorIndex = i;
+      }
+    }
+    return this.deckBot.splice(piorIndex, 1)[0];
+  }
+
   private escolherCartaBotInteligente(cartaJogador: Carta): Carta {
     if (this.deckBot.length === 0) return null as any;
 
-    
     const profundidade = Math.min(3, this.deckBot.length);
     
-    
     if (cartaJogador.lendaria) {
-      
-      let indexGrupoA = this.deckBot.findIndex((c, i) => i < profundidade && c.grupo === 'A');
+      const indexGrupoA = this.deckBot.findIndex((c, i) => i < profundidade && c.grupo === 'A');
       if (indexGrupoA !== -1) return this.deckBot.splice(indexGrupoA, 1)[0];
-      
-      
-      let piorIndex = 0;
-      let menorMedia = Infinity;
-      for (let i = 0; i < profundidade; i++) {
-        const c = this.deckBot[i];
-        const media = (Number(c.performance) + Number(c.sintaxe) + Number(c.seguranca) + Number(c.longevidade) + Number(c.popularidade) + Number(c.abstracao) + Number(c.versatilidade)) / 7;
-        if (media < menorMedia && !c.lendaria) { 
-          menorMedia = media;
-          piorIndex = i;
-        }
-      }
-      return this.deckBot.splice(piorIndex, 1)[0];
+      return this.escolherPiorCarta(profundidade);
     }
 
-    
     const atributos: (keyof Carta)[] = ['performance', 'sintaxe', 'seguranca', 'longevidade', 'popularidade', 'abstracao', 'versatilidade'];
     let melhorAtributoJogador: keyof Carta = 'performance';
     let maiorValorJogador = 0;
@@ -293,7 +287,6 @@ export class PartidaComponent implements OnInit, OnDestroy {
       }
     }
 
-    
     let melhorIndexBot = 0;
     let maiorValorBot = -1;
 
@@ -305,22 +298,10 @@ export class PartidaComponent implements OnInit, OnDestroy {
       }
     }
 
-    
     if (maiorValorBot < maiorValorJogador) {
-        let piorIndex = 0;
-        let menorMedia = Infinity;
-        for (let i = 0; i < profundidade; i++) {
-            const c = this.deckBot[i];
-            const media = (Number(c.performance) + Number(c.sintaxe) + Number(c.seguranca) + Number(c.longevidade) + Number(c.popularidade) + Number(c.abstracao) + Number(c.versatilidade)) / 7;
-            if (media < menorMedia && !c.lendaria) {
-                menorMedia = media;
-                piorIndex = i;
-            }
-        }
-        return this.deckBot.splice(piorIndex, 1)[0];
+      return this.escolherPiorCarta(profundidade);
     }
 
-    
     return this.deckBot.splice(melhorIndexBot, 1)[0];
   }
 
@@ -388,10 +369,21 @@ export class PartidaComponent implements OnInit, OnDestroy {
 
     const resultadoSuperTrunfo = this.verificarSuperTrunfo(this.cartaAtualJogador, this.cartaAtualBot);
 
-    if (resultadoSuperTrunfo === 'JOGADOR') {
-      let msg = `★ SUPER TRUNFO ACIONADO! VITÓRIA AUTOMÁTICA com ${this.cartaAtualJogador.nome}!`;
-      this.deckJogador.push(this.cartaAtualJogador);
-      this.deckJogador.push(this.cartaAtualBot);
+    if (resultadoSuperTrunfo) {
+      this.executarResultadoSuperTrunfo(resultadoSuperTrunfo);
+    } else {
+      this.executarResultadoAtributo(atributo, nomeAtributo);
+    }
+    
+    setTimeout(() => {
+      this.recolherCartas();
+    }, 1500);
+  }
+
+  private executarResultadoSuperTrunfo(vencedor: 'JOGADOR' | 'BOT'): void {
+    if (vencedor === 'JOGADOR') {
+      let msg = `★ SUPER TRUNFO ACIONADO! VITÓRIA AUTOMÁTICA com ${this.cartaAtualJogador!.nome}!`;
+      this.deckJogador.push(this.cartaAtualJogador!, this.cartaAtualBot!);
       if (this.deckEmpate.length > 0) {
         msg += ` E VOCÊ CONQUISTOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
         this.deckJogador.push(...this.deckEmpate);
@@ -400,11 +392,9 @@ export class PartidaComponent implements OnInit, OnDestroy {
       this.escreverMensagemSistema(`> ${msg}`);
       this.dispararGlitch();
       this.turnoAtual = 'JOGADOR';
-
-    } else if (resultadoSuperTrunfo === 'BOT') {
-      let msg = `★ SUPER TRUNFO INIMIGO! O BOT venceu automaticamente com ${this.cartaAtualBot.nome}!`;
-      this.deckBot.push(this.cartaAtualBot);
-      this.deckBot.push(this.cartaAtualJogador);
+    } else {
+      let msg = `★ SUPER TRUNFO INIMIGO! O BOT venceu automaticamente com ${this.cartaAtualBot!.nome}!`;
+      this.deckBot.push(this.cartaAtualBot!, this.cartaAtualJogador!);
       if (this.deckEmpate.length > 0) {
         msg += ` O BOT LEVOU AS ${this.deckEmpate.length} CARTAS ACUMULADAS!`;
         this.deckBot.push(...this.deckEmpate);
@@ -413,70 +403,64 @@ export class PartidaComponent implements OnInit, OnDestroy {
       this.escreverMensagemSistema(`> ${msg}`);
       this.dispararGlitch();
       this.turnoAtual = 'BOT';
+    }
+  }
+
+  private executarResultadoAtributo(atributo: keyof Carta, nomeAtributo: string): void {
+    const valorJogador = Number(this.cartaAtualJogador![atributo]);
+    const valorBot = Number(this.cartaAtualBot![atributo]);
+
+    if (valorJogador > valorBot) {
+      const diff = valorJogador - valorBot;
+      let msg: string;
+      if (diff > 30) {
+        msg = `> ERRO CRÍTICO: Defesas aniquiladas! O ataque de ${valorJogador} humilhou a IA (${valorBot}).`;
+      } else if (diff < 5) {
+        msg = `> SOBRECARGA: A máquina quase bloqueou seu ataque (${valorJogador} vs ${valorBot}). Recalibrando...`;
+      } else {
+        msg = `> SUCESSO: Seu ataque em ${nomeAtributo} (${valorJogador}) superou os escudos do Bot (${valorBot}).`;
+      }
+      
+      this.deckJogador.push(this.cartaAtualJogador!, this.cartaAtualBot!);
+
+      if (this.deckEmpate.length > 0) {
+        msg += ` + EXTRAÇÃO DOS RECURSOS ACUMULADOS (${this.deckEmpate.length})!`;
+        this.deckJogador.push(...this.deckEmpate);
+        this.deckEmpate = [];
+      }
+      
+      this.escreverMensagemSistema(msg);
+      this.dispararGlitch();
+      this.turnoAtual = 'JOGADOR';
+
+    } else if (valorBot > valorJogador) {
+      const diff = valorBot - valorJogador;
+      let msg: string;
+      if (diff > 30) {
+        msg = `> BOT_EXEC: Padrão humano pífio. Bloqueio absoluto (${valorBot} vs ${valorJogador}).`;
+      } else if (diff < 5) {
+        msg = `> BOT_EXEC: Margem de risco detectada. Sobrevivência por eficiência calculada (${valorBot} vs ${valorJogador}).`;
+      } else {
+        msg = `> FALHA TÁTICA: A Inteligência Artificial esmagou seu ataque de ${valorJogador} com ${valorBot}.`;
+      }
+      
+      this.deckBot.push(this.cartaAtualBot!, this.cartaAtualJogador!);
+
+      if (this.deckEmpate.length > 0) {
+        msg += ` + A MÁQUINA ASSIMILOU OS DADOS EM EMPATE (${this.deckEmpate.length})!`;
+        this.deckBot.push(...this.deckEmpate);
+        this.deckEmpate = [];
+      }
+
+      this.escreverMensagemSistema(msg);
+      this.dispararGlitch();
+      this.turnoAtual = 'BOT';
 
     } else {
-      const valorJogador = Number(this.cartaAtualJogador[atributo]);
-      const valorBot = Number(this.cartaAtualBot[atributo]);
-
-      if (valorJogador > valorBot) {
-        let diff = valorJogador - valorBot;
-        let msg = `> BOT_EXEC_ERROR: Falha na barreira de ${nomeAtributo}.`;
-        if (diff > 30) {
-          msg = `> ERRO CRÍTICO: Defesas aniquiladas! O ataque de ${valorJogador} humilhou a IA (${valorBot}).`;
-        } else if (diff < 5) {
-          msg = `> SOBRECARGA: A máquina quase bloqueou seu ataque (${valorJogador} vs ${valorBot}). Recalibrando...`;
-        } else {
-          msg = `> SUCESSO: Seu ataque em ${nomeAtributo} (${valorJogador}) superou os escudos do Bot (${valorBot}).`;
-        }
-        
-        this.deckJogador.push(this.cartaAtualJogador);
-        this.deckJogador.push(this.cartaAtualBot);
-
-        if (this.deckEmpate.length > 0) {
-          msg += ` + EXTRAÇÃO DOS RECURSOS ACUMULADOS (${this.deckEmpate.length})!`;
-          this.deckJogador.push(...this.deckEmpate);
-          this.deckEmpate = [];
-        }
-        
-        this.escreverMensagemSistema(msg);
-        this.dispararGlitch();
-        this.turnoAtual = 'JOGADOR';
-
-      } else if (valorBot > valorJogador) {
-        let diff = valorBot - valorJogador;
-        let msg = `> MÁQUINA VENCEU: Padrão de ataque ineficiente em ${nomeAtributo}.`;
-        if (diff > 30) {
-          msg = `> BOT_EXEC: Padrão humano pífio. Bloqueio absoluto (${valorBot} vs ${valorJogador}).`;
-        } else if (diff < 5) {
-          msg = `> BOT_EXEC: Margem de risco detectada. Sobrevivência por eficiência calculada (${valorBot} vs ${valorJogador}).`;
-        } else {
-          msg = `> FALHA TÁTICA: A Inteligência Artificial esmagou seu ataque de ${valorJogador} com ${valorBot}.`;
-        }
-        
-        this.deckBot.push(this.cartaAtualBot);
-        this.deckBot.push(this.cartaAtualJogador);
-
-        if (this.deckEmpate.length > 0) {
-          msg += ` + A MÁQUINA ASSIMILOU OS DADOS EM EMPATE (${this.deckEmpate.length})!`;
-          this.deckBot.push(...this.deckEmpate);
-          this.deckEmpate = [];
-        }
-
-        this.escreverMensagemSistema(msg);
-        this.dispararGlitch();
-        this.turnoAtual = 'BOT';
-
-      } else {
-        this.escreverMensagemSistema(`> EMPATE DE SISTEMA! (${valorJogador} vs ${valorBot}) As cartas vão para o pote central.`);
-        this.dispararGlitch();
-        this.deckEmpate.push(this.cartaAtualJogador);
-        this.deckEmpate.push(this.cartaAtualBot);
-      }
+      this.escreverMensagemSistema(`> EMPATE DE SISTEMA! (${valorJogador} vs ${valorBot}) As cartas vão para o pote central.`);
+      this.dispararGlitch();
+      this.deckEmpate.push(this.cartaAtualJogador!, this.cartaAtualBot!);
     }
-    
-    setTimeout(() => {
-      this.recolherCartas();
-    }, 1500);
   }
 
   recolherCartas(): void {
@@ -682,49 +666,57 @@ export class PartidaComponent implements OnInit, OnDestroy {
     }
   }
 
-  tocarSomClique(): void {
+  private playTone(
+    type: OscillatorType,
+    frequency: number,
+    duration: number,
+    volume: number = 0.1,
+    startTime: number = this.audioCtx ? this.audioCtx.currentTime : 0,
+    rampFreq?: { to: number, type: 'linear' | 'exponential' },
+    rampGain?: { to: number, type: 'linear' | 'exponential' }
+  ) {
     if (!this.audioAtivo || !this.audioCtx) return;
-    const osc = this.audioCtx.createOscillator();
-    const gain = this.audioCtx.createGain();
-    
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, this.audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(1200, this.audioCtx.currentTime + 0.1);
-    
-    gain.gain.setValueAtTime(0.1, this.audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + 0.1);
-    
-    osc.connect(gain);
-    gain.connect(this.audioCtx.destination);
-    
-    osc.start();
-    osc.stop(this.audioCtx.currentTime + 0.1);
+    try {
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.type = type;
+      osc.frequency.setValueAtTime(frequency, startTime);
+      if (rampFreq) {
+        if (rampFreq.type === 'linear') {
+          osc.frequency.linearRampToValueAtTime(rampFreq.to, startTime + duration);
+        } else {
+          osc.frequency.exponentialRampToValueAtTime(rampFreq.to, startTime + duration);
+        }
+      }
+      gain.gain.setValueAtTime(volume, startTime);
+      if (rampGain) {
+        if (rampGain.type === 'linear') {
+          gain.gain.linearRampToValueAtTime(rampGain.to, startTime + duration);
+        } else {
+          gain.gain.exponentialRampToValueAtTime(rampGain.to, startTime + duration);
+        }
+      } else {
+        gain.gain.linearRampToValueAtTime(0.001, startTime + duration);
+      }
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    } catch (error) {
+      console.warn('Audio play failed:', error);
+    }
+  }
+
+  tocarSomClique(): void {
+    this.playTone('sine', 800, 0.1, 0.1, this.audioCtx?.currentTime, { to: 1200, type: 'exponential' }, { to: 0.01, type: 'exponential' });
   }
 
   tocarSomLendaria(): void {
     if (!this.audioAtivo || !this.audioCtx) return;
-    
-    
     const notas = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
-    
     notas.forEach((freq, i) => {
-      const osc = this.audioCtx.createOscillator();
-      const gain = this.audioCtx.createGain();
-      
-      osc.type = 'square'; 
-      osc.frequency.value = freq;
-      
-      const startTime = this.audioCtx.currentTime + (i * 0.08); 
-      
-      gain.gain.setValueAtTime(0, startTime);
-      gain.gain.linearRampToValueAtTime(0.1, startTime + 0.02);
-      gain.gain.linearRampToValueAtTime(0, startTime + 0.08);
-      
-      osc.connect(gain);
-      gain.connect(this.audioCtx.destination);
-      
-      osc.start(startTime);
-      osc.stop(startTime + 0.1);
+      const startTime = this.audioCtx.currentTime + (i * 0.08);
+      this.playTone('square', freq, 0.1, 0.1, startTime, undefined, { to: 0, type: 'linear' });
     });
   }
 
@@ -756,27 +748,12 @@ export class PartidaComponent implements OnInit, OnDestroy {
 
   tocarSomDigitacao(duracaoMs: number = 300): void {
     if (!this.audioAtivo || !this.audioCtx) return;
-    
     let startTime = this.audioCtx.currentTime;
     let endTime = startTime + (duracaoMs / 1000);
-    
     for (let t = startTime; t < endTime; t += 0.05) {
-      if (Math.random() > 0.3) {
-        const osc = this.audioCtx.createOscillator();
-        const gain = this.audioCtx.createGain();
-        
-        osc.type = 'triangle';
-        osc.frequency.value = 400 + Math.random() * 200; 
-        
-        gain.gain.setValueAtTime(0, t);
-        gain.gain.linearRampToValueAtTime(0.05, t + 0.01);
-        gain.gain.linearRampToValueAtTime(0, t + 0.03);
-        
-        osc.connect(gain);
-        gain.connect(this.audioCtx.destination);
-        
-        osc.start(t);
-        osc.stop(t + 0.04);
+      if (Math.random() > 0.3) { // NOSONAR
+        const freq = 400 + Math.random() * 200; // NOSONAR
+        this.playTone('triangle', freq, 0.04, 0.05, t, undefined, { to: 0, type: 'linear' });
       }
     }
   }

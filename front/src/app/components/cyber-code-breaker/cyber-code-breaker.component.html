@@ -1,8 +1,26 @@
 <div class="cyber-container">
+  <div class="crt-scanline"></div>
+  <div class="matrix-rain-container">
+    <div class="matrix-column" *ngFor="let col of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]">
+      <span>1</span><span>0</span><span>1</span><span>0</span><span>0</span><span>1</span><span>1</span><span>0</span><span>1</span><span>0</span><span>1</span><span>1</span>
+    </div>
+  </div>
   <div class="top-bar">
     <div class="glitch-title">CYBER CODE BREAKER</div>
-    <div class="level-info" style="font-size: 18px; color: #fff;">NÍVEL {{ activeLevel.id }} - {{ activeLevel.name }}</div>
-    <div class="health-bar-container">
+    <div class="level-info" *ngIf="gameState() !== 'CREATOR_PANEL'" style="font-size: 18px; color: #fff;">
+      {{ gameState() === 'PLAYING_CUSTOM' ? 'CONEXÃO CUSTOMIZADA' : 'NÍVEL ' + activeLevel.id + ' - ' + activeLevel.name }}
+    </div>
+    
+    <div class="mode-toggles" style="display: flex; gap: 15px;">
+      <button type="button" class="btn-dica" *ngIf="gameState() !== 'CREATOR_PANEL'" (click)="iniciarCriador()" style="margin-top: 0; background: rgba(255, 0, 127, 0.15); border-color: #ff007f; color: #ff007f;">
+        [ MODO CRIAÇÃO ]
+      </button>
+      <button type="button" class="btn-dica" *ngIf="gameState() === 'CREATOR_PANEL'" (click)="restartGame()" style="margin-top: 0; background: rgba(0, 229, 255, 0.15); border-color: #00e5ff; color: #00e5ff;">
+        [ MODO CAMPANHA ]
+      </button>
+    </div>
+
+    <div class="health-bar-container" *ngIf="gameState() !== 'CREATOR_PANEL'">
       <span style="color: #ff003c; font-weight: bold;">JOGADAS RESTANTES: {{ activeLevel.maxAttempts - guesses.length }} / {{ activeLevel.maxAttempts }}</span>
       <div class="health-bar">
         <div class="health-fill" [style.width.%]="((activeLevel.maxAttempts - guesses.length) / activeLevel.maxAttempts) * 100"></div>
@@ -10,7 +28,8 @@
     </div>
   </div>
 
-  <div class="main-content">
+  <!-- TELA DO JOGO (CAMPANHA OU CUSTOMIZADO) -->
+  <div class="main-content" *ngIf="gameState() !== 'CREATOR_PANEL'">
     <div class="game-panel">
       <div class="history-board">
         <div class="guess-row" *ngFor="let g of guesses">
@@ -28,22 +47,30 @@
         </div>
       </div>
 
-      <div class="input-area" *ngIf="gameState() === 'PLAYING'">
+      <div class="input-area" *ngIf="gameState() === 'PLAYING' || gameState() === 'PLAYING_CUSTOM'">
         <div style="margin-bottom: 15px; color: #ccc;">SELECIONE OS COMANDOS DISPONÍVEIS PARA MONTAR A SEQUÊNCIA (ARRASTE OU CLIQUE):</div>
         
         <div class="commands-palette">
           <button class="cmd-btn" 
-                  *ngFor="let cmd of activeLevel.availableCommands" 
+                  *ngFor="let cmd of activeLevel.availableCommands; let idx = index" 
                   draggable="true" 
                   (dragstart)="onDragStart($event, cmd)"
-                  (click)="selectCommand(cmd)">
+                  (click)="selectCommand(cmd)"
+                  (mouseenter)="onCommandHover(cmd)"
+                  (mouseleave)="onCommandLeave()">
             {{ cmd }}
+            <span class="cmd-btn-key-hint">[{{ idx + 1 }}]</span>
           </button>
+        </div>
+
+        <div class="cmd-description-box">
+          <span class="desc-tag">:: CONCEITO_LOGICO //</span> 
+          <span class="desc-text">{{ hoveredCommandDesc() || 'Passe o mouse sobre um comando para analisar sua função.' }}</span>
         </div>
 
         <div class="action-row">
           <div class="code-slots">
-            <div class="slot interactive" 
+            <button type="button" class="slot interactive" 
                  *ngFor="let slot of currentGuess; let i = index" 
                  [class.filled]="slot"
                  [class.drag-over]="dragTargetIndex() === i"
@@ -53,7 +80,7 @@
                  (click)="clearCommand(i)"
                  title="Clique para remover ou arraste algo aqui">
               {{ slot || '_' }}
-            </div>
+            </button>
           </div>
           <button class="submit-btn" (click)="submitGuess()" [disabled]="currentGuess.includes(null!)">
             EXECUTAR BYPASS
@@ -65,15 +92,126 @@
     <div class="story-panel">
       <div class="oracle-box">
         <div class="oracle-avatar">
-          <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="40" stroke="#00ffff" stroke-width="4" fill="none"/>
-            <circle cx="50" cy="50" r="10" fill="#00ffff"/>
-          </svg>
-          <div style="font-size: 16px; margin-top: 10px;">ORACLE v1.0</div>
+          <div class="hologram-wrapper">
+            <svg viewBox="0 0 100 100" class="oracle-hologram-svg">
+              <defs>
+                <linearGradient id="holoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.9"/>
+                  <stop offset="50%" stop-color="#ff007f" stop-opacity="0.6"/>
+                  <stop offset="100%" stop-color="#00e5ff" stop-opacity="0.9"/>
+                </linearGradient>
+              </defs>
+              <!-- Outer scanner ring -->
+              <circle cx="50" cy="50" r="42" stroke="url(#holoGrad)" stroke-width="2" fill="none" stroke-dasharray="10 5 20 5" class="ring-outer"/>
+              <!-- Inner ring -->
+              <circle cx="50" cy="50" r="32" stroke="#00e5ff" stroke-width="1.2" fill="none" stroke-dasharray="5 5" class="ring-inner"/>
+              <!-- Oscillating waves representing digital thinking -->
+              <path d="M 20,50 Q 35,20 50,50 T 80,50" stroke="#ff007f" stroke-width="2" fill="none" class="wave-line w1"/>
+              <path d="M 20,50 Q 35,80 50,50 T 80,50" stroke="#00e5ff" stroke-width="1.5" fill="none" class="wave-line w2"/>
+              <!-- Core pulse -->
+              <circle cx="50" cy="50" r="8" fill="#00e5ff" class="core-pulse"/>
+            </svg>
+          </div>
+          <div class="oracle-tag">ORACLE v1.0</div>
         </div>
         <div class="oracle-dialog">
-          <span>{{ oracleMessage() }}</span><span class="typing-cursor" *ngIf="isTyping()"></span>
+          <div class="oracle-text-container">
+            <span>{{ oracleMessage() }}</span><span class="typing-cursor" *ngIf="isTyping()"></span>
+          </div>
+          <button class="btn-dica" *ngIf="gameState() === 'PLAYING' || gameState() === 'PLAYING_CUSTOM'" (click)="pedirDica()" [disabled]="dicasRestantes() <= 0 || isTyping()">
+            ⚡ DETECTAR PISTA ({{ dicasRestantes() }} RESTANTES)
+          </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA DO MODO CRIAÇÃO -->
+  <div class="main-content creator-content-grid" *ngIf="gameState() === 'CREATOR_PANEL'">
+    <div class="game-panel creator-panel-box">
+      <h2 style="font-family: 'Orbitron', sans-serif; color: #ff007f; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255,0,127,0.3);">
+        [ CONFIGURADOR_DE_FIREWALL ]
+      </h2>
+      
+      <div class="creator-section">
+        <label class="creator-label">COMPRIMENTO DO CÓDIGO (SENHA):</label>
+        <div class="selector-row">
+          <button type="button" class="select-btn" [class.active]="creatorCodeLength() === 3" (click)="onCreatorCodeLengthChange(3)">3</button>
+          <button type="button" class="select-btn" [class.active]="creatorCodeLength() === 4" (click)="onCreatorCodeLengthChange(4)">4</button>
+          <button type="button" class="select-btn" [class.active]="creatorCodeLength() === 5" (click)="onCreatorCodeLengthChange(5)">5</button>
+        </div>
+      </div>
+
+      <div class="creator-section">
+        <label class="creator-label">TENTATIVAS MÁXIMAS: <span style="color: #00e5ff; margin-left: 10px;">{{ creatorMaxAttempts() }}</span></label>
+        <input type="range" min="5" max="15" [value]="creatorMaxAttempts()" (input)="creatorMaxAttempts.set($any($event.target).value)" class="cyber-range"/>
+      </div>
+
+      <div class="creator-section">
+        <label class="creator-label">COMANDOS ATIVOS:</label>
+        <div class="commands-grid">
+          <button type="button" class="cmd-check-btn" 
+                  *ngFor="let cmd of allCommands" 
+                  [class.checked]="creatorAvailableCommands().includes(cmd)"
+                  (click)="alternarComandoDisponivel(cmd)">
+            {{ cmd }}
+          </button>
+        </div>
+      </div>
+
+      <div class="creator-section">
+        <label class="creator-label">DEFINIR GABARITO (SEQUÊNCIA SECRETA):</label>
+        <div class="code-slots" style="margin-top: 10px; margin-bottom: 15px;">
+          <button type="button" class="slot interactive" 
+                  *ngFor="let slot of creatorSecretCode(); let i = index" 
+                  [class.filled]="slot"
+                  (click)="limparComandoSecretCode(i)"
+                  title="Clique para limpar slot">
+            {{ slot || '_' }}
+          </button>
+        </div>
+        <div class="commands-palette" *ngIf="creatorSecretCode().includes(null)">
+          <button type="button" class="cmd-btn" 
+                  *ngFor="let cmd of creatorAvailableCommands()"
+                  (click)="definirComandoSecretCode(creatorSecretCode().indexOf(null), cmd)">
+            {{ cmd }}
+          </button>
+        </div>
+      </div>
+
+      <div class="creator-section">
+        <label class="creator-label">INSTRUÇÃO PEDAGÓGICA DO ORACLE:</label>
+        <textarea rows="3" class="cyber-textarea" 
+                  [value]="creatorOracleIntro()" 
+                  (input)="creatorOracleIntro.set($any($event.target).value)" 
+                  placeholder="Escreva dicas e objetivos pedagógicos sobre esse fluxo lógico..."></textarea>
+      </div>
+
+      <div class="creator-actions">
+        <button type="button" class="action-btn test-btn" (click)="jogarNivelCustomizado()">TESTAR FIREWALL</button>
+        <button type="button" class="action-btn share-btn" (click)="gerarCodigoCompartilhamento()">COMPARTILHAR</button>
+      </div>
+
+      <div class="share-box" *ngIf="customLevelCode()">
+        <label class="creator-label">CÓDIGO DE INVASÃO GERADO:</label>
+        <input type="text" readonly class="cyber-input" [value]="customLevelCode()" onClick="this.select()"/>
+        <p style="color: #666; font-size: 11px; margin-top: 5px;">Copie e compartilhe esse hash com outros decoders para jogarem seu nível.</p>
+      </div>
+    </div>
+
+    <div class="story-panel import-panel-box">
+      <div class="oracle-box" style="flex-direction: column; align-items: stretch; gap: 15px; padding: 20px;">
+        <h3 style="font-family: 'Orbitron', sans-serif; color: #00e5ff; margin: 0; font-size: 16px;">
+          [ IMPORTAR FIREWALL ]
+        </h3>
+        <p style="color: #ccc; font-size: 12px; margin: 0;">Cole o código Base64 recebido para descriptografar e testar a sequência.</p>
+        <input type="text" class="cyber-input" 
+               [value]="importLevelCode()" 
+               (input)="importLevelCode.set($any($event.target).value)" 
+               placeholder="Cole o código hash aqui..."/>
+        <button type="button" class="action-btn test-btn" style="width: 100%; margin-top: 5px;" (click)="carregarNivelPorCodigo(importLevelCode())">
+          DESCRIPTOGRAFAR E INICIAR
+        </button>
       </div>
     </div>
   </div>

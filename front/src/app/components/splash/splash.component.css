@@ -1,25 +1,133 @@
-
 .splash-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
   width: 100vw;
-  background-color: #3e2723; 
-  animation: fadeInSlow 3s ease-in-out forwards; 
-  opacity: 0;
+  background-color: #04040c; 
+  position: relative;
+  overflow: hidden;
+  font-family: 'Share Tech Mono', monospace;
 }
 
-.splash-container img {
-  max-width: 100%;
-  max-height: 100%;
+/* Efeito de sobreposição das  linhas CRT (Scanlines) */
+.crt-scanline {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  background-size: 100% 4px, 6px 100%;
+  z-index: 5;
+  pointer-events: none;
 }
 
-@keyframes fadeInSlow {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+/* Laser scanner animado em neon ciano/magenta */
+.laser-scanner {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #00e5ff, #ff007f, #00e5ff, transparent);
+  box-shadow: 0 0 15px #00e5ff, 0 0 5px #ff007f;
+  z-index: 4;
+  opacity: 0.8;
+  animation: scanVertical 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scanVertical {
+  0% { top: 0%; }
+  50% { top: 100%; }
+  100% { top: 0%; }
+}
+
+.content-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  animation: loadFadeIn 1.5s ease-out forwards;
+}
+
+@keyframes loadFadeIn {
+  from { opacity: 0; filter: blur(5px); }
+  to { opacity: 1; filter: blur(0); }
+}
+
+.img-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  background: #04040c;
+}
+
+.img-container img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  opacity: 0.85;
+}
+
+/* Estilização do painel de carregamento flutuando no rodapé */
+.loading-panel {
+  position: absolute;
+  bottom: 80px;
+  width: 480px;
+  background: rgba(8, 12, 24, 0.85);
+  border: 1px solid rgba(0, 229, 255, 0.25);
+  border-left: 4px solid #ff007f;
+  padding: 20px;
+  box-sizing: border-box;
+  backdrop-filter: blur(15px);
+  z-index: 3;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 229, 255, 0.05);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.loading-text {
+  color: #00e5ff;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  text-shadow: 0 0 5px rgba(0, 229, 255, 0.5);
+  height: 18px;
+}
+
+.loading-text .prefix {
+  color: #ff007f;
+  text-shadow: 0 0 5px rgba(255, 0, 127, 0.5);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 5px rgba(0, 229, 255, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #ff007f, #00e5ff);
+  box-shadow: 0 0 8px #00e5ff;
+  animation: fillProgress 4.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes fillProgress {
+  0% { width: 0%; }
+  20% { width: 15%; }
+  45% { width: 55%; }
+  75% { width: 85%; }
+  100% { width: 100%; }
 }
