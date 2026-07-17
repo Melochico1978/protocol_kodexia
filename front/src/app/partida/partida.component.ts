@@ -267,7 +267,8 @@ export class PartidaComponent implements OnInit, OnDestroy {
   private escolherCartaBotInteligente(cartaJogador: Carta): Carta {
     if (this.deckBot.length === 0) return null as any;
 
-    const profundidade = Math.min(3, this.deckBot.length);
+    // Aumenta a profundidade de decisão de 3 para 5 cartas
+    const profundidade = Math.min(5, this.deckBot.length);
     
     if (cartaJogador.lendaria) {
       const indexGrupoA = this.deckBot.findIndex((c, i) => i < profundidade && c.grupo === 'A');
@@ -298,6 +299,8 @@ export class PartidaComponent implements OnInit, OnDestroy {
       }
     }
 
+    // Se o bot não tem nenhuma carta capaz de bater o atributo mais forte do jogador,
+    // ele economiza as cartas boas e descarta a pior carta dele na profundidade atual
     if (maiorValorBot < maiorValorJogador) {
       return this.escolherPiorCarta(profundidade);
     }
@@ -322,20 +325,32 @@ export class PartidaComponent implements OnInit, OnDestroy {
     ];
 
     let melhorAtributo = atributos[0];
-    let maiorValor = Number(this.cartaAtualBot[melhorAtributo.chave]) || 0;
+    let melhorScore = -Infinity;
 
-    for (let i = 1; i < atributos.length; i++) {
-      const valor = Number(this.cartaAtualBot[atributos[i].chave]) || 0;
-      if (valor > maiorValor) {
-        maiorValor = valor;
-        melhorAtributo = atributos[i];
+    // IA Heurística Neural: Calcula a maior vantagem contra a média da mão do jogador
+    for (const attr of atributos) {
+      const valorBot = Number(this.cartaAtualBot[attr.chave]) || 0;
+      let somaJogador = 0;
+      let countJogador = 0;
+
+      for (const card of this.maoJogador) {
+        somaJogador += Number(card[attr.chave]) || 0;
+        countJogador++;
+      }
+
+      const mediaJogador = countJogador > 0 ? (somaJogador / countJogador) : 50;
+      const score = valorBot - mediaJogador;
+
+      if (score > melhorScore) {
+        melhorScore = score;
+        melhorAtributo = attr;
       }
     }
 
     this.atributoAtaqueBot = melhorAtributo.chave;
     this.nomeAtributoAtaqueBot = melhorAtributo.nome;
     
-    this.escreverMensagemSistema(`> ATAQUE INIMIGO: O Bot atacou com ${this.nomeAtributoAtaqueBot}. Escolha uma carta para DEFENDER!`);
+    this.escreverMensagemSistema(`> HEURÍSTICA NEURAL: IA identificou brecha em ${this.nomeAtributoAtaqueBot}. Escolha uma carta para DEFENDER!`);
     this.faseAtual = 'DEFENDER';
   }
 
