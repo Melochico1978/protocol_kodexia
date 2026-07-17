@@ -1,13 +1,27 @@
-
-body { 
-  margin: 0; 
-  padding: 0; 
+.gerenciar-master-container {
+  min-height: 100vh;
+  background: radial-gradient(circle at center, rgba(13, 2, 33, 0.85) 0%, rgba(5, 1, 15, 0.98) 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
 
+.gerenciar-master-container::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 1;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
 
 .header-modo-criacao {
   text-align: center;
   padding-top: 30px;
+  position: relative;
+  z-index: 2;
 }
 
 .titulo-cyberpunk {
@@ -209,13 +223,23 @@ body {
 .form-dados input, 
 .form-dados select, 
 .form-dados textarea {
-  background: rgba(0, 0, 0, 0.6); 
-  border: 1px solid #00f3ff; 
+  background: rgba(4, 4, 12, 0.9); 
+  border: 1px solid rgba(0, 243, 255, 0.4); 
   color: white;
-  padding: 8px; 
+  padding: 8px 12px; 
   font-family: 'VT323', monospace; 
-  font-size: 18px; 
+  font-size: 20px; 
   border-radius: 4px;
+  box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.05);
+  transition: all 0.3s;
+}
+
+.form-dados input:focus, 
+.form-dados select:focus, 
+.form-dados textarea:focus {
+  border-color: #00f3ff;
+  outline: none;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.4), inset 0 0 5px rgba(0, 243, 255, 0.2);
 }
 
 .form-sliders { 

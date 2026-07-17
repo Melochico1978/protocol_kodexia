@@ -20,45 +20,14 @@
         </div>
       </div>
 
-      <div class="janela-so janela-preview">
+      <div class="janela-so janela-preview" style="border-color: #00f3ff;">
         <div class="header-so">🔴 🟡 🟢 VISUALIZADOR_HOLOGRAFICO.exe</div>
-        <div class="body-so layout-preview">
-
-          <div class="preview-esq">
-            <div class="caixa-imagem">
-              <span>IMG</span>
-            </div>
-            <div class="caixa-grupo">
-              GRUPO: {{ novaCarta.grupo }}
-            </div>
-          </div>
-
-          <div class="preview-dir">
-            <div class="attr-mini"><span>PERF:</span>
-              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.performance"></div></div> <span>{{novaCarta.performance}}</span>
-            </div>
-            <div class="attr-mini"><span>SINT:</span>
-              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.sintaxe"></div></div> <span>{{novaCarta.sintaxe}}</span>
-            </div>
-            <div class="attr-mini"><span>SEGU:</span>
-              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.seguranca"></div></div> <span>{{novaCarta.seguranca}}</span>
-            </div>
-            <div class="attr-mini"><span>LONG:</span>
-              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.longevidade"></div></div> <span>{{novaCarta.longevidade}}</span>
-            </div>
-            <div class="attr-mini"><span>POPU:</span>
-              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.popularidade"></div></div> <span>{{novaCarta.popularidade}}</span>
-            </div>
-            <div class="attr-mini"><span>ABST:</span>
-              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.abstracao"></div></div> <span>{{novaCarta.abstracao}}</span>
-            </div>
-            <div class="attr-mini"><span>VERS:</span>
-              <div class="barra-bg"><div class="barra-fill" [style.width.%]="novaCarta.versatilidade"></div></div> <span>{{novaCarta.versatilidade}}</span>
-            </div>
-          </div>
+        <div class="body-so layout-preview-card" style="display: flex; justify-content: center; align-items: center; padding: 25px 10px;">
+          <!-- Pré-visualização em tempo real com a própria carta do jogo -->
+          <app-carta [cartaInput]="novaCarta"></app-carta>
         </div>
 
-        <div class="botoes-acao">
+        <div class="botoes-acao" style="margin-top: 0; padding: 15px; border-top: 1px dashed rgba(0, 243, 255, 0.2);">
           <button class="btn-acao btn-salvar" (click)="adicionarCarta()" [disabled]="!novaCarta.nome">
             {{ modoEdicao ? '✅ SALVAR EDIÇÃO' : '💾 SALVAR DADO' }}
           </button>
