@@ -918,8 +918,14 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
     gap: 20px;
   }
   
+  .zona-embate {
+    gap: 10px;
+  }
+
   .slot-carta {
     transform: scale(0.9);
+    width: 200px;
+    height: 290px;
   }
   
   .divisor-vs {
@@ -962,8 +968,14 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
     gap: 15px;
   }
   
+  .zona-embate {
+    gap: 5px;
+  }
+
   .slot-carta {
     transform: scale(0.8);
+    width: 180px;
+    height: 260px;
   }
   
   .divisor-vs {

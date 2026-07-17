@@ -110,6 +110,8 @@ export class PartidaComponent implements OnInit, OnDestroy {
     this.introCharIndex = 0;
     const fullText = this.introSlideAtual.text;
 
+    this.tocarSomDigitacao(fullText.length * 30);
+
     this.introTypeInterval = setInterval(() => {
       if (this.introCharIndex < fullText.length) {
         this.introDisplayedText += fullText.charAt(this.introCharIndex);

@@ -137,9 +137,32 @@
     <h2 style="color: #00f3ff; border-bottom: 1px dashed #00f3ff; display: inline-block; padding-bottom: 5px;">[ BANCO DE DADOS: LINGUAGENS CADASTRADAS ]</h2>
   </div>
 
-  <div class="galeria-wrapper" style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; padding-bottom: 50px;">
+  <!-- Painel de Busca e Filtros -->
+  <div class="filtros-container" style="max-width: 1250px; margin: 0 auto 30px auto; padding: 0 40px; display: flex; gap: 20px; flex-wrap: wrap; position: relative; z-index: 2;">
+    <input type="text" class="filtro-campo" [(ngModel)]="filtroTexto" placeholder="Pesquisar por nome ou código..." style="flex: 2; min-width: 250px;"/>
     
-    <div *ngFor="let carta of cartas" class="card-interativo" style="position: relative;">
+    <select class="filtro-campo" [(ngModel)]="filtroGrupo" style="flex: 1; min-width: 150px;">
+      <option value="TODOS">Todos os Grupos</option>
+      <option value="A">Grupo A</option>
+      <option value="B">Grupo B</option>
+      <option value="C">Grupo C</option>
+      <option value="D">Grupo D</option>
+      <option value="E">Grupo E</option>
+      <option value="F">Grupo F</option>
+      <option value="G">Grupo G</option>
+      <option value="H">Grupo H</option>
+    </select>
+
+    <select class="filtro-campo" [(ngModel)]="filtroRaridade" style="flex: 1; min-width: 150px;">
+      <option value="TODAS">Todas as Raridades</option>
+      <option value="COMUM">Comuns</option>
+      <option value="LENDARIA">Lendárias</option>
+    </select>
+  </div>
+
+  <div class="galeria-wrapper" style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; padding-bottom: 50px; position: relative; z-index: 2;">
+    
+    <div *ngFor="let carta of cartasFiltradas" class="card-interativo" style="position: relative;">
       
       <app-carta [cartaInput]="carta"></app-carta>
 
@@ -154,6 +177,10 @@
         </button>
       </div>
 
+    </div>
+    
+    <div *ngIf="cartasFiltradas.length === 0" style="color: #666; font-size: 24px; text-align: center; width: 100%; margin-top: 40px;">
+      NENHUM NÚCLEO DE DADOS ENCONTRADO PARA OS FILTROS SELECIONADOS.
     </div>
   </div>
 

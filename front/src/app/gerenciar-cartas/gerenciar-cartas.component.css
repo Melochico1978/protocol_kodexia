@@ -26,6 +26,7 @@
 
 .titulo-cyberpunk {
   color: #00f3ff;
+  font-family: 'VT323', monospace;
   font-size: 50px;
   letter-spacing: 5px;
   text-shadow: 0 0 15px #00f3ff;
@@ -45,7 +46,7 @@
   margin: 0 auto;
   padding: 20px 40px;
   min-height: calc(100vh - 100px); 
-  font-family: 'VT323', monospace;
+  font-family: 'Share Tech Mono', monospace;
   color: white;
 }
 
@@ -227,7 +228,7 @@
   border: 1px solid rgba(0, 243, 255, 0.4); 
   color: white;
   padding: 8px 12px; 
-  font-family: 'VT323', monospace; 
+  font-family: 'Share Tech Mono', monospace; 
   font-size: 20px; 
   border-radius: 4px;
   box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.05);
@@ -294,4 +295,22 @@ input[type=range]::-webkit-slider-runnable-track {
   background: rgba(0, 243, 255, 0.6); 
   border-radius: 4px; 
   border: 1px solid rgba(0, 243, 255, 0.3);
+}
+
+.filtro-campo {
+  background: rgba(4, 4, 12, 0.9) !important; 
+  border: 1px solid rgba(0, 243, 255, 0.4) !important; 
+  color: white !important;
+  padding: 10px 15px !important; 
+  font-family: 'VT323', monospace !important; 
+  font-size: 22px !important; 
+  border-radius: 4px !important;
+  box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.05);
+  transition: all 0.3s;
+}
+
+.filtro-campo:focus {
+  border-color: #00f3ff !important;
+  outline: none;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.4), inset 0 0 5px rgba(0, 243, 255, 0.2);
 }

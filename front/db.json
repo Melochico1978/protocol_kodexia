@@ -479,6 +479,20 @@
       "abstracao": 10,
       "versatilidade": 90,
       "lendaria": false
+    },
+    {
+      "nome": "CEFET",
+      "grupo": "L",
+      "codigo": "8",
+      "performance": 98,
+      "sintaxe": 95,
+      "seguranca": 92,
+      "longevidade": 85,
+      "popularidade": 83,
+      "abstracao": 82,
+      "versatilidade": 82,
+      "lendaria": false,
+      "id": "obMJWljUlbE"
     }
   ],
   "usuarios": [
@@ -487,5 +501,6 @@
       "login": "roberth",
       "nome": "Roberth"
     }
-  ]
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }

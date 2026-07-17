@@ -17,6 +17,22 @@ export class GerenciarCartasComponent implements OnInit {
   cartas: Carta[] = [];
   modoEdicao: boolean = false;
   cartaEmEdicao: Carta | null = null;
+
+  filtroTexto: string = '';
+  filtroGrupo: string = 'TODOS';
+  filtroRaridade: 'TODAS' | 'COMUM' | 'LENDARIA' = 'TODAS';
+
+  get cartasFiltradas(): Carta[] {
+    return this.cartas.filter(c => {
+      const matchesTexto = c.nome.toLowerCase().includes(this.filtroTexto.toLowerCase()) ||
+                           (c.grupo + '-' + c.codigo).toLowerCase().includes(this.filtroTexto.toLowerCase());
+      const matchesGrupo = this.filtroGrupo === 'TODOS' || c.grupo === this.filtroGrupo;
+      const matchesRaridade = this.filtroRaridade === 'TODAS' ||
+                              (this.filtroRaridade === 'LENDARIA' && c.lendaria) ||
+                              (this.filtroRaridade === 'COMUM' && !c.lendaria);
+      return matchesTexto && matchesGrupo && matchesRaridade;
+    });
+  }
   
   novaCarta: Carta = {
     nome: '',

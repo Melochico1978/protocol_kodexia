@@ -277,7 +277,9 @@ export class CyberCodeBreakerComponent implements OnInit {
   }
 
   playBeepType() {
-    this.playTone('triangle', 1000, 0.03, 0.01);
+    // Ruído de teclado mecânico retrô: oscilação rápida com frequência aleatória sutil
+    const freq = 600 + Math.random() * 300;
+    this.playTone('triangle', freq, 0.02, 0.03);
   }
 
   playBeepSuccess() {
