@@ -1,133 +1,278 @@
+/* Estilo base da Carta Cyberpunk */
 .carta-container {
-  font-family: 'VT323', monospace;
-  width: 350px;
-  border: 4px solid transparent;
-  border-radius: 12px;
-  background:
-    linear-gradient(#0b0c10, #0b0c10) padding-box,
-    linear-gradient(135deg, #00d2ff 0%, #8a2be2 100%) border-box;
-  padding: 15px;
-  color: #fff;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 0, 255, 0.2);
+  font-family: 'Rajdhani', 'VT323', monospace;
+  width: 360px;
+  min-height: 520px;
+  background: linear-gradient(135deg, #0d0e15 0%, #151821 50%, #0d0e15 100%);
+  border: 2px solid #2d3548;
+  border-radius: 16px;
+  padding: 16px;
+  color: #e2e8f0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 243, 255, 0.05);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  user-select: none;
+  z-index: 1;
+}
+
+.carta-container:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+}
+
+/* Bordas e glows dinâmicos por raridade */
+.carta-container[data-raridade="LENDÁRIA"] {
+  border-color: #ff9d00;
+  box-shadow: 0 0 25px rgba(255, 157, 0, 0.35), inset 0 0 15px rgba(255, 157, 0, 0.1);
+  background: linear-gradient(135deg, #16120b 0%, #291e0e 50%, #16120b 100%);
+}
+.carta-container[data-raridade="LENDÁRIA"] .carta-header .nome {
+  color: #ffb700;
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.6);
+}
+
+.carta-container[data-raridade="ULTRA RARA"] {
+  border-color: #ff007f;
+  box-shadow: 0 0 25px rgba(255, 0, 127, 0.35), inset 0 0 15px rgba(255, 0, 127, 0.1);
+  background: linear-gradient(135deg, #160b13 0%, #290e21 50%, #160b13 100%);
+}
+.carta-container[data-raridade="ULTRA RARA"] .carta-header .nome {
+  color: #ff007f;
+  text-shadow: 0 0 10px rgba(255, 0, 127, 0.6);
+}
+
+.carta-container[data-raridade="RARA"] {
+  border-color: #00f3ff;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.3), inset 0 0 15px rgba(0, 243, 255, 0.08);
+  background: linear-gradient(135deg, #0b1416 0%, #0e2429 50%, #0b1416 100%);
+}
+.carta-container[data-raridade="RARA"] .carta-header .nome {
+  color: #00f3ff;
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.6);
+}
+
+.carta-container[data-raridade="INCOMUM"] {
+  border-color: #39ff14;
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.25), inset 0 0 15px rgba(57, 255, 20, 0.08);
+  background: linear-gradient(135deg, #0b160b 0%, #0e290e 50%, #0b160b 100%);
+}
+.carta-container[data-raridade="INCOMUM"] .carta-header .nome {
+  color: #39ff14;
+  text-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
+}
+
+/* Cabeçalho */
+.carta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.carta-header .nome {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #e2e8f0;
   text-transform: uppercase;
 }
 
-.carta-header {
-  font-size: 2.2rem;
-  color: #39ff14;
-  text-shadow: 0 0 5px #39ff14;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
+.codigo-overlay {
+  font-family: 'VT323', monospace;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.imagem-container {
-  width: 100%;
-  height: 200px;
-  background: #000;
-  border: 3px solid #45a29e;
-  border-radius: 6px;
-  margin-bottom: 15px;
+/* Imagem de Fundo para o design Full-Art */
+.carta-background-imagem {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
+  border-radius: 14px;
 }
-
-.imagem-pixel {
-  width: 100%;
-  height: 100%;
+.carta-background-imagem img {
+  width: 100%; height: 100%;
   object-fit: cover;
-  image-rendering: pixelated;
+  opacity: 0.85;
+  filter: saturate(1.0) contrast(1.0);
+  transition: all 0.4s ease;
 }
 
+.carta-container:hover .carta-background-imagem img {
+  opacity: 0.95;
+  transform: scale(1.05);
+}
 
+.carta-background-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(to bottom, rgba(13, 14, 21, 0.2) 0%, rgba(13, 14, 21, 0.5) 100%);
+}
+/* Fallback/Placeholder de erro */
 .placeholder-erro {
   text-align: center;
-  color: #ff003c;
-  font-family: 'VT323', monospace;
+  color: #ff0055;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: rgba(255, 0, 60, 0.1);
+  background: rgba(255, 0, 85, 0.08);
 }
 
 .glitch-text {
-  font-size: 24px;
+  font-family: 'VT323', monospace;
+  font-size: 1.8rem;
   font-weight: bold;
-  position: relative;
+  letter-spacing: 1px;
   text-shadow: 2px 0 #00f3ff;
   animation: glitch 2s infinite;
 }
 
 .sub-erro {
-  font-size: 14px;
-  opacity: 0.7;
-  display: block;
-  margin-top: 5px;
+  font-size: 0.8rem;
+  opacity: 0.6;
+  margin-top: 6px;
+  font-family: monospace;
 }
 
 .scanline-erro {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 2px;
-  background: rgba(255, 0, 60, 0.3);
-  animation: scanlineMove 3s linear infinite;
+  background: rgba(255, 0, 85, 0.4);
+  animation: scanlineErro 2s linear infinite;
 }
 
-@keyframes scanlineMove {
+@keyframes scanlineErro {
   0% { top: 0; }
   100% { top: 100%; }
 }
 
-@keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
+/* Sub-Info Bar (Level | Type | Rarity) */
+.sub-info-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
 }
 
+.sub-info-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 
+.sub-info-item .label {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.sub-info-item .val {
+  color: #e2e8f0;
+}
+
+.sub-info-item .highlighted {
+  color: #00f3ff;
+  text-shadow: 0 0 5px rgba(0, 243, 255, 0.4);
+}
+
+.highlighted-rarity {
+  font-weight: 700;
+}
+.carta-container[data-raridade="LENDÁRIA"] .highlighted-rarity { color: #ffb700; }
+.carta-container[data-raridade="ULTRA RARA"] .highlighted-rarity { color: #ff007f; }
+.carta-container[data-raridade="RARA"] .highlighted-rarity { color: #00f3ff; }
+.carta-container[data-raridade="INCOMUM"] .highlighted-rarity { color: #39ff14; }
+.carta-container[data-raridade="COMUM"] .highlighted-rarity { color: #cbd5e1; }
+
+.sub-info-divider {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+/* Lista de Atributos */
 .atributos-lista {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 15px;
+  background: transparent;
+  border: none;
+  position: relative;
+  z-index: 1;
 }
 
 .atributo-linha {
   display: flex;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .attr-nome {
-  width: 130px;
-  color: #66fcf1;
-  letter-spacing: 1px;
+  width: 105px;
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 2px rgba(0, 0, 0, 0.95);
+  font-size: 0.8rem;
 }
 
 .attr-barra-container {
   flex: 1;
-  height: 16px;
-  background-color: #111;
-  border: 1px solid #333;
+  height: 12px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
   position: relative;
   margin: 0 10px;
+  overflow: hidden;
 }
 
 .attr-barra-preenchimento {
   height: 100%;
-  background: linear-gradient(90deg, #39ff14 0%, #ffff00 60%, #ff0000 100%);
-  transition: width 0.3s ease;
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+/* Cores das barras de progresso baseadas na raridade */
+.carta-container[data-raridade="LENDÁRIA"] .attr-barra-preenchimento {
+  background: linear-gradient(90deg, #ff9d00, #ffea00);
+  box-shadow: 0 0 8px rgba(255, 157, 0, 0.4);
+}
+.carta-container[data-raridade="ULTRA RARA"] .attr-barra-preenchimento {
+  background: linear-gradient(90deg, #ff007f, #ff7ba8);
+  box-shadow: 0 0 8px rgba(255, 0, 127, 0.4);
+}
+.carta-container[data-raridade="RARA"] .attr-barra-preenchimento {
+  background: linear-gradient(90deg, #00bfff, #00f3ff);
+  box-shadow: 0 0 8px rgba(0, 243, 255, 0.4);
+}
+.carta-container[data-raridade="INCOMUM"] .attr-barra-preenchimento {
+  background: linear-gradient(90deg, #1db954, #39ff14);
+  box-shadow: 0 0 8px rgba(57, 255, 20, 0.4);
+}
+.carta-container[data-raridade="COMUM"] .attr-barra-preenchimento {
+  background: linear-gradient(90deg, #475569, #94a3b8);
 }
 
 .attr-barra-segmentos {
@@ -136,49 +281,96 @@
   background: repeating-linear-gradient(
     90deg,
     transparent,
-    transparent calc(10% - 2px),
-    #0b0c10 calc(10% - 2px),
-    #0b0c10 10%
+    transparent calc(10% - 1px),
+    rgba(13, 14, 21, 0.8) calc(10% - 1px),
+    rgba(13, 14, 21, 0.8) 10%
   );
 }
 
 .attr-valor {
-  width: 40px;
-  color: #ff4c4c;
+  width: 32px;
+  color: #e2e8f0;
   text-align: right;
+  font-family: monospace;
 }
 
-
-.super-trunfo-box {
-  border: 2px solid #ff0000;
-  border-radius: 6px;
-  padding: 10px;
-  background: rgba(255, 0, 0, 0.1);
-  text-align: center;
-  box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
-}
-
-.titulo-trunfo {
-  color: #ff0000;
-  font-size: 1.5rem;
-  margin-bottom: 5px;
-  text-shadow: 0 0 4px #ff0000;
-}
-
-.conteudo-trunfo {
+/* Caixa de Lore / Descrição */
+.lore-box {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #94a3b8;
+  min-height: 48px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 1.1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.lore-content {
+  font-style: italic;
+}
+
+/* Rodapé / Stats de Jogo (Power & Special) */
+.carta-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.footer-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 1px;
+}
+
+.footer-val {
+  font-family: 'VT323', monospace;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.footer-stat-divider {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+/* Efeito de cores neon no Rodapé */
+.carta-container[data-raridade="LENDÁRIA"] .footer-val { color: #ffb700; text-shadow: 0 0 5px rgba(255, 183, 0, 0.4); }
+.carta-container[data-raridade="ULTRA RARA"] .footer-val { color: #ff007f; text-shadow: 0 0 5px rgba(255, 0, 127, 0.4); }
+.carta-container[data-raridade="RARA"] .footer-val { color: #00f3ff; text-shadow: 0 0 5px rgba(0, 243, 255, 0.4); }
+.carta-container[data-raridade="INCOMUM"] .footer-val { color: #39ff14; text-shadow: 0 0 5px rgba(57, 255, 20, 0.4); }
+.carta-container[data-raridade="COMUM"] .footer-val { color: #cbd5e1; }
+
+/* Tag Especial de Lendária */
+.lendaria-tag {
+  position: absolute;
+  top: 15px;
+  right: -30px;
+  background: linear-gradient(95deg, #d97706, #f59e0b, #d97706);
   color: #fff;
-  line-height: 1.2;
-}
-
-.estrela {
-  font-size: 1.8rem;
-}
-
-.conteudo-trunfo p {
-  margin: 0;
-  text-align: center;
+  padding: 4px 35px;
+  transform: rotate(45deg);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  z-index: 10;
 }

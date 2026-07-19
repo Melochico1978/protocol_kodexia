@@ -1,12 +1,13 @@
 <div class="card" [class.lendaria]="carta.lendaria">
+  <!-- Imagem de fundo cobrindo toda a carta -->
+  <div *ngIf="carta.imagem" class="card-background-imagem">
+    <img [src]="carta.imagem" [alt]="carta.nome">
+    <div class="card-background-overlay"></div>
+  </div>
+
   <div class="card-header">
     <span class="grupo">{{ carta.grupo }}-{{ carta.codigo }}</span>
     <h3 class="nome">{{ carta.nome }}</h3>
-  </div>
-
-  <div class="card-img">
-    <span *ngIf="!carta.imagem" class="emoji">💻</span>
-    <img *ngIf="carta.imagem" src="{{ carta.imagem }}" alt="{{ carta.nome }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
   </div>
 
   <div class="stats">
@@ -22,7 +23,6 @@
       <label>Segurança</label>
       <div class="bar-container"><div class="bar segu" [style.width]="getBarWidth(carta.seguranca)"></div></div>
     </div>
-    
   </div>
 
   <div *ngIf="carta.lendaria" class="badge">★ LENDÁRIA ★</div>
