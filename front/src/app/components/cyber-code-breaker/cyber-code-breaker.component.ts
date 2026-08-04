@@ -49,19 +49,19 @@ export class CyberCodeBreakerComponent implements OnInit, OnDestroy {
     { id: 12, name: 'Núcleo Central', codeLength: 5, availableCommands: this.allCommands, maxAttempts: 8, oracleIntro: "Último nível. ACERTE.", oracleSuccess: "Você conseguiu. A verdade será exposta. Você é uma lenda.", oracleFail: "Nossas existências foram apagadas. GAME OVER." }
   ];
 
-  currentLevelIndex = signal(0);
-  gameState = signal<'INTRO' | 'PLAYING' | 'LEVEL_WON' | 'GAME_WON' | 'GAME_OVER' | 'CREATOR_PANEL' | 'PLAYING_CUSTOM'>('INTRO');
+  readonly currentLevelIndex = signal(0);
+  readonly gameState = signal<'INTRO' | 'PLAYING' | 'LEVEL_WON' | 'GAME_WON' | 'GAME_OVER' | 'CREATOR_PANEL' | 'PLAYING_CUSTOM'>('INTRO');
   
   secretCode: string[] = [];
   guesses: Guess[] = [];
   currentGuess: string[] = [];
   
-  oracleMessage = signal('');
-  isTyping = signal(false);
-  dragTargetIndex = signal<number | null>(null);
-  dicasRestantes = signal(2);
+  readonly oracleMessage = signal('');
+  readonly isTyping = signal(false);
+  readonly dragTargetIndex = signal<number | null>(null);
+  readonly dicasRestantes = signal(2);
   
-  hoveredCommandDesc = signal<string | null>(null);
+  readonly hoveredCommandDesc = signal<string | null>(null);
 
   readonly commandDescriptions: { [key: string]: string } = {
     'VAR': 'Variável: Reserva espaço na memória do computador para guardar um valor ou informação.',
@@ -83,15 +83,15 @@ export class CyberCodeBreakerComponent implements OnInit, OnDestroy {
   }
 
   // --- MODO CRIAÇÃO ---
-  creatorCodeLength = signal<number>(4);
-  creatorMaxAttempts = signal<number>(10);
-  creatorAvailableCommands = signal<string[]>(['VAR', 'DATA', 'PRINT', 'END']);
-  creatorSecretCode = signal<(string | null)[]>(new Array(4).fill(null));
-  creatorOracleIntro = signal<string>('');
+  readonly creatorCodeLength = signal<number>(4);
+  readonly creatorMaxAttempts = signal<number>(10);
+  readonly creatorAvailableCommands = signal<string[]>(['VAR', 'DATA', 'PRINT', 'END']);
+  readonly creatorSecretCode = signal<(string | null)[]>(new Array(4).fill(null));
+  readonly creatorOracleIntro = signal<string>('');
   novoComandoNome = '';
   novoComandoDesc = '';
-  customLevelCode = signal<string>('');
-  importLevelCode = signal<string>('');
+  readonly customLevelCode = signal<string>('');
+  readonly importLevelCode = signal<string>('');
 
   adicionarNovoComandoPersonalizado() {
     const nome = this.novoComandoNome.trim().toUpperCase();
