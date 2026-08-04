@@ -1,11 +1,9 @@
 <div class="carta-container" [attr.data-raridade]="raridade" [class.lendaria]="cartaInput.lendaria">
   <!-- Imagem de fundo cobrindo toda a carta -->
-  @if (cartaInput.imagem) {
-    <div class="carta-background-imagem">
-      <img [src]="cartaInput.imagem" [alt]="cartaInput.nome">
-      <div class="carta-background-overlay"></div>
-    </div>
-  }
+  <div class="carta-background-imagem">
+    <img [src]="getImagemUrl()" [alt]="cartaInput.nome">
+    <div class="carta-background-overlay"></div>
+  </div>
 
   <!-- Cabeçalho Futurista -->
   <div class="carta-header">

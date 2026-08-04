@@ -9,7 +9,7 @@
       <div class="intro-avatar-area">
         <div class="intro-avatar-moldura" [class.intro-avatar-sistema]="introSlideAtual.speaker === 'SISTEMA'">
           <img 
-            [src]="introSlideAtual.speaker === 'SISTEMA' ? 'assets/images/sisi.jpeg' : 'assets/images/miraberto.jpeg'" 
+            [src]="introSlideAtual.speaker === 'SISTEMA' ? '/assets/images/sisi.jpeg' : '/assets/images/miraberto.jpeg'" 
             alt="Prof. Miraberto" 
             class="intro-avatar-img"
           />
@@ -37,7 +37,7 @@
     </div>
 
   </div>
-  <!-- ====== FIM INTRO ====== -->
+  <!-- ====== FIM INTRODUÇAO====== -->
 
   <button class="btn-fuga" (click)="voltarParaMenu()">[X] ABORTAR SIMULAÇÃO</button>
   
@@ -184,6 +184,8 @@
     <div class="carta-na-mao" 
          *ngFor="let carta of maoJogador; let i = index" 
          (click)="selecionarCartaDaMao(i)"
+         (mouseenter)="cartaFocadaIndex = i"
+         [class.focada]="cartaFocadaIndex === i"
          [class.pode-jogar]="faseAtual === 'ESCOLHER_CARTA' || faseAtual === 'DEFENDER'">
       <app-carta-exibicao [carta]="carta"></app-carta-exibicao>
     </div>

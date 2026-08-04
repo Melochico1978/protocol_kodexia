@@ -11,7 +11,16 @@
       {{ gameState() === 'PLAYING_CUSTOM' ? 'CONEXÃO CUSTOMIZADA' : 'NÍVEL ' + activeLevel.id + ' - ' + activeLevel.name }}
     </div>
     
-    <div class="mode-toggles" style="display: flex; gap: 15px;">
+    <div class="mode-toggles" style="display: flex; gap: 15px; align-items: center;">
+      <button type="button" class="btn-dica music-toggle-btn" (click)="toggleMusic()" 
+              [style.background]="isMusicPlaying() ? 'rgba(0, 229, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)'"
+              [style.borderColor]="isMusicPlaying() ? '#00e5ff' : '#666'"
+              [style.color]="isMusicPlaying() ? '#00e5ff' : '#999'"
+              style="margin-top: 0; font-family: 'Share Tech Mono', monospace; display: flex; align-items: center; gap: 8px;">
+        <span class="music-icon" [class.music-playing]="isMusicPlaying()">🎵</span>
+        {{ isMusicPlaying() ? 'MÚSICA: LIGADA' : 'MÚSICA: DESLIGADA' }}
+      </button>
+
       <button type="button" class="btn-dica" *ngIf="gameState() !== 'CREATOR_PANEL'" (click)="iniciarCriador()" style="margin-top: 0; background: rgba(255, 0, 127, 0.15); border-color: #ff007f; color: #ff007f;">
         [ MODO CRIAÇÃO ]
       </button>
@@ -155,6 +164,17 @@
                   [class.checked]="creatorAvailableCommands().includes(cmd)"
                   (click)="alternarComandoDisponivel(cmd)">
             {{ cmd }}
+          </button>
+        </div>
+      </div>
+
+      <div class="creator-section" style="border-top: 1px dashed rgba(0, 229, 255, 0.2); padding-top: 15px; margin-top: 15px;">
+        <label class="creator-label">CRIAR NOVO COMANDO CUSTOMIZADO:</label>
+        <div class="custom-cmd-inputs" style="display: flex; gap: 10px; margin-top: 10px; align-items: center;">
+          <input type="text" [(ngModel)]="novoComandoNome" placeholder="NOME (ex: WHILE)" class="cyber-input" style="flex: 1; max-width: 150px; text-transform: uppercase;" />
+          <input type="text" [(ngModel)]="novoComandoDesc" placeholder="Descrição do conceito lógico..." class="cyber-input" style="flex: 2;" />
+          <button type="button" class="action-btn test-btn" style="padding: 0 15px; margin-top: 0; white-space: nowrap; height: 38px;" (click)="adicionarNovoComandoPersonalizado()">
+            + CRIAR
           </button>
         </div>
       </div>

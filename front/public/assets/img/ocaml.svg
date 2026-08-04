@@ -1,31 +1,106 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" width="100%" height="100%">
   <defs>
+    <!-- Background Gradient -->
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#090514" />
-      <stop offset="100%" stop-color="#190e2b" />
+      <stop offset="0%" stop-color="#0b0502" />
+      <stop offset="50%" stop-color="#241005" />
+      <stop offset="100%" stop-color="#140600" />
     </linearGradient>
-    <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff7b00" />
-      <stop offset="100%" stop-color="#ff007b" />
+    
+    <!-- Neon Orange/Gold Gradient for OCaml -->
+    <linearGradient id="neonOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9d00" />
+      <stop offset="50%" stop-color="#ff5500" />
+      <stop offset="100%" stop-color="#ff0055" />
     </linearGradient>
-    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="6" result="blur" />
+
+    <!-- Neon Gold Accent -->
+    <linearGradient id="neonGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffea00" />
+      <stop offset="100%" stop-color="#ff8800" />
+    </linearGradient>
+    
+    <!-- Strong Glow Filter -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur1" />
+      <feGaussianBlur stdDeviation="2" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur1" />
+        <feMergeNode in="blur2" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <!-- Subtle Glow Filter -->
+    <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="2" result="blur" />
       <feMerge>
         <feMergeNode in="blur" />
         <feMergeNode in="SourceGraphic" />
       </feMerge>
     </filter>
   </defs>
-  <rect width="300" height="200" fill="url(#bgGrad)" />
-  <path d="M 0,20 L 300,20 M 0,40 L 300,40 M 0,60 L 300,60 M 0,80 L 300,80 M 0,100 L 300,100 M 0,120 L 300,120 M 0,140 L 300,140 M 0,160 L 300,160 M 0,180 L 300,180" stroke="#2a1b4e" stroke-width="0.5" />
-  <path d="M 30,0 L 30,200 M 60,0 L 60,200 M 90,0 L 90,200 M 120,0 L 120,200 M 150,0 L 150,200 M 180,0 L 180,200 M 210,0 L 210,200 M 240,0 L 240,200 M 270,0 L 270,200" stroke="#2a1b4e" stroke-width="0.5" />
-  <path d="M 15,185 L 55,185 L 75,165 L 105,165" stroke="#ff7b00" stroke-width="1.5" fill="none" opacity="0.5" />
-  <circle cx="105" cy="165" r="3" fill="#ff7b00" opacity="0.8" />
-  <path d="M 285,15 L 245,15 L 225,35 L 195,35" stroke="#ff007b" stroke-width="1.5" fill="none" opacity="0.5" />
-  <circle cx="195" cy="35" r="3" fill="#ff007b" opacity="0.8" />
-  <g filter="url(#glow)" transform="translate(150, 100)">
-    <polygon points="0,-45 40,25 -40,25" fill="none" stroke="url(#neonGrad)" stroke-width="4" />
-    <circle cx="0" cy="-5" r="20" fill="none" stroke="#ff007b" stroke-width="2" />
-    <text x="0" y="8" font-family="'Courier New', monospace" font-weight="900" font-size="28" fill="#ffffff" text-anchor="middle">OCAML</text>
+  
+  <!-- Outer Border & Background -->
+  <rect width="300" height="200" fill="url(#bgGrad)" rx="6" />
+  
+  <!-- Cyberpunk Tech Grid -->
+  <path d="M 0,20 L 300,20 M 0,40 L 300,40 M 0,60 L 300,60 M 0,80 L 300,80 M 0,100 L 300,100 M 0,120 L 300,120 M 0,140 L 300,140 M 0,160 L 300,160 M 0,180 L 300,180" stroke="#331405" stroke-width="0.75" />
+  <path d="M 30,0 L 30,200 M 60,0 L 60,200 M 90,0 L 90,200 M 120,0 L 120,200 M 150,0 L 150,200 M 180,0 L 180,200 M 210,0 L 210,200 M 240,0 L 240,200 M 270,0 L 270,200" stroke="#331405" stroke-width="0.75" />
+  
+  <!-- Geometric HUD Circle behind Camel -->
+  <circle cx="150" cy="90" r="55" fill="none" stroke="#ff5500" stroke-width="0.5" stroke-dasharray="10,10" opacity="0.25" />
+  <circle cx="150" cy="90" r="50" fill="none" stroke="#ffea00" stroke-width="1" stroke-dasharray="80,180,30,40" opacity="0.3" transform="rotate(45, 150, 90)" />
+
+  <!-- OCaml Camel Origami Cyberpunk Logo -->
+  <g filter="url(#glow)">
+    <!-- Designed using geometric low-poly/origami lines to make a futuristic camel -->
+    <!-- Head, Neck, Hump (Camel shape), legs -->
+    <path d="
+      M 95,125 
+      L 105,100 
+      L 115,105 
+      L 125,75 
+      L 145,65 
+      L 165,75 
+      L 180,68 
+      L 185,55 
+      L 198,52 
+      L 205,62 
+      L 190,75 
+      L 180,95 
+      L 185,125 
+      L 175,125 
+      L 170,105 
+      L 145,108 
+      L 140,125 
+      L 130,125 
+      L 132,102 
+      L 110,102 
+      L 105,125 
+      Z" 
+      fill="none" 
+      stroke="url(#neonOrange)" 
+      stroke-width="3" 
+      stroke-linejoin="round" 
+      stroke-linecap="round" />
+
+    <!-- Interior Facet Lines to give the 3D low-poly / tech look -->
+    <path d="
+      M 125,75 L 145,108 M 165,75 L 145,108 
+      M 145,65 L 145,108 
+      M 180,68 L 190,75 L 170,105 
+      M 115,105 L 132,102 
+      M 180,95 L 185,125" 
+      fill="none" 
+      stroke="url(#neonGold)" 
+      stroke-width="1.5" 
+      stroke-linejoin="round" 
+      stroke-linecap="round" 
+      opacity="0.8" />
   </g>
+  
+  <!-- Cyberpunk Text/Data -->
+  <text x="150" y="168" font-family="'Courier New', monospace" font-weight="900" font-size="14" fill="#ffffff" text-anchor="middle" letter-spacing="4" filter="url(#subtleGlow)">[ LINGUAGEM OCAML ]</text>
+  <text x="150" y="181" font-family="'Courier New', monospace" font-size="8" fill="#ff7700" text-anchor="middle" letter-spacing="1" opacity="0.8">PROGRAMAÇÃO FUNCIONAL SEGURA</text>
 </svg>

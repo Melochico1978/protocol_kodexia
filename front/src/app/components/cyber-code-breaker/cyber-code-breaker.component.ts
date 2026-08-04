@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -28,11 +28,11 @@ interface LevelData {
   templateUrl: './cyber-code-breaker.component.html',
   styleUrl: './cyber-code-breaker.component.css'
 })
-export class CyberCodeBreakerComponent implements OnInit {
+export class CyberCodeBreakerComponent implements OnInit, OnDestroy {
   
   private readonly router = inject(Router);
 
-  allCommands = ['IF', 'LOOP', 'VAR', 'END', 'DATA', 'PRINT', 'FUNCTION', 'RETURN'];
+  readonly allCommands = ['IF', 'LOOP', 'VAR', 'END', 'DATA', 'PRINT', 'FUNCTION', 'RETURN'];
   
   levels: LevelData[] = [
     { id: 1, name: 'Nó 01: Variáveis', codeLength: 3, availableCommands: this.allCommands.slice(0, 6), maxAttempts: 10, oracleIntro: "Decoder, para passar por este firewall você deve declarar uma variável para dados usando a sequência ideal: VAR (Variável) -> DATA (Dados) -> END (Fim). Arraste ou clique nos comandos!", oracleSuccess: "Variável inicializada com sucesso! Acesso ao próximo nível liberado.", oracleFail: "Acesso bloqueado. Declare a variável e carregue seus dados adequadamente.", presetCode: ['VAR', 'DATA', 'END'] },
@@ -63,7 +63,7 @@ export class CyberCodeBreakerComponent implements OnInit {
   
   hoveredCommandDesc = signal<string | null>(null);
 
-  commandDescriptions: { [key: string]: string } = {
+  readonly commandDescriptions: { [key: string]: string } = {
     'VAR': 'Variável: Reserva espaço na memória do computador para guardar um valor ou informação.',
     'DATA': 'Dados: Carrega ou atribui valores primitivos (números, textos) ao sistema.',
     'PRINT': 'Impressão: Envia dados para a tela de saída (console) para visualização.',
@@ -88,8 +88,29 @@ export class CyberCodeBreakerComponent implements OnInit {
   creatorAvailableCommands = signal<string[]>(['VAR', 'DATA', 'PRINT', 'END']);
   creatorSecretCode = signal<(string | null)[]>(new Array(4).fill(null));
   creatorOracleIntro = signal<string>('');
+  novoComandoNome = '';
+  novoComandoDesc = '';
   customLevelCode = signal<string>('');
   importLevelCode = signal<string>('');
+
+  adicionarNovoComandoPersonalizado() {
+    const nome = this.novoComandoNome.trim().toUpperCase();
+    const desc = this.novoComandoDesc.trim();
+    if (!nome) {
+      alert('Por favor, digite o nome do comando.');
+      return;
+    }
+    if (this.allCommands.includes(nome)) {
+      alert('Este comando já existe.');
+      return;
+    }
+    this.allCommands.push(nome);
+    this.commandDescriptions[nome] = desc || `Comando customizado: ${nome}`;
+    this.creatorAvailableCommands.update(cmds => [...cmds, nome]);
+    
+    this.novoComandoNome = '';
+    this.novoComandoDesc = '';
+  }
 
   iniciarCriador() {
     this.gameState.set('CREATOR_PANEL');
@@ -143,17 +164,22 @@ export class CyberCodeBreakerComponent implements OnInit {
     };
     try {
       const json = JSON.stringify(levelObj);
-      const base64 = btoa(unescape(encodeURIComponent(json)));
+      const bytes = new TextEncoder().encode(json);
+      const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+      const base64 = btoa(binary);
       this.customLevelCode.set(base64);
     } catch (error) {
       console.error('Falha ao gerar código:', error);
     }
   }
 
-  carregarNivelPorCodigo(base64: string) {
-    if (!base64 || base64.trim() === '') return;
+  carregarNivelPorCodigo(base64Input: string) {
+    if (!base64Input || base64Input.trim() === '') return;
     try {
-      const json = decodeURIComponent(escape(atob(base64)));
+      const base64Clean = base64Input.trim().replace(/\s/g, '');
+      const binary = atob(base64Clean);
+      const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+      const json = new TextDecoder().decode(bytes);
       const levelObj = JSON.parse(json);
       if (levelObj && levelObj.len && levelObj.code) {
         this.creatorCodeLength.set(levelObj.len);
@@ -164,6 +190,7 @@ export class CyberCodeBreakerComponent implements OnInit {
         this.jogarNivelCustomizado();
       }
     } catch (error) {
+      console.error('Erro de decodificação:', error);
       alert('Código de invasão inválido ou corrompido.');
     }
   }
@@ -193,10 +220,142 @@ export class CyberCodeBreakerComponent implements OnInit {
     this.startLevel();
   }
 
+  isMusicPlaying = signal(false);
+  private schedulerTimer: any = null;
+  private currentBeat = 0;
+  private tempo = 125; // 125 BPM Cyber Synthwave
+  private scheduleAheadTime = 0.1; // seconds
+  private nextNoteTime = 0.0;
+
   private typeInterval: any;
 
   ngOnInit() {
     this.startLevel();
+  }
+
+  ngOnDestroy() {
+    if (this.typeInterval) clearInterval(this.typeInterval);
+    if (this.schedulerTimer) {
+      clearInterval(this.schedulerTimer);
+      this.schedulerTimer = null;
+    }
+  }
+
+  toggleMusic() {
+    const ctx = this.getAudioContext();
+    if (this.isMusicPlaying()) {
+      this.isMusicPlaying.set(false);
+      if (this.schedulerTimer) {
+        clearInterval(this.schedulerTimer);
+        this.schedulerTimer = null;
+      }
+    } else {
+      this.isMusicPlaying.set(true);
+      this.nextNoteTime = ctx.currentTime;
+      this.currentBeat = 0;
+      this.schedulerTimer = setInterval(() => this.schedulerLoop(), 25);
+    }
+  }
+
+  private schedulerLoop() {
+    const ctx = this.getAudioContext();
+    while (this.nextNoteTime < ctx.currentTime + this.scheduleAheadTime) {
+      this.scheduleNote(this.currentBeat, this.nextNoteTime);
+      this.advanceNote();
+    }
+  }
+
+  private advanceNote() {
+    const secondsPerBeat = 60.0 / this.tempo;
+    this.nextNoteTime += 0.25 * secondsPerBeat; // 8th note steps
+    this.currentBeat = (this.currentBeat + 1) % 16;
+  }
+
+  private scheduleNote(step: number, time: number) {
+    const ctx = this.getAudioContext();
+    
+    // 1. Bassline (A minor / Cyber vibe)
+    const bassScale = [
+      55.0, 55.0, 55.0, 55.0, // A1
+      65.4, 65.4, 65.4, 65.4, // C2
+      73.4, 73.4, 73.4, 73.4, // D2
+      82.4, 82.4, 98.0, 110.0 // E2, G2, A2
+    ];
+    const bassFreq = bassScale[step];
+    
+    // Bass synth: sawtooth wave, low-pass filter
+    const bassOsc = ctx.createOscillator();
+    const bassGain = ctx.createGain();
+    const bassFilter = ctx.createBiquadFilter();
+    
+    bassOsc.type = 'sawtooth';
+    bassOsc.frequency.setValueAtTime(bassFreq, time);
+    
+    bassFilter.type = 'lowpass';
+    bassFilter.frequency.setValueAtTime(250, time);
+    bassFilter.frequency.exponentialRampToValueAtTime(80, time + 0.18);
+    
+    bassGain.gain.setValueAtTime(0.06, time);
+    bassGain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+    
+    bassOsc.connect(bassFilter);
+    bassFilter.connect(bassGain);
+    bassGain.connect(ctx.destination);
+    
+    bassOsc.start(time);
+    bassOsc.stop(time + 0.21);
+
+    // 2. Cyber Melody (Arpeggiator)
+    const melodyPattern = [
+      440.00, 0, 523.25, 659.25,
+      0, 587.33, 0, 783.99,
+      880.00, 0, 783.99, 659.25,
+      523.25, 587.33, 0, 0
+    ];
+    
+    const melFreq = melodyPattern[step];
+    if (melFreq > 0) {
+      const melOsc = ctx.createOscillator();
+      const melGain = ctx.createGain();
+      const delay = ctx.createDelay();
+      const delayGain = ctx.createGain();
+
+      melOsc.type = 'triangle';
+      melOsc.frequency.setValueAtTime(melFreq, time);
+      
+      melGain.gain.setValueAtTime(0.025, time);
+      melGain.gain.exponentialRampToValueAtTime(0.001, time + 0.28);
+      
+      delay.delayTime.setValueAtTime(0.18, time);
+      delayGain.gain.setValueAtTime(0.012, time);
+
+      melOsc.connect(melGain);
+      melGain.connect(ctx.destination);
+      
+      melGain.connect(delay);
+      delay.connect(delayGain);
+      delayGain.connect(ctx.destination);
+      
+      melOsc.start(time);
+      melOsc.stop(time + 0.3);
+    }
+
+    // 3. Cybernetic Hi-Hats
+    if (step % 2 === 1) { 
+      const hatOsc = ctx.createOscillator();
+      const hatGain = ctx.createGain();
+      hatOsc.type = 'sine';
+      hatOsc.frequency.setValueAtTime(9000 + Math.random() * 3000, time);
+      
+      hatGain.gain.setValueAtTime(0.01, time);
+      hatGain.gain.exponentialRampToValueAtTime(0.001, time + 0.035);
+      
+      hatOsc.connect(hatGain);
+      hatGain.connect(ctx.destination);
+      
+      hatOsc.start(time);
+      hatOsc.stop(time + 0.04);
+    }
   }
 
   get activeLevel(): LevelData {

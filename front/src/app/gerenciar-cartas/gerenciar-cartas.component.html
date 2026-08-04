@@ -7,6 +7,11 @@
     <div *ngIf="modoEdicao" style="text-align:center; color:#f1c40f; font-size:18px; margin-bottom:10px; border: 1px dashed #f1c40f; padding: 8px; border-radius:4px;">
       ✏️ EDITANDO: {{ cartaEmEdicao?.nome | uppercase }} — Modifique os dados e clique em SALVAR DADO.
     </div>
+    <div style="margin-top: 15px; text-align: center;" *ngIf="!modoEdicao">
+      <button (click)="scrollToBanco()" style="padding: 6px 16px; background: rgba(0, 243, 255, 0.15); border: 2px solid #00f3ff; color: #00f3ff; font-family: 'VT323', monospace; font-size: 20px; cursor: pointer; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); transition: 0.3s;" onmouseover="this.style.background='#00f3ff'; this.style.color='black';" onmouseout="this.style.background='rgba(0, 243, 255, 0.15)'; this.style.color='#00f3ff';">
+        📦 IR PARA O BANCO DE CARTAS (VER TODAS) 👇
+      </button>
+    </div>
   </div>
 
   <div class="oficina-container">
@@ -133,7 +138,7 @@
 
   </div>
 
-  <div style="text-align: center; margin-bottom: 20px;">
+  <div id="banco-cartas" style="text-align: center; margin-bottom: 20px; padding-top: 30px;">
     <h2 style="color: #00f3ff; border-bottom: 1px dashed #00f3ff; display: inline-block; padding-bottom: 5px;">[ BANCO DE DADOS: LINGUAGENS CADASTRADAS ]</h2>
   </div>
 
@@ -166,13 +171,18 @@
       
       <app-carta [cartaInput]="carta"></app-carta>
 
-      <div style="text-align: center; margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+      <div style="text-align: center; margin-top: 15px; display: flex; gap: 8px; justify-content: center;">
+        <button (click)="visualizarCarta(carta)"
+          style="padding: 8px 12px; background: transparent; color: #00f3ff; border: 1px dashed #00f3ff; border-radius: 4px; cursor: pointer; font-size: 16px; font-family: 'VT323', monospace; transition: 0.3s;"
+          title="Visualizar carta individualmente">
+          👁️ VER
+        </button>
         <button (click)="editarCarta(carta)"
-          style="padding: 8px 16px; background: transparent; color: #f1c40f; border: 1px dashed #f1c40f; border-radius: 4px; cursor: pointer; font-size: 16px; font-family: 'VT323', monospace; transition: 0.3s;">
+          style="padding: 8px 12px; background: transparent; color: #f1c40f; border: 1px dashed #f1c40f; border-radius: 4px; cursor: pointer; font-size: 16px; font-family: 'VT323', monospace; transition: 0.3s;">
           ✏️ EDITAR
         </button>
         <button (click)="excluirCarta(carta.id)"
-          style="padding: 8px 16px; background: transparent; color: #ff003c; border: 1px dashed #ff003c; border-radius: 4px; cursor: pointer; font-size: 16px; font-family: 'VT323', monospace; transition: 0.3s;">
+          style="padding: 8px 12px; background: transparent; color: #ff003c; border: 1px dashed #ff003c; border-radius: 4px; cursor: pointer; font-size: 16px; font-family: 'VT323', monospace; transition: 0.3s;">
           🗑️ APAGAR
         </button>
       </div>
@@ -181,6 +191,34 @@
     
     <div *ngIf="cartasFiltradas.length === 0" style="color: #666; font-size: 24px; text-align: center; width: 100%; margin-top: 40px;">
       NENHUM NÚCLEO DE DADOS ENCONTRADO PARA OS FILTROS SELECIONADOS.
+    </div>
+  </div>
+
+  <!-- Modal HUD Cyberpunk para Visualização Individual -->
+  <div class="modal-visualizacao-overlay" *ngIf="cartaParaVisualizar" (click)="fecharVisualizador()">
+    <div class="modal-visualizacao-content" (click)="$event.stopPropagation()">
+      <div class="janela-so visualizador-individual">
+        <div class="header-so" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 243, 255, 0.2); border-bottom: 2px solid #00f3ff; padding: 10px 15px; color: #00f3ff;">
+          <span style="font-size: 22px; letter-spacing: 2px;">👁️ CODEX_INSPECTOR.sys</span>
+          <button class="btn-fechar-modal" (click)="fecharVisualizador()" style="background: transparent; border: none; color: #ff003c; font-size: 20px; cursor: pointer; transition: transform 0.2s;">❌</button>
+        </div>
+        <div class="body-so" style="display: flex; flex-direction: column; align-items: center; padding: 30px; gap: 25px; background: rgba(13, 2, 33, 0.95);">
+          <!-- Renderiza a carta ampliada e com detalhes -->
+          <div style="transform: scale(1.15); margin: 20px 0;">
+            <app-carta [cartaInput]="cartaParaVisualizar"></app-carta>
+          </div>
+          
+          <!-- Controles de Navegação por Botão -->
+          <div class="controles-navegacao-modal" style="display: flex; gap: 30px; margin-top: 10px;">
+            <button class="btn-navegar-modal" (click)="navegarVisualizacao(-1)" style="font-family: 'VT323', monospace; font-size: 22px; padding: 8px 20px; background: rgba(0, 0, 0, 0.6); border: 2px solid #00f3ff; color: #00f3ff; border-radius: 4px; cursor: pointer; transition: 0.3s;">
+              ◀ ANTERIOR [←]
+            </button>
+            <button class="btn-navegar-modal" (click)="navegarVisualizacao(1)" style="font-family: 'VT323', monospace; font-size: 22px; padding: 8px 20px; background: rgba(0, 0, 0, 0.6); border: 2px solid #00f3ff; color: #00f3ff; border-radius: 4px; cursor: pointer; transition: 0.3s;">
+              [→] PRÓXIMA ▶
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

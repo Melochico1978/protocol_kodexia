@@ -619,7 +619,8 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 }
 
 
-.carta-na-mao.pode-jogar:hover {
+.carta-na-mao.pode-jogar:hover,
+.carta-na-mao.pode-jogar.focada {
   transform: scale(0.85) rotate(0deg) translateY(-80px) !important;
   z-index: 100 !important;
   filter: drop-shadow(0 0 35px rgba(0, 243, 255, 1));

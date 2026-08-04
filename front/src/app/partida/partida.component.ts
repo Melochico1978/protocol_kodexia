@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -50,6 +50,8 @@ export class PartidaComponent implements OnInit, OnDestroy {
   mensagemSistemaDisplay: string = '';
   private typewriterInterval: any;
   mostrarGlitch: boolean = false;
+  
+  cartaFocadaIndex: number = -1;
 
   jogoAcabou: boolean = false;
   superTrunfoAtivado: boolean = false;
@@ -96,6 +98,30 @@ export class PartidaComponent implements OnInit, OnDestroy {
     this.faseAtual = 'INTRO';
     this.introSlideIndex = 0;
     this.iniciarIntroTyping();
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (this.jogoAcabou || this.faseAtual === 'INTRO') return;
+
+    if (this.faseAtual === 'ESCOLHER_CARTA' || this.faseAtual === 'DEFENDER') {
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        if (this.maoJogador.length > 0) {
+          this.cartaFocadaIndex = (this.cartaFocadaIndex + 1) % this.maoJogador.length;
+        }
+      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        if (this.maoJogador.length > 0) {
+          this.cartaFocadaIndex = (this.cartaFocadaIndex - 1 + this.maoJogador.length) % this.maoJogador.length;
+        }
+      } else if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        if (this.cartaFocadaIndex >= 0 && this.cartaFocadaIndex < this.maoJogador.length) {
+          this.selecionarCartaDaMao(this.cartaFocadaIndex);
+        }
+      }
+    }
   }
 
   // --- MÉTODOS DA INTRO MIRABERTO ---
@@ -194,6 +220,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
     this.rodadaAtual = 1;
     this.turnoAtual = 'JOGADOR';
     this.faseAtual = 'ESCOLHER_CARTA';
+    this.cartaFocadaIndex = 0;
     this.escreverMensagemSistema('> SELECIONE UMA CARTA DA SUA MÃO.');
     this.mostrarOverlay('INICIAR PARTIDA');
   }
@@ -354,6 +381,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
     
     this.escreverMensagemSistema(`> HEURÍSTICA NEURAL: IA identificou brecha em ${this.nomeAtributoAtaqueBot}. Escolha uma carta para DEFENDER!`);
     this.faseAtual = 'DEFENDER';
+    this.cartaFocadaIndex = 0;
   }
 
   private verificarSuperTrunfo(carta1: Carta, carta2: Carta): 'JOGADOR' | 'BOT' | null {
@@ -496,6 +524,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
       this.turnoAtual = 'JOGADOR';
       this.escreverMensagemSistema('> SEU TURNO. SELECIONE UMA CARTA DA MÃO.');
       this.faseAtual = 'ESCOLHER_CARTA';
+      this.cartaFocadaIndex = 0;
     }
   }
 
@@ -525,13 +554,6 @@ export class PartidaComponent implements OnInit, OnDestroy {
     }
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.setItem('nomeJogador', this.nomeJogador);
-      
-      this.vitorias = 0;
-      this.vitoriasBot = 0;
-      localStorage.setItem('vitoriasJogador', '0');
-      localStorage.setItem('vitoriasBot', '0');
-      this.atualizarTrofeu();
-      this.atualizarTrofeuBot();
     }
   }
 

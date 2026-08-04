@@ -1,7 +1,7 @@
 <div class="card" [class.lendaria]="carta.lendaria">
   <!-- Imagem de fundo cobrindo toda a carta -->
-  <div *ngIf="carta.imagem" class="card-background-imagem">
-    <img [src]="carta.imagem" [alt]="carta.nome">
+  <div class="card-background-imagem">
+    <img [src]="getImagemUrl()" [alt]="carta.nome">
     <div class="card-background-overlay"></div>
   </div>
 

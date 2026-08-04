@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { FormsModule } from '@angular/forms'; 
 import { RouterModule } from '@angular/router'; 
@@ -17,6 +17,7 @@ export class GerenciarCartasComponent implements OnInit {
   cartas: Carta[] = [];
   modoEdicao: boolean = false;
   cartaEmEdicao: Carta | null = null;
+  cartaParaVisualizar: Carta | null = null;
 
   filtroTexto: string = '';
   filtroGrupo: string = 'TODOS';
@@ -67,6 +68,36 @@ export class GerenciarCartasComponent implements OnInit {
     }
     this.novaCarta.codigo = Math.floor(1 + Math.random() * 9).toString();
     
+      
+    if (!this.novaCarta.imagem) {
+      const nomeLower = this.novaCarta.nome.trim().toLowerCase();
+      const svgs = ['ruby', 'scala', 'vlang', 'zig', 'ocaml', 'r', 'nim'];
+      const ext = svgs.includes(nomeLower) ? 'svg' : 'png';
+      
+      const LINGUAGENS = [
+        'PYTHON', 'JAVASCRIPT', 'TYPESCRIPT', 'JAVA', 'C#', 'C++', 'C', 'GO',
+        'RUST', 'KOTLIN', 'SWIFT', 'PHP', 'DART', 'RUBY', 'MATLAB', 'SCALA',
+        'R', 'ELIXIR', 'HASKELL', 'JULIA', 'GROOVY', 'LUA', 'ZIG', 'NIM',
+        'CRYSTAL', 'V (VLANG)', 'F#', 'ADA', 'COBOL', 'FORTRAN', 'OCAML', 'ASSEMBLY'
+      ];
+      
+      const matched = LINGUAGENS.find(l => 
+        nomeLower === l.toLowerCase() || 
+        nomeLower.includes(l.toLowerCase()) || 
+        l.toLowerCase().includes(nomeLower)
+      );
+      
+      if (matched) {
+        let filename = matched.toLowerCase();
+        if (filename === 'c#') filename = 'csharp';
+        if (filename === 'c++') filename = 'cpp';
+        if (filename === 'v (vlang)') filename = 'vlang';
+        this.novaCarta.imagem = `assets/img/${filename}.${ext}`;
+      } else {
+        this.novaCarta.imagem = 'assets/img/teste.jpg';
+      }
+    }
+    
     this.cartaService.addCarta(this.novaCarta).subscribe(() => {
       this.carregarCartas();
       this.resetarFormulario();
@@ -84,6 +115,36 @@ export class GerenciarCartasComponent implements OnInit {
 
   salvarEdicao(): void {
     if (!this.cartaEmEdicao?.id) return;
+
+    if (!this.novaCarta.imagem) {
+      const nomeLower = this.novaCarta.nome.trim().toLowerCase();
+      const svgs = ['ruby', 'scala', 'vlang', 'zig', 'ocaml', 'r', 'nim'];
+      const ext = svgs.includes(nomeLower) ? 'svg' : 'png';
+      
+      const LINGUAGENS = [
+        'PYTHON', 'JAVASCRIPT', 'TYPESCRIPT', 'JAVA', 'C#', 'C++', 'C', 'GO',
+        'RUST', 'KOTLIN', 'SWIFT', 'PHP', 'DART', 'RUBY', 'MATLAB', 'SCALA',
+        'R', 'ELIXIR', 'HASKELL', 'JULIA', 'GROOVY', 'LUA', 'ZIG', 'NIM',
+        'CRYSTAL', 'V (VLANG)', 'F#', 'ADA', 'COBOL', 'FORTRAN', 'OCAML', 'ASSEMBLY'
+      ];
+      
+      const matched = LINGUAGENS.find(l => 
+        nomeLower === l.toLowerCase() || 
+        nomeLower.includes(l.toLowerCase()) || 
+        l.toLowerCase().includes(nomeLower)
+      );
+      
+      if (matched) {
+        let filename = matched.toLowerCase();
+        if (filename === 'c#') filename = 'csharp';
+        if (filename === 'c++') filename = 'cpp';
+        if (filename === 'v (vlang)') filename = 'vlang';
+        this.novaCarta.imagem = `assets/img/${filename}.${ext}`;
+      } else {
+        this.novaCarta.imagem = 'assets/img/teste.jpg';
+      }
+    }
+
     this.cartaService.updateCarta(this.cartaEmEdicao.id, this.novaCarta).subscribe(() => {
       this.carregarCartas();
       this.cancelarEdicao();
@@ -101,6 +162,46 @@ export class GerenciarCartasComponent implements OnInit {
       this.cartaService.deleteCarta(id).subscribe(() => {
         this.carregarCartas();
       });
+    }
+  }
+
+  visualizarCarta(carta: Carta): void {
+    this.cartaParaVisualizar = carta;
+  }
+
+  fecharVisualizador(): void {
+    this.cartaParaVisualizar = null;
+  }
+
+  scrollToBanco(): void {
+    const el = document.getElementById('banco-cartas');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  navegarVisualizacao(direcao: number): void {
+    if (!this.cartaParaVisualizar) return;
+    const index = this.cartasFiltradas.findIndex(c => c.id === this.cartaParaVisualizar?.id);
+    if (index !== -1) {
+      const novoIndex = (index + direcao + this.cartasFiltradas.length) % this.cartasFiltradas.length;
+      this.cartaParaVisualizar = this.cartasFiltradas[novoIndex];
+    }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (this.cartaParaVisualizar) {
+      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        this.navegarVisualizacao(1);
+      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        this.navegarVisualizacao(-1);
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        this.fecharVisualizador();
+      }
     }
   }
 
