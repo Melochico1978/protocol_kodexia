@@ -1,25 +1,13 @@
-package com.kodexia.model;
+package com.kodexia.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Table;
+import com.kodexia.model.GrupoCarta;
 
-@Entity
-@Table(name = "cartas")
-public class CartaEntity {
-
-    @Id
+public class CartaDTO {
     private String id;
-    
-    @Enumerated(EnumType.STRING)
     private GrupoCarta grupo;
-    
     private String codigo;
     private String nome;
     private String imagem;
-    
     private double performance;
     private double sintaxe;
     private double seguranca;
@@ -29,28 +17,10 @@ public class CartaEntity {
     private double versatilidade;
     private boolean lendaria;
 
-    public CartaEntity() {}
-
-    @SuppressWarnings("java:S107")
-    public CartaEntity(String id, GrupoCarta grupo, String codigo, String nome, String imagem, 
-                       double performance, double sintaxe, double seguranca, double longevidade, 
-                       double popularidade, double abstracao, double versatilidade, boolean lendaria) {
-        this.id = id;
-        this.grupo = grupo;
-        this.codigo = codigo;
-        this.nome = nome;
-        this.imagem = imagem;
-        this.performance = performance;
-        this.sintaxe = sintaxe;
-        this.seguranca = seguranca;
-        this.longevidade = longevidade;
-        this.popularidade = popularidade;
-        this.abstracao = abstracao;
-        this.versatilidade = versatilidade;
-        this.lendaria = lendaria;
+    public CartaDTO() {
+        // Required for Jackson deserialization
     }
 
-    // Getters and Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

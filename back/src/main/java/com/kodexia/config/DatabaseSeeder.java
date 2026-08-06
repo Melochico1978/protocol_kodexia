@@ -7,7 +7,9 @@ import com.kodexia.model.GrupoCarta;
 import com.kodexia.model.UsuarioEntity;
 import com.kodexia.repository.CartaRepository;
 import com.kodexia.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -18,11 +20,23 @@ import java.nio.file.Paths;
 @Component
 public class DatabaseSeeder implements CommandLineRunner {
 
-    @Autowired
-    private CartaRepository cartaRepository;
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseSeeder.class);
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    private final CartaRepository cartaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final String dbJsonPath;
+    private final String dbJsonFallbackPath;
+
+    public DatabaseSeeder(
+            CartaRepository cartaRepository,
+            UsuarioRepository usuarioRepository,
+            @Value("${app.db.json.path:../front/db.json}") String dbJsonPath,
+            @Value("${app.db.json.fallback-path:c:/Users/CHICO/Desktop/tcc kodexia/front/db.json}") String dbJsonFallbackPath) {
+        this.cartaRepository = cartaRepository;
+        this.usuarioRepository = usuarioRepository;
+        this.dbJsonPath = dbJsonPath;
+        this.dbJsonFallbackPath = dbJsonFallbackPath;
+    }
 
     @Override
     public void run(String... args) throws Exception {
@@ -30,52 +44,58 @@ public class DatabaseSeeder implements CommandLineRunner {
             return; // Já semeado
         }
 
-        String dbJsonPath = "../front/db.json";
-        if (!Files.exists(Paths.get(dbJsonPath))) {
-            dbJsonPath = "c:/Users/CHICO/Desktop/tcc kodexia/front/db.json";
+        String path = this.dbJsonPath;
+        if (!Files.exists(Paths.get(path))) {
+            path = this.dbJsonFallbackPath;
         }
 
-        if (Files.exists(Paths.get(dbJsonPath))) {
-            System.out.println("Semeando banco de dados a partir de: " + dbJsonPath);
+        if (Files.exists(Paths.get(path))) {
+            logger.info("Semeando banco de dados a partir de: {}", path);
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode rootNode = mapper.readTree(new File(dbJsonPath));
+            JsonNode rootNode = mapper.readTree(new File(path));
 
-            // Semeia cartas
-            JsonNode cartasNode = rootNode.get("cartas");
-            if (cartasNode != null && cartasNode.isArray()) {
-                for (JsonNode node : cartasNode) {
-                    CartaEntity carta = new CartaEntity();
-                    carta.setId(node.get("id").asText());
-                    carta.setGrupo(GrupoCarta.valueOf(node.get("grupo").asText().toUpperCase()));
-                    carta.setCodigo(node.get("codigo").asText());
-                    carta.setNome(node.get("nome").asText());
-                    carta.setImagem(node.get("imagem").asText());
-                    carta.setPerformance(node.get("performance").asDouble());
-                    carta.setSintaxe(node.get("sintaxe").asDouble());
-                    carta.setSeguranca(node.get("seguranca").asDouble());
-                    carta.setLongevidade(node.get("longevidade").asDouble());
-                    carta.setPopularidade(node.get("popularidade").asDouble());
-                    carta.setAbstracao(node.get("abstracao").asDouble());
-                    carta.setVersatilidade(node.get("versatilidade").asDouble());
-                    carta.setLendaria(node.has("lendaria") && node.get("lendaria").asBoolean());
-                    cartaRepository.save(carta);
-                }
-            }
+            seedCartas(rootNode);
+            seedUsuarios(rootNode);
 
-            // Semeia usuarios
-            JsonNode usuariosNode = rootNode.get("usuarios");
-            if (usuariosNode != null && usuariosNode.isArray()) {
-                for (JsonNode node : usuariosNode) {
-                    UsuarioEntity usuario = new UsuarioEntity();
-                    usuario.setId(node.get("id").asText());
-                    usuario.setLogin(node.get("login").asText());
-                    usuario.setNome(node.get("nome").asText());
-                    usuarioRepository.save(usuario);
-                }
-            }
-            System.out.println("Banco de dados semeado com sucesso!");
+            logger.info("Banco de dados semeado com sucesso!");
         } else {
-            System.err.println("Aviso: arquivo db.json nao encontrado para semear o banco de dados.");
+            logger.warn("Aviso: arquivo db.json nao encontrado para semear o banco de dados.");
+        }
+    }
+
+    private void seedCartas(JsonNode rootNode) {
+        JsonNode cartasNode = rootNode.get("cartas");
+        if (cartasNode != null && cartasNode.isArray()) {
+            for (JsonNode node : cartasNode) {
+                CartaEntity carta = new CartaEntity();
+                carta.setId(node.get("id").asText());
+                carta.setGrupo(GrupoCarta.valueOf(node.get("grupo").asText().toUpperCase()));
+                carta.setCodigo(node.get("codigo").asText());
+                carta.setNome(node.get("nome").asText());
+                carta.setImagem(node.get("imagem").asText());
+                carta.setPerformance(node.get("performance").asDouble());
+                carta.setSintaxe(node.get("sintaxe").asDouble());
+                carta.setSeguranca(node.get("seguranca").asDouble());
+                carta.setLongevidade(node.get("longevidade").asDouble());
+                carta.setPopularidade(node.get("popularidade").asDouble());
+                carta.setAbstracao(node.get("abstracao").asDouble());
+                carta.setVersatilidade(node.get("versatilidade").asDouble());
+                carta.setLendaria(node.has("lendaria") && node.get("lendaria").asBoolean());
+                cartaRepository.save(carta);
+            }
+        }
+    }
+
+    private void seedUsuarios(JsonNode rootNode) {
+        JsonNode usuariosNode = rootNode.get("usuarios");
+        if (usuariosNode != null && usuariosNode.isArray()) {
+            for (JsonNode node : usuariosNode) {
+                UsuarioEntity usuario = new UsuarioEntity();
+                usuario.setId(node.get("id").asText());
+                usuario.setLogin(node.get("login").asText());
+                usuario.setNome(node.get("nome").asText());
+                usuarioRepository.save(usuario);
+            }
         }
     }
 }

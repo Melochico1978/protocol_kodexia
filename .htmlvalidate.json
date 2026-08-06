@@ -3,10 +3,9 @@
     "attr-case": [
       "error",
       {
-        "ignore": [
-          "/^\\*/",
-          "/^\\[/",
-          "/^\\(/"
+        "style": [
+          "lowercase",
+          "camelcase"
         ]
       }
     ]

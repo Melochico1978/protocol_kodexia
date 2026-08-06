@@ -16,6 +16,7 @@ import { CartaExibicaoComponent } from '../components/carta-exibicao/carta-exibi
 export class PartidaComponent implements OnInit, OnDestroy {
   
   faseAtual: 'INTRO' | 'ESCOLHER_CARTA' | 'ESCOLHER' | 'COMPARAR' | 'DEFENDER' = 'INTRO';
+  cartaPlayerRevelada: boolean = false;
 
   // --- INTRO MIRABERTO ---
   introSlides = [
@@ -103,23 +104,19 @@ export class PartidaComponent implements OnInit, OnDestroy {
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent): void {
     if (this.jogoAcabou || this.faseAtual === 'INTRO') return;
+    if (this.faseAtual !== 'ESCOLHER_CARTA' && this.faseAtual !== 'DEFENDER') return;
+    if (this.maoJogador.length === 0) return;
 
-    if (this.faseAtual === 'ESCOLHER_CARTA' || this.faseAtual === 'DEFENDER') {
-      if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-        event.preventDefault();
-        if (this.maoJogador.length > 0) {
-          this.cartaFocadaIndex = (this.cartaFocadaIndex + 1) % this.maoJogador.length;
-        }
-      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-        event.preventDefault();
-        if (this.maoJogador.length > 0) {
-          this.cartaFocadaIndex = (this.cartaFocadaIndex - 1 + this.maoJogador.length) % this.maoJogador.length;
-        }
-      } else if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        if (this.cartaFocadaIndex >= 0 && this.cartaFocadaIndex < this.maoJogador.length) {
-          this.selecionarCartaDaMao(this.cartaFocadaIndex);
-        }
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.cartaFocadaIndex = (this.cartaFocadaIndex + 1) % this.maoJogador.length;
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.cartaFocadaIndex = (this.cartaFocadaIndex - 1 + this.maoJogador.length) % this.maoJogador.length;
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (this.cartaFocadaIndex >= 0 && this.cartaFocadaIndex < this.maoJogador.length) {
+        this.selecionarCartaDaMao(this.cartaFocadaIndex);
       }
     }
   }
@@ -207,6 +204,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
     this.vencedor = null;
     this.cartaAtualJogador = null;
     this.cartaAtualBot = null;
+    this.cartaPlayerRevelada = false;
     this.maoJogador = [];
     this.deckEmpate = [];
     
@@ -266,12 +264,14 @@ export class PartidaComponent implements OnInit, OnDestroy {
       this.cartaAtualBot = this.escolherCartaBotInteligente(this.cartaAtualJogador);
       
       this.superTrunfoAtivado = false;
+      this.cartaPlayerRevelada = false;
       
-      this.escreverMensagemSistema('> CARTA REGISTRADA. MÁQUINA EM MODO DE ANÁLISE... SELECIONE O VETOR DE ATAQUE.');
+      this.escreverMensagemSistema('> CARTA REGISTRADA. CLIQUE NA CARTA PARA FILTRAR VETORES DE ATAQUE (ANALISADOR.bat).');
       this.faseAtual = 'ESCOLHER';
     } else if (this.faseAtual === 'DEFENDER') {
       this.cartaAtualJogador = this.maoJogador.splice(index, 1)[0];
       this.superTrunfoAtivado = false;
+      this.cartaPlayerRevelada = true; // Auto reveal when defending since bot already attacked
       
       if (this.atributoAtaqueBot && this.nomeAtributoAtaqueBot) {
         this.batalhar(this.atributoAtaqueBot, this.nomeAtributoAtaqueBot);
@@ -512,6 +512,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
     this.cartaAtualJogador = null;
     this.cartaAtualBot = null;
     this.superTrunfoAtivado = false;
+    this.cartaPlayerRevelada = false;
     
     const totalJogador = this.deckJogador.length + this.maoJogador.length;
 

@@ -1,0 +1,9 @@
+{
+    "java.project.sourcePaths": [
+        "back/src/main/java"
+    ],
+    "java.import.maven.enabled": true,
+    "java.import.projects": [
+        "back"
+    ]
+}

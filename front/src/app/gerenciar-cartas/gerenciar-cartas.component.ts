@@ -49,7 +49,7 @@ export class GerenciarCartasComponent implements OnInit {
     lendaria: false
   };
 
-  constructor(private cartaService: CartaService) {}
+  constructor(private readonly cartaService: CartaService) {}
 
   ngOnInit(): void {
     this.carregarCartas();
@@ -61,42 +61,51 @@ export class GerenciarCartasComponent implements OnInit {
     });
   }
 
+  private definirImagemPadrao(carta: Carta): void {
+    if (carta.imagem) return;
+
+    const nomeLower = carta.nome.trim().toLowerCase();
+    const svgs = ['ruby', 'scala', 'vlang', 'zig', 'ocaml', 'r', 'nim'];
+    const ext = svgs.includes(nomeLower) ? 'svg' : 'png';
+    
+    const LINGUAGENS = [
+      'PYTHON', 'JAVASCRIPT', 'TYPESCRIPT', 'JAVA', 'C#', 'C++', 'C', 'GO',
+      'RUST', 'KOTLIN', 'SWIFT', 'PHP', 'DART', 'RUBY', 'MATLAB', 'SCALA',
+      'R', 'ELIXIR', 'HASKELL', 'JULIA', 'GROOVY', 'LUA', 'ZIG', 'NIM',
+      'CRYSTAL', 'V (VLANG)', 'F#', 'ADA', 'COBOL', 'FORTRAN', 'OCAML', 'ASSEMBLY'
+    ];
+    
+    const matched = LINGUAGENS.find(l => 
+      nomeLower === l.toLowerCase() || 
+      nomeLower.includes(l.toLowerCase()) || 
+      l.toLowerCase().includes(nomeLower)
+    );
+    
+    if (matched) {
+      let filename = matched.toLowerCase();
+      if (filename === 'c#') filename = 'csharp';
+      if (filename === 'c++') filename = 'cpp';
+      if (filename === 'v (vlang)') filename = 'vlang';
+      carta.imagem = `assets/img/${filename}.${ext}`;
+    } else {
+      carta.imagem = 'assets/img/teste.jpg';
+    }
+  }
+
+  private gerarCodigoAleatorio(): string {
+    const array = new Uint32Array(1);
+    window.crypto.getRandomValues(array);
+    return (array[0] % 9 + 1).toString();
+  }
+
   adicionarCarta(): void {
     if (this.modoEdicao) {
       this.salvarEdicao();
       return;
     }
-    this.novaCarta.codigo = Math.floor(1 + Math.random() * 9).toString();
+    this.novaCarta.codigo = this.gerarCodigoAleatorio();
     
-      
-    if (!this.novaCarta.imagem) {
-      const nomeLower = this.novaCarta.nome.trim().toLowerCase();
-      const svgs = ['ruby', 'scala', 'vlang', 'zig', 'ocaml', 'r', 'nim'];
-      const ext = svgs.includes(nomeLower) ? 'svg' : 'png';
-      
-      const LINGUAGENS = [
-        'PYTHON', 'JAVASCRIPT', 'TYPESCRIPT', 'JAVA', 'C#', 'C++', 'C', 'GO',
-        'RUST', 'KOTLIN', 'SWIFT', 'PHP', 'DART', 'RUBY', 'MATLAB', 'SCALA',
-        'R', 'ELIXIR', 'HASKELL', 'JULIA', 'GROOVY', 'LUA', 'ZIG', 'NIM',
-        'CRYSTAL', 'V (VLANG)', 'F#', 'ADA', 'COBOL', 'FORTRAN', 'OCAML', 'ASSEMBLY'
-      ];
-      
-      const matched = LINGUAGENS.find(l => 
-        nomeLower === l.toLowerCase() || 
-        nomeLower.includes(l.toLowerCase()) || 
-        l.toLowerCase().includes(nomeLower)
-      );
-      
-      if (matched) {
-        let filename = matched.toLowerCase();
-        if (filename === 'c#') filename = 'csharp';
-        if (filename === 'c++') filename = 'cpp';
-        if (filename === 'v (vlang)') filename = 'vlang';
-        this.novaCarta.imagem = `assets/img/${filename}.${ext}`;
-      } else {
-        this.novaCarta.imagem = 'assets/img/teste.jpg';
-      }
-    }
+    this.definirImagemPadrao(this.novaCarta);
     
     this.cartaService.addCarta(this.novaCarta).subscribe(() => {
       this.carregarCartas();
@@ -116,34 +125,7 @@ export class GerenciarCartasComponent implements OnInit {
   salvarEdicao(): void {
     if (!this.cartaEmEdicao?.id) return;
 
-    if (!this.novaCarta.imagem) {
-      const nomeLower = this.novaCarta.nome.trim().toLowerCase();
-      const svgs = ['ruby', 'scala', 'vlang', 'zig', 'ocaml', 'r', 'nim'];
-      const ext = svgs.includes(nomeLower) ? 'svg' : 'png';
-      
-      const LINGUAGENS = [
-        'PYTHON', 'JAVASCRIPT', 'TYPESCRIPT', 'JAVA', 'C#', 'C++', 'C', 'GO',
-        'RUST', 'KOTLIN', 'SWIFT', 'PHP', 'DART', 'RUBY', 'MATLAB', 'SCALA',
-        'R', 'ELIXIR', 'HASKELL', 'JULIA', 'GROOVY', 'LUA', 'ZIG', 'NIM',
-        'CRYSTAL', 'V (VLANG)', 'F#', 'ADA', 'COBOL', 'FORTRAN', 'OCAML', 'ASSEMBLY'
-      ];
-      
-      const matched = LINGUAGENS.find(l => 
-        nomeLower === l.toLowerCase() || 
-        nomeLower.includes(l.toLowerCase()) || 
-        l.toLowerCase().includes(nomeLower)
-      );
-      
-      if (matched) {
-        let filename = matched.toLowerCase();
-        if (filename === 'c#') filename = 'csharp';
-        if (filename === 'c++') filename = 'cpp';
-        if (filename === 'v (vlang)') filename = 'vlang';
-        this.novaCarta.imagem = `assets/img/${filename}.${ext}`;
-      } else {
-        this.novaCarta.imagem = 'assets/img/teste.jpg';
-      }
-    }
+    this.definirImagemPadrao(this.novaCarta);
 
     this.cartaService.updateCarta(this.cartaEmEdicao.id, this.novaCarta).subscribe(() => {
       this.carregarCartas();

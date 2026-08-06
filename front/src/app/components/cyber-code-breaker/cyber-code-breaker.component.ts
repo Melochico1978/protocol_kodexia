@@ -50,7 +50,7 @@ export class CyberCodeBreakerComponent implements OnInit, OnDestroy {
   ];
 
   readonly currentLevelIndex = signal(0);
-  readonly gameState = signal<'INTRO' | 'PLAYING' | 'LEVEL_WON' | 'GAME_WON' | 'GAME_OVER' | 'CREATOR_PANEL' | 'PLAYING_CUSTOM'>('INTRO');
+  readonly gameState = signal<'INTRO' | 'PLAYING' | 'LEVEL_WON' | 'GAME_WON' | 'GAME_OVER' | 'CREATOR_PANEL' | 'PLAYING_CUSTOM' | 'HVH_SETUP' | 'HVH_TRANSITION' | 'HVH_PLAYING' | 'HVH_WON' | 'HVH_LOST'>('INTRO');
   
   secretCode: string[] = [];
   guesses: Guess[] = [];
@@ -92,6 +92,166 @@ export class CyberCodeBreakerComponent implements OnInit, OnDestroy {
   novoComandoDesc = '';
   readonly customLevelCode = signal<string>('');
   readonly importLevelCode = signal<string>('');
+
+  // --- MODO HUMANO vs HUMANO ---
+  readonly hvhCodeLength = signal<number>(4);
+  readonly hvhMaxAttempts = signal<number>(10);
+  readonly hvhAvailableCommands = signal<string[]>(['VAR', 'DATA', 'PRINT', 'END']);
+  readonly hvhSecretCode = signal<(string | null)[]>(new Array(4).fill(null));
+  hvhGuesses: Guess[] = [];
+  hvhCurrentGuess: string[] = [];
+  readonly hvhTransitionCountdown = signal<number>(5);
+  private hvhCountdownTimer: any = null;
+  readonly hvhShowCode = signal<boolean>(false);
+
+  iniciarModoHvH() {
+    this.gameState.set('HVH_SETUP');
+    this.hvhSecretCode.set(new Array(this.hvhCodeLength()).fill(null));
+    this.hvhShowCode.set(false);
+  }
+
+  onHvhCodeLengthChange(length: number) {
+    this.hvhCodeLength.set(length);
+    this.hvhSecretCode.set(new Array(length).fill(null));
+  }
+
+  alternarHvhComando(cmd: string) {
+    this.hvhAvailableCommands.update(cmds => {
+      if (cmds.includes(cmd)) {
+        const filtered = cmds.filter(c => c !== cmd);
+        // Also remove from secret code if it was used
+        this.hvhSecretCode.update(code =>
+          code.map(c => (c === cmd ? null : c))
+        );
+        return filtered;
+      } else {
+        return [...cmds, cmd];
+      }
+    });
+  }
+
+  definirHvhSecretCode(index: number, cmd: string) {
+    this.hvhSecretCode.update(code => {
+      const newCode = [...code];
+      newCode[index] = cmd;
+      return newCode;
+    });
+  }
+
+  limparHvhSecretCode(index: number) {
+    this.hvhSecretCode.update(code => {
+      const newCode = [...code];
+      newCode[index] = null;
+      return newCode;
+    });
+  }
+
+  confirmarSetupHvH() {
+    if (this.hvhSecretCode().some(c => c === null)) {
+      alert('Defina a sequência secreta completa antes de prosseguir.');
+      return;
+    }
+    if (this.hvhAvailableCommands().length < 2) {
+      alert('Selecione ao menos 2 comandos disponíveis para o Jogador 2.');
+      return;
+    }
+    this.playBeepSuccess();
+    this.gameState.set('HVH_TRANSITION');
+    this.hvhTransitionCountdown.set(5);
+    if (this.hvhCountdownTimer) clearInterval(this.hvhCountdownTimer);
+    this.hvhCountdownTimer = setInterval(() => {
+      const current = this.hvhTransitionCountdown();
+      if (current <= 1) {
+        clearInterval(this.hvhCountdownTimer);
+        this.hvhCountdownTimer = null;
+        this.iniciarJogoHvH();
+      } else {
+        this.hvhTransitionCountdown.set(current - 1);
+        this.playBeepClick();
+      }
+    }, 1000);
+  }
+
+  iniciarJogoHvH() {
+    this.hvhGuesses = [];
+    this.hvhCurrentGuess = new Array(this.hvhCodeLength()).fill(null);
+    this.hvhShowCode.set(false);
+    this.gameState.set('HVH_PLAYING');
+    this.typeOracleMessage(
+      '> Jogador 2, o Firewall está ativo. Decodifique a sequência secreta para vencer!',
+      () => {}
+    );
+  }
+
+  selectHvhCommand(cmd: string) {
+    if (this.gameState() !== 'HVH_PLAYING') return;
+    const idx = this.hvhCurrentGuess.indexOf(null!);
+    if (idx !== -1) {
+      this.playBeepClick();
+      this.hvhCurrentGuess[idx] = cmd;
+    }
+  }
+
+  clearHvhCommand(index: number) {
+    if (this.gameState() !== 'HVH_PLAYING') return;
+    this.playBeepClick();
+    this.hvhCurrentGuess[index] = null!;
+  }
+
+  submitHvhGuess() {
+    if (this.gameState() !== 'HVH_PLAYING') return;
+    if (this.hvhCurrentGuess.some(c => !c)) return;
+
+    this.playBeepClick();
+    const secret = this.hvhSecretCode() as string[];
+    const result = this.calculateResult(this.hvhCurrentGuess, secret);
+
+    this.hvhGuesses.push({
+      code: [...this.hvhCurrentGuess],
+      exact: result.exact,
+      partial: result.partial
+    });
+
+    if (result.exact === this.hvhCodeLength()) {
+      this.playBeepSuccess();
+      this.hvhShowCode.set(true);
+      this.gameState.set('HVH_WON');
+      this.typeOracleMessage('> ACESSO CONCEDIDO! Jogador 2 quebrou o firewall!', () => {});
+    } else if (this.hvhGuesses.length >= this.hvhMaxAttempts()) {
+      this.playBeepFail();
+      this.hvhShowCode.set(true);
+      this.gameState.set('HVH_LOST');
+      this.typeOracleMessage(
+        `> FALHA CRÍTICA! O Jogador 1 defendeu o sistema. A senha era: [ ${secret.join(' | ')} ]`,
+        () => {}
+      );
+    } else {
+      this.hvhCurrentGuess = new Array(this.hvhCodeLength()).fill(null);
+      let dica = '> Falha na decodificação. Tente novamente.';
+      if (result.exact > 0 && result.partial > 0) {
+        dica = '> Interessante. Alguns comandos estão na posição exata, outros estão corretos mas deslocados. Reorganize-os.';
+      } else if (result.exact > 0) {
+        dica = `> Bom. ${result.exact} comando(s) perfeitamente alinhado(s). Mantenha e troque o resto.`;
+      } else if (result.partial > 0) {
+        dica = `> Ressonância detectada. ${result.partial} comando(s) correto(s) mas em posição errada.`;
+      } else {
+        dica = '> Erro crítico. NENHUM desses comandos faz parte da senha. Esqueça-os.';
+      }
+      this.typeOracleMessage(dica, () => {});
+    }
+  }
+
+  reiniciarHvH() {
+    if (this.hvhCountdownTimer) {
+      clearInterval(this.hvhCountdownTimer);
+      this.hvhCountdownTimer = null;
+    }
+    this.hvhSecretCode.set(new Array(this.hvhCodeLength()).fill(null));
+    this.hvhGuesses = [];
+    this.hvhCurrentGuess = [];
+    this.hvhShowCode.set(false);
+    this.gameState.set('HVH_SETUP');
+  }
 
   adicionarNovoComandoPersonalizado() {
     const nome = this.novoComandoNome.trim().toUpperCase();
@@ -238,6 +398,10 @@ export class CyberCodeBreakerComponent implements OnInit, OnDestroy {
     if (this.schedulerTimer) {
       clearInterval(this.schedulerTimer);
       this.schedulerTimer = null;
+    }
+    if (this.hvhCountdownTimer) {
+      clearInterval(this.hvhCountdownTimer);
+      this.hvhCountdownTimer = null;
     }
   }
 
@@ -470,14 +634,35 @@ export class CyberCodeBreakerComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (this.gameState() !== 'PLAYING' || this.isTyping()) return;
+    const state = this.gameState();
+    if (state !== 'PLAYING' && state !== 'HVH_PLAYING') return;
+    if (this.isTyping()) return;
 
     if (event.key >= '1' && event.key <= '8') {
-      this.handleNumberKey(event.key);
+      if (state === 'HVH_PLAYING') {
+        const idx = Number.parseInt(event.key, 10) - 1;
+        const cmds = this.hvhAvailableCommands();
+        if (idx < cmds.length) this.selectHvhCommand(cmds[idx]);
+      } else {
+        this.handleNumberKey(event.key);
+      }
     } else if (event.key === 'Backspace') {
-      this.handleBackspaceKey(event);
+      if (state === 'HVH_PLAYING') {
+        event.preventDefault();
+        let lastIdx = -1;
+        for (let i = this.hvhCurrentGuess.length - 1; i >= 0; i--) {
+          if (this.hvhCurrentGuess[i] !== null) { lastIdx = i; break; }
+        }
+        if (lastIdx !== -1) this.clearHvhCommand(lastIdx);
+      } else {
+        this.handleBackspaceKey(event);
+      }
     } else if (event.key === 'Enter') {
-      this.handleEnterKey();
+      if (state === 'HVH_PLAYING') {
+        if (!this.hvhCurrentGuess.includes(null!)) this.submitHvhGuess();
+      } else {
+        this.handleEnterKey();
+      }
     }
   }
 

@@ -1,6 +1,6 @@
 <div class="level-container" *ngIf="currentLevelData">
   <div class="header-nivel">
-    <button class="btn-acao btn-voltar" (click)="router.navigate(['/story/map'])"><< ABORTAR MISSÃO</button>
+    <button class="btn-acao btn-voltar" (click)="router.navigate(['/story/map'])">&lt;&lt; ABORTAR MISSÃO</button>
     <span class="titulo-nivel">SISTEMA CENTRAL — NODE 0{{ levelId }}</span>
   </div>
 
@@ -47,7 +47,8 @@
           <div class="linhas-numeros">
             <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
           </div>
-          <textarea [(ngModel)]="userCode" class="codigo-input" placeholder="// Insira as credenciais de acesso aqui..." spellcheck="false" [disabled]="executionState() === 'executing' || executionState() === 'success'"></textarea>
+          <label for="codigo-input" class="sr-only">Código Fonte</label>
+          <textarea id="codigo-input" [(ngModel)]="userCode" class="codigo-input" placeholder="// Insira as credenciais de acesso aqui..." spellcheck="false" [disabled]="executionState() === 'executing' || executionState() === 'success'"></textarea>
         </div>
 
         <div class="terminal-saida">

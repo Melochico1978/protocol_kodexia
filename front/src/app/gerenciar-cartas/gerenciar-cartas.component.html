@@ -8,7 +8,7 @@
       ✏️ EDITANDO: {{ cartaEmEdicao?.nome | uppercase }} — Modifique os dados e clique em SALVAR DADO.
     </div>
     <div style="margin-top: 15px; text-align: center;" *ngIf="!modoEdicao">
-      <button (click)="scrollToBanco()" style="padding: 6px 16px; background: rgba(0, 243, 255, 0.15); border: 2px solid #00f3ff; color: #00f3ff; font-family: 'VT323', monospace; font-size: 20px; cursor: pointer; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); transition: 0.3s;" onmouseover="this.style.background='#00f3ff'; this.style.color='black';" onmouseout="this.style.background='rgba(0, 243, 255, 0.15)'; this.style.color='#00f3ff';">
+      <button (click)="scrollToBanco()" style="padding: 6px 16px; background: #0d0221; border: 2px solid #00f3ff; color: #00f3ff; font-family: 'VT323', monospace; font-size: 20px; cursor: pointer; border-radius: 4px; box-shadow: 0 0 10px rgba(0, 243, 255, 0.2); transition: 0.3s;" onmouseover="this.style.background='#00f3ff'; this.style.color='black';" onmouseout="this.style.background='#0d0221'; this.style.color='#00f3ff';">
         📦 IR PARA O BANCO DE CARTAS (VER TODAS) 👇
       </button>
     </div>
@@ -54,11 +54,11 @@
         <div class="header-so">🔴 🟡 🟢 COLETOR_INFO.sh</div>
         <div class="body-so form-dados">
 
-          <label>NOME DA LINGUAGEM:</label>
-          <input type="text" [(ngModel)]="novaCarta.nome" placeholder="Ex: C++, Java...">
+          <label for="nomeLinguagem">NOME DA LINGUAGEM:</label>
+          <input id="nomeLinguagem" type="text" [(ngModel)]="novaCarta.nome" placeholder="Ex: C++, Java...">
 
-          <label>GRUPO:</label>
-          <select [(ngModel)]="novaCarta.grupo">
+          <label for="grupoSelect">GRUPO:</label>
+          <select id="grupoSelect" [(ngModel)]="novaCarta.grupo">
             <option value="A">Grupo A</option>
             <option value="B">Grupo B</option>
             <option value="C">Grupo C</option>
@@ -103,32 +103,32 @@
         <div class="body-so form-sliders">
 
           <div class="slider-group">
-            <label>PERFORMANCE [{{novaCarta.performance}}]</label>
-            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.performance">
+            <label for="performanceInput">PERFORMANCE [{{novaCarta.performance}}]</label>
+            <input id="performanceInput" type="range" min="0" max="100" [(ngModel)]="novaCarta.performance">
           </div>
           <div class="slider-group">
-            <label>SINTAXE [{{novaCarta.sintaxe}}]</label>
-            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.sintaxe">
+            <label for="sintaxeInput">SINTAXE [{{novaCarta.sintaxe}}]</label>
+            <input id="sintaxeInput" type="range" min="0" max="100" [(ngModel)]="novaCarta.sintaxe">
           </div>
           <div class="slider-group">
-            <label>SEGURANÇA [{{novaCarta.seguranca}}]</label>
-            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.seguranca">
+            <label for="segurancaInput">SEGURANÇA [{{novaCarta.seguranca}}]</label>
+            <input id="segurancaInput" type="range" min="0" max="100" [(ngModel)]="novaCarta.seguranca">
           </div>
           <div class="slider-group">
-            <label>LONGEVIDADE [{{novaCarta.longevidade}}]</label>
-            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.longevidade">
+            <label for="longevidadeInput">LONGEVIDADE [{{novaCarta.longevidade}}]</label>
+            <input id="longevidadeInput" type="range" min="0" max="100" [(ngModel)]="novaCarta.longevidade">
           </div>
           <div class="slider-group">
-            <label>POPULARIDADE [{{novaCarta.popularidade}}]</label>
-            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.popularidade">
+            <label for="popularidadeInput">POPULARIDADE [{{novaCarta.popularidade}}]</label>
+            <input id="popularidadeInput" type="range" min="0" max="100" [(ngModel)]="novaCarta.popularidade">
           </div>
           <div class="slider-group">
-            <label>ABSTRAÇÃO [{{novaCarta.abstracao}}]</label>
-            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.abstracao">
+            <label for="abstracaoInput">ABSTRAÇÃO [{{novaCarta.abstracao}}]</label>
+            <input id="abstracaoInput" type="range" min="0" max="100" [(ngModel)]="novaCarta.abstracao">
           </div>
           <div class="slider-group">
-            <label>VERSATILIDADE [{{novaCarta.versatilidade}}]</label>
-            <input type="range" min="0" max="100" [(ngModel)]="novaCarta.versatilidade">
+            <label for="versatilidadeInput">VERSATILIDADE [{{novaCarta.versatilidade}}]</label>
+            <input id="versatilidadeInput" type="range" min="0" max="100" [(ngModel)]="novaCarta.versatilidade">
           </div>
 
         </div>
@@ -144,9 +144,9 @@
 
   <!-- Painel de Busca e Filtros -->
   <div class="filtros-container" style="max-width: 1250px; margin: 0 auto 30px auto; padding: 0 40px; display: flex; gap: 20px; flex-wrap: wrap; position: relative; z-index: 2;">
-    <input type="text" class="filtro-campo" [(ngModel)]="filtroTexto" placeholder="Pesquisar por nome ou código..." style="flex: 2; min-width: 250px;"/>
+    <input id="filtroTexto" aria-label="Pesquisar por nome ou código" type="text" class="filtro-campo" [(ngModel)]="filtroTexto" placeholder="Pesquisar por nome ou código..." style="flex: 2; min-width: 250px;"/>
     
-    <select class="filtro-campo" [(ngModel)]="filtroGrupo" style="flex: 1; min-width: 150px;">
+    <select id="filtroGrupo" aria-label="Todos os Grupos" class="filtro-campo" [(ngModel)]="filtroGrupo" style="flex: 1; min-width: 150px;">
       <option value="TODOS">Todos os Grupos</option>
       <option value="A">Grupo A</option>
       <option value="B">Grupo B</option>
@@ -158,7 +158,7 @@
       <option value="H">Grupo H</option>
     </select>
 
-    <select class="filtro-campo" [(ngModel)]="filtroRaridade" style="flex: 1; min-width: 150px;">
+    <select id="filtroRaridade" aria-label="Todas as Raridades" class="filtro-campo" [(ngModel)]="filtroRaridade" style="flex: 1; min-width: 150px;">
       <option value="TODAS">Todas as Raridades</option>
       <option value="COMUM">Comuns</option>
       <option value="LENDARIA">Lendárias</option>
@@ -195,10 +195,11 @@
   </div>
 
   <!-- Modal HUD Cyberpunk para Visualização Individual -->
-  <div class="modal-visualizacao-overlay" *ngIf="cartaParaVisualizar" (click)="fecharVisualizador()">
-    <div class="modal-visualizacao-content" (click)="$event.stopPropagation()">
+  <div class="modal-visualizacao-wrapper" *ngIf="cartaParaVisualizar">
+    <button type="button" class="modal-visualizacao-overlay" (click)="fecharVisualizador()" aria-label="Fechar visualizador"></button>
+    <div class="modal-visualizacao-content">
       <div class="janela-so visualizador-individual">
-        <div class="header-so" style="display: flex; justify-content: space-between; align-items: center; background: rgba(0, 243, 255, 0.2); border-bottom: 2px solid #00f3ff; padding: 10px 15px; color: #00f3ff;">
+        <div class="header-so" style="display: flex; justify-content: space-between; align-items: center; background: #0d0221; border-bottom: 2px solid #00f3ff; padding: 10px 15px; color: #00f3ff;">
           <span style="font-size: 22px; letter-spacing: 2px;">👁️ CODEX_INSPECTOR.sys</span>
           <button class="btn-fechar-modal" (click)="fecharVisualizador()" style="background: transparent; border: none; color: #ff003c; font-size: 20px; cursor: pointer; transition: transform 0.2s;">❌</button>
         </div>

@@ -208,7 +208,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   color: #fff;
   text-align: center;
   text-shadow: 0 0 5px #ffcc00;
-  background: rgba(255, 204, 0, 0.1);
+  background: #1a1400;
   border: 1px solid rgba(255, 204, 0, 0.5);
   border-radius: 5px;
   padding: 5px 10px;
@@ -309,10 +309,10 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 .placeholder-holografico {
   width: 220px; height: 320px; border: 2px dashed #00f3ff; border-radius: 15px;
   display: flex; align-items: center; justify-content: center; text-align: center;
-  font-size: 24px; color: rgba(0, 243, 255, 0.4); background: rgba(0, 243, 255, 0.05);
+  font-size: 24px; color: #00f3ff; background: #0c021a;
 }
 
-.placeholder-holografico.inimigo { border-color: #ff003c; color: rgba(255, 0, 60, 0.4); background: rgba(255, 0, 60, 0.05); }
+.placeholder-holografico.inimigo { border-color: #ff003c; color: #ff003c; background: #0c021a; }
 
 
 .janela-so.menu-ataque {
@@ -324,7 +324,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 }
 
 .janela-so.menu-ataque .header-so {
-  background: rgba(241, 196, 15, 0.2); border-bottom: 2px solid #f1c40f;
+  background: #1a1400; border-bottom: 2px solid #f1c40f;
   color: #f1c40f; padding: 6px 10px; font-size: 15px;
   text-shadow: 0 0 5px #f1c40f;
   border-top-left-radius: 13px;
@@ -358,7 +358,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   line-height: 1.2;
 }
 .btn-atributo:hover { 
-  background: rgba(0, 243, 255, 0.2); color: #fff; 
+  background: #00f3ff; color: #0d0221; 
   transform: scale(1.02) translateX(3px); 
   box-shadow: 0 0 10px rgba(0, 243, 255, 0.6), inset 0 0 5px rgba(0, 243, 255, 0.5); 
   border-color: #fff;
@@ -398,7 +398,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   letter-spacing: 8px;
   text-shadow: 0 0 20px #f1c40f, 0 0 40px #f1c40f;
   border: 2px solid #f1c40f;
-  background: rgba(241, 196, 15, 0.1);
+  background: #1a1400;
   padding: 10px 30px;
   border-radius: 8px;
   margin-bottom: 15px;
@@ -413,7 +413,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 .super-trunfo-msg {
   color: #f1c40f !important;
   border-color: #f1c40f !important;
-  background: rgba(241, 196, 15, 0.1) !important;
+  background: #1a1400 !important;
   text-shadow: 0 0 10px #f1c40f;
 }
 
@@ -486,7 +486,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 }
 
 .terminal-header {
-  background: #222; padding: 10px 15px; color: #888; font-family: sans-serif; font-size: 14px;
+  background: #222; padding: 10px 15px; color: #b0b0b0; font-family: sans-serif; font-size: 14px;
   display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #444;
 }
 .terminal-header .dot { width: 12px; height: 12px; border-radius: 50%; }
@@ -507,8 +507,8 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 .feedback-area {
   padding: 10px; border-radius: 4px; font-weight: bold; font-size: 20px;
 }
-.feedback-area.sucesso { background: rgba(0, 255, 65, 0.1); color: #00ff41; border: 1px dashed #00ff41; }
-.feedback-area.erro { background: rgba(255, 0, 60, 0.1); color: #ff003c; border: 1px dashed #ff003c; }
+.feedback-area.sucesso { background: #041407; color: #00ff41; border: 1px dashed #00ff41; }
+.feedback-area.erro { background: #1c0005; color: #ff003c; border: 1px dashed #ff003c; }
 
 .input-line { display: flex; align-items: center; gap: 10px; margin-top: auto; }
 .prompt-symbol { color: #00f3ff; font-weight: bold; }
@@ -1093,3 +1093,195 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   50% { top: 100%; }
   100% { top: 0%; }
 }
+
+/* Accessibility button style resets */
+button.intro-miraberto-overlay {
+  border: none;
+  padding: 0;
+  outline: none;
+  font-family: inherit;
+  color: inherit;
+}
+
+.btn-editar-nome {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+
+button.carta-na-mao {
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: block;
+  font-family: inherit;
+  color: inherit;
+}
+
+/* CARD FLIP 3D EFFECTS */
+.card-flip-container {
+  perspective: 1000px;
+  width: 220px;
+  height: 320px;
+  cursor: pointer;
+}
+
+.card-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+.card-flip-container.flipped .card-flipper {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  overflow: visible;
+}
+
+.card-face-back {
+  transform: rotateY(0deg);
+  z-index: 2;
+}
+
+.card-face-front {
+  transform: rotateY(180deg);
+  z-index: 1;
+}
+
+/* Back of card with reveal text */
+.interativo-revelar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #00f3ff;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+  background: radial-gradient(circle at center, #0f0326 0%, #05010f 100%);
+  color: #00f3ff;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.interativo-revelar:hover {
+  box-shadow: 0 0 25px rgba(0, 243, 255, 0.7);
+  border-color: #fff;
+}
+
+.click-to-reveal {
+  font-size: 14px;
+  color: #fff;
+  border: 1px dashed #00f3ff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  animation: piscar 1.5s infinite;
+}
+
+/* Attack Menu on the Card's back */
+.menu-ataque-card {
+  width: 220px;
+  height: 320px;
+  background: rgba(13, 2, 33, 0.98);
+  border: 2px solid #f1c40f;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(241, 196, 15, 0.5);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.menu-ataque-card .header-so {
+  background: #1a1400;
+  border-bottom: 2px solid #f1c40f;
+  color: #f1c40f;
+  padding: 6px 10px;
+  font-size: 15px;
+  text-shadow: 0 0 5px #f1c40f;
+  text-align: left;
+}
+
+.menu-ataque-card .body-so {
+  padding: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+}
+
+.titulo-ataque-card {
+  color: #fff;
+  font-size: 15px;
+  text-align: center;
+  margin: 0 0 4px 0;
+  border-bottom: 1px dashed #f1c40f;
+  padding-bottom: 2px;
+  text-transform: uppercase;
+}
+
+/* Hide Stats of Machine's Card */
+.slot-p2 app-carta-exibicao ::ng-deep .stats,
+.slot-p2 app-carta-exibicao ::ng-deep .badge {
+  display: none !important;
+}
+
+/* Hide Stats of Player Card when not flipped/revealed */
+.carta-stats-ocultos ::ng-deep .stats,
+.carta-stats-ocultos ::ng-deep .badge {
+  display: none !important;
+}
+
+.carta-player-escondida-wrapper {
+  position: relative;
+  width: 220px;
+  height: 320px;
+  border-radius: 12px;
+  overflow: visible;
+}
+
+.click-to-reveal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(13, 2, 33, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00f3ff;
+  font-size: 18px;
+  text-align: center;
+  font-weight: bold;
+  padding: 15px;
+  border-radius: 12px;
+  border: 2px dashed #00f3ff;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-sizing: border-box;
+  text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff;
+  box-shadow: inset 0 0 30px rgba(0, 243, 255, 0.3);
+}
+
+.carta-player-escondida-wrapper:hover .click-to-reveal-overlay {
+  opacity: 1;
+}
+

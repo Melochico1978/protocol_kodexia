@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, ViewEncapsulation } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { KonamiService } from '../../core/services/konami.service';
+import { KonamiService } from './konami.service';
 import { Subscription } from 'rxjs';
 
 @Component({

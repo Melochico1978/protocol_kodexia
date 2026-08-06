@@ -177,30 +177,46 @@ export class CartaComponent implements OnInit, OnChanges {
     this.atualizarDesign();
   }
 
+  private obterInfoLinguagem(nome: string, lendaria: boolean): { tipo: string; descricao: string; nomeAtributoEspecial: string } {
+    const nomeNormalizado = nome.trim().toUpperCase();
+    let info = LINGUAGENS_INFO[nomeNormalizado];
+
+    if (!info) {
+      const keyMatch = Object.keys(LINGUAGENS_INFO).find(k => nomeNormalizado.includes(k) || k.includes(nomeNormalizado));
+      if (keyMatch) {
+        info = LINGUAGENS_INFO[keyMatch];
+      }
+    }
+
+    if (info) {
+      return {
+        tipo: info.tipo,
+        descricao: info.descricao,
+        nomeAtributoEspecial: info.atributoEspecial
+      };
+    }
+
+    return {
+      tipo: lendaria ? 'LENDÁRIA / CORROMPIDA' : 'CYBER CUSTOM',
+      descricao: `CÓDIGO DE DADOS CUSTOMIZADO | Identidade de dados registrada localmente no terminal principal da Kodexia.`,
+      nomeAtributoEspecial: `${nomeNormalizado.replace(/[^a-zA-Z]/g, '') || 'KODEX'} FLOW`
+    };
+  }
+
+  private calcularRaridade(media: number, lendaria: boolean): string {
+    if (lendaria) return 'LENDÁRIA';
+    if (media >= 88) return 'ULTRA RARA';
+    if (media >= 76) return 'RARA';
+    if (media >= 60) return 'INCOMUM';
+    return 'COMUM';
+  }
+
   atualizarDesign() {
     if (this.cartaInput) {
-      // Normalização do nome para busca
-      const nomeNormalizado = this.cartaInput.nome.trim().toUpperCase();
-      let info = LINGUAGENS_INFO[nomeNormalizado];
-
-      // Busca por aproximação caso o nome seja composto
-      if (!info) {
-        const keyMatch = Object.keys(LINGUAGENS_INFO).find(k => nomeNormalizado.includes(k) || k.includes(nomeNormalizado));
-        if (keyMatch) {
-          info = LINGUAGENS_INFO[keyMatch];
-        }
-      }
-
-      // Atribuição de dados estáticos ou dinâmicos (fallback)
-      if (info) {
-        this.tipo = info.tipo;
-        this.descricao = info.descricao;
-        this.nomeAtributoEspecial = info.atributoEspecial;
-      } else {
-        this.tipo = this.cartaInput.lendaria ? 'LENDÁRIA / CORROMPIDA' : 'CYBER CUSTOM';
-        this.descricao = `CÓDIGO DE DADOS CUSTOMIZADO | Identidade de dados registrada localmente no terminal principal da Kodexia.`;
-        this.nomeAtributoEspecial = `${nomeNormalizado.replace(/[^a-zA-Z]/g, '') || 'KODEX'} FLOW`;
-      }
+      const info = this.obterInfoLinguagem(this.cartaInput.nome, this.cartaInput.lendaria);
+      this.tipo = info.tipo;
+      this.descricao = info.descricao;
+      this.nomeAtributoEspecial = info.nomeAtributoEspecial;
 
       // Cálculos matemáticos baseados nos atributos reais
       const totalAtributos = 
@@ -218,17 +234,7 @@ export class CartaComponent implements OnInit, OnChanges {
       this.nivel = Math.max(1, Math.min(10, Math.round(media / 10)));
 
       // Raridade
-      if (this.cartaInput.lendaria) {
-        this.raridade = 'LENDÁRIA';
-      } else if (media >= 88) {
-        this.raridade = 'ULTRA RARA';
-      } else if (media >= 76) {
-        this.raridade = 'RARA';
-      } else if (media >= 60) {
-        this.raridade = 'INCOMUM';
-      } else {
-        this.raridade = 'COMUM';
-      }
+      this.raridade = this.calcularRaridade(media, this.cartaInput.lendaria);
 
       // Poder e Atributo Especial
       this.poder = Math.round((this.cartaInput.performance * 0.4 + this.cartaInput.seguranca * 0.4 + this.cartaInput.popularidade * 0.2) * 100);
@@ -253,50 +259,61 @@ export class CartaComponent implements OnInit, OnChanges {
     }
   }
 
+
   obterImagemFallback(nome: string | undefined): string {
     if (!nome) return '/assets/img/teste.jpg';
     const nomeLower = nome.trim().toLowerCase();
-    const svgs = ['ruby', 'scala', 'vlang', 'zig', 'ocaml', 'r', 'nim'];
-    const ext = svgs.includes(nomeLower) ? 'svg' : 'png';
-    
-    let filename = nomeLower;
-    if (filename.includes('c#') || filename.includes('csharp')) return '/assets/img/csharp.png';
-    if (filename.includes('c++') || filename.includes('cpp')) return '/assets/img/cpp.png';
-    if (filename.includes('vlang') || filename === 'v') return '/assets/img/vlang.svg';
-    if (filename.includes('python')) return '/assets/img/python.png';
-    if (filename.includes('javascript')) return '/assets/img/javascript.png';
-    if (filename.includes('typescript')) return '/assets/img/typescript.png';
-    if (filename.includes('java')) return '/assets/img/java.png';
-    if (filename.includes('rust')) return '/assets/img/rust.png';
-    if (filename.includes('kotlin')) return '/assets/img/kotlin.png';
-    if (filename.includes('swift')) return '/assets/img/swift.png';
-    if (filename.includes('php')) return '/assets/img/php.png';
-    if (filename.includes('dart')) return '/assets/img/dart.png';
-    if (filename.includes('ruby')) return '/assets/img/ruby.svg';
-    if (filename.includes('matlab')) return '/assets/img/matlab.png';
-    if (filename.includes('scala')) return '/assets/img/scala.svg';
-    if (filename.includes('elixir')) return '/assets/img/elixir.png';
-    if (filename.includes('haskell')) return '/assets/img/haskell.png';
-    if (filename.includes('julia')) return '/assets/img/julia.png';
-    if (filename.includes('groovy')) return '/assets/img/groovy.png';
-    if (filename.includes('lua')) return '/assets/img/lua.png';
-    if (filename.includes('zig')) return '/assets/img/zig.svg';
-    if (filename.includes('nim')) return '/assets/img/nim.svg';
-    if (filename.includes('crystal')) return '/assets/img/crystal.png';
-    if (filename.includes('fsharp')) return '/assets/img/fsharp.png';
-    if (filename.includes('ada')) return '/assets/img/ada.png';
-    if (filename.includes('cobol')) return '/assets/img/cobol.png';
-    if (filename.includes('fortran')) return '/assets/img/fortran.png';
-    if (filename.includes('ocaml')) return '/assets/img/ocaml.svg';
-    if (filename.includes('assembly')) return '/assets/img/assembly.png';
-    if (filename.includes('go')) return '/assets/img/go.png';
-    if (filename.includes('cefet')) return '/assets/images/miraberto.jpeg';
-    
+
+    const mapping: { [key: string]: string } = {
+      'c#': '/assets/img/csharp.png',
+      'csharp': '/assets/img/csharp.png',
+      'c++': '/assets/img/cpp.png',
+      'cpp': '/assets/img/cpp.png',
+      'vlang': '/assets/img/vlang.svg',
+      'v': '/assets/img/vlang.svg',
+      'python': '/assets/img/python.png',
+      'javascript': '/assets/img/javascript.png',
+      'typescript': '/assets/img/typescript.png',
+      'java': '/assets/img/java.png',
+      'rust': '/assets/img/rust.png',
+      'kotlin': '/assets/img/kotlin.png',
+      'swift': '/assets/img/swift.png',
+      'php': '/assets/img/php.png',
+      'dart': '/assets/img/dart.png',
+      'ruby': '/assets/img/ruby.svg',
+      'matlab': '/assets/img/matlab.png',
+      'scala': '/assets/img/scala.svg',
+      'elixir': '/assets/img/elixir.png',
+      'haskell': '/assets/img/haskell.png',
+      'julia': '/assets/img/julia.png',
+      'groovy': '/assets/img/groovy.png',
+      'lua': '/assets/img/lua.png',
+      'zig': '/assets/img/zig.svg',
+      'nim': '/assets/img/nim.svg',
+      'crystal': '/assets/img/crystal.png',
+      'fsharp': '/assets/img/fsharp.png',
+      'ada': '/assets/img/ada.png',
+      'cobol': '/assets/img/cobol.png',
+      'fortran': '/assets/img/fortran.png',
+      'ocaml': '/assets/img/ocaml.svg',
+      'assembly': '/assets/img/assembly.png',
+      'go': '/assets/img/go.png',
+      'cefet': '/assets/images/miraberto.jpeg'
+    };
+
+    for (const key of Object.keys(mapping)) {
+      if (nomeLower.includes(key)) {
+        return mapping[key];
+      }
+    }
+
+    if (nomeLower === 'r') return '/assets/img/r.svg';
+
     return '/assets/img/teste.jpg';
   }
 
   getImagemUrl(): string {
-    if (!this.cartaInput || !this.cartaInput.imagem) {
+    if (!this.cartaInput?.imagem) {
       return this.obterImagemFallback(this.cartaInput?.nome);
     }
     const path = this.cartaInput.imagem;

@@ -1,0 +1,302 @@
+<div class="batalha-master-container" style="font-family: 'VT323', monospace;">
+  <div class="glitch-overlay" *ngIf="mostrarGlitch"></div>
+
+  <!-- BOTOES GLOBAIS DE FUGA E AUDIO -->
+  <button class="btn-fuga" (click)="voltarParaMenu()">[X] ABORTAR SIMULAÇÃO</button>
+  <button class="btn-audio" (click)="toggleAudio()">
+    {{ audioAtivo ? '🔊 SOM: ON' : '🔇 SOM: OFF' }}
+  </button>
+
+  <div class="header-batalha">
+    <h1 class="titulo-cyberpunk"> [ DUELO DE AGENTES ] </h1>
+    <p class="log-sistema" [class.super-trunfo-msg]="superTrunfoAtivado">{{ mensagemSistemaDisplay }}<span class="cursor-pisca">_</span></p>
+  </div>
+
+  <!-- INDICADOR DE VEZ DO AGENTE (MODO MULTI-MONITOR) -->
+  <div class="banner-turno-pvp" *ngIf="jogoIniciado && !jogoAcabou && modoTela === 'DUPLA'">
+    <div class="badge-turno sua-vez" *ngIf="isMinhaVez">
+      ▶ SUA VEZ DE JOGAR - EXECUTE SUA AÇÃO ◀
+    </div>
+    <div class="badge-turno aguarde" *ngIf="!isMinhaVez && passoAtual !== 'COMPARAR'">
+      ⏳ AGUARDE A JOGADA DO OPONENTE...
+    </div>
+    <div class="badge-turno comparando" *ngIf="passoAtual === 'COMPARAR'">
+      ⚡ ANÁLISE DE CONFLITO EM CURSO...
+    </div>
+  </div>
+
+  <!-- FASE 1: REGISTRO E PREPARAÇÃO -->
+  <div *ngIf="!jogoIniciado" class="lobby-preparacao">
+    <div class="janela-so setup-box">
+      <div class="header-so">🔴 🟡 🟢 CONFIGURAR_DUELO.bat</div>
+      <div class="body-so-setup">
+        <h2 class="titulo-setup">INICIALIZAR CONEXÃO PVP</h2>
+        
+        <!-- SELEÇÃO DE MODO DE TELA -->
+        <div class="modo-tela-seletor">
+          <label>MODO DE EXECUÇÃO:</label>
+          <div class="botoes-modo">
+            <button class="btn-modo" [class.ativo]="modoTela === 'UNICA'" (click)="modoTela = 'UNICA'; papelLocal = null">
+              🖥️ TELA ÚNICA (REVEZAMENTO)
+            </button>
+            <button class="btn-modo" [class.ativo]="modoTela === 'DUPLA'" (click)="modoTela = 'DUPLA'">
+              👥 DUAS TELAS (SINCRONIZADO)
+            </button>
+          </div>
+        </div>
+
+        <!-- PAPEL LOCAL SE MODO DUPLO ATIVO -->
+        <div *ngIf="modoTela === 'DUPLA'" class="papel-seletor">
+          <label>IDENTIFICAÇÃO DESTE MONITOR:</label>
+          <div class="botoes-modo">
+            <button class="btn-modo p1-theme" [class.ativo]="papelLocal === 'P1'" (click)="definirPapelDuplo('P1')">
+              🔴 REGISTRAR MONITOR JOGADOR 1
+            </button>
+            <button class="btn-modo p2-theme" [class.ativo]="papelLocal === 'P2'" (click)="definirPapelDuplo('P2')">
+              🔵 REGISTRAR MONITOR JOGADOR 2
+            </button>
+          </div>
+          <p class="aviso-dupla-tela" *ngIf="papelLocal">
+            Monitor registrado como <strong>{{ papelLocal === 'P1' ? 'JOGADOR 1' : 'JOGADOR 2' }}</strong>. 
+            Abra outra aba no segundo monitor e registre com o outro papel!
+          </p>
+        </div>
+
+        <div class="input-grupo">
+          <label for="player1">CODINOME JOGADOR 1 (RED):</label>
+          <input id="player1" type="text" [(ngModel)]="nomeP1" placeholder="Codinome Jogador 1..." maxlength="15">
+        </div>
+
+        <div class="input-grupo">
+          <label for="player2">CODINOME JOGADOR 2 (BLUE):</label>
+          <input id="player2" type="text" [(ngModel)]="nomeP2" placeholder="Codinome Jogador 2..." maxlength="15">
+        </div>
+
+        <button *ngIf="modoTela === 'UNICA' || papelLocal !== null" class="btn-iniciar-pvp" (click)="iniciarPartida()">
+          🚀 COMPILAR DUELO E INICIAR
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FASE 2: COMBATE ATIVO -->
+  <div *ngIf="jogoIniciado && !jogoAcabou" class="layout-batalha-pvp">
+
+    <!-- CORTINA DE PRIVACIDADE E SEGURANÇA (SOMENTE PARA MODO TELA ÚNICA) -->
+    <div class="cortina-seguranca" *ngIf="modoTela === 'UNICA' && (passoAtual === 'SECRET_P1' || passoAtual === 'SECRET_P2' || passoAtual === 'SECRET_ATRIB_P1' || passoAtual === 'SECRET_ATRIB_P2')">
+      <div class="janela-so painel-seguranca">
+        <div class="header-so">⚠️ CANAL CRIPTOGRAFADO</div>
+        <div class="body-so-seguranca">
+          <h2 class="titulo-seguranca" [class.p1]="passoAtual === 'SECRET_P1' || passoAtual === 'SECRET_ATRIB_P1'">
+            VEZ DO {{ (passoAtual === 'SECRET_P1' || passoAtual === 'SECRET_ATRIB_P1') ? nomeP1 : nomeP2 }}
+          </h2>
+          <p class="instrucao-seguranca">
+            Por favor, assuma o controle. O adversário deve olhar para o outro lado!
+          </p>
+          <button class="btn-revelar-seguranca" (click)="avancarPassoSecreto()">
+            🔑 ACESSAR PAINEL SECRETO
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARENA E CONTROLES -->
+    <div class="arena-geral" *ngIf="modoTela === 'DUPLA' || (!passoAtual.startsWith('SECRET_'))">
+      
+      <!-- INFORMAÇÕES LATERAIS E ARENA -->
+      <div class="arena-central-pvp">
+        
+        <!-- PAINEL SUPERIOR COM STATUS DOS JOGADORES -->
+        <div class="painel-status-pvp">
+          <div class="status-box p1" [class.ativo]="passoAtual === 'MESA_P1' || passoAtual === 'ESCOLHER_ATRIB_P1'">
+            <span class="nome">{{ nomeP1 }}</span>
+            <span class="contador">CARTAS: {{ totalCartasP1 }}</span>
+          </div>
+          <div class="pote-empate" *ngIf="deckEmpate.length > 0">
+            ⚔️ EM DISPUTA: {{ deckEmpate.length }}
+          </div>
+          <div class="status-box p2" [class.ativo]="passoAtual === 'MESA_P2' || passoAtual === 'ESCOLHER_ATRIB_P2'">
+            <span class="nome">{{ nomeP2 }}</span>
+            <span class="contador">CARTAS: {{ totalCartasP2 }}</span>
+          </div>
+        </div>
+
+        <div class="zona-embate-pvp">
+          
+          <!-- SLOT JOGADOR 1 -->
+          <div class="slot-carta slot-p1">
+            <div *ngIf="!cartaAtualP1" class="placeholder-holografico">AGENTE 1</div>
+
+            <div *ngIf="cartaAtualP1"
+                 class="card-flip-container"
+                 [class.flipped]="passoAtual === 'COMPARAR' || (cartaP1Revelada && (modoTela === 'UNICA' || papelLocal === 'P1'))"
+                 [class.vencedor-rodada]="passoAtual === 'COMPARAR' && vencedorRodada === 'P1'"
+                 [class.perdedor-rodada]="passoAtual === 'COMPARAR' && vencedorRodada === 'P2'"
+                 [class.empate-rodada]="passoAtual === 'COMPARAR' && vencedorRodada === 'EMPATE'"
+                 (click)="passoAtual === 'ESCOLHER_ATRIB_P1' && (modoTela === 'UNICA' || papelLocal === 'P1') ? revelarCartasParaEscolha() : null">
+              <div class="card-flipper">
+                
+                <div class="card-face card-face-back">
+                  <div class="carta-player-escondida-wrapper">
+                    <app-carta-exibicao [carta]="cartaAtualP1" class="carta-stats-ocultos"></app-carta-exibicao>
+                    <span class="click-to-reveal-overlay" *ngIf="passoAtual === 'ESCOLHER_ATRIB_P1' && (modoTela === 'UNICA' || papelLocal === 'P1')">
+                      CLIQUE PARA REVELAR VETORES DE ATAQUE
+                    </span>
+                  </div>
+                </div>
+
+                <div class="card-face card-face-front">
+                  <div *ngIf="passoAtual === 'ESCOLHER_ATRIB_P1' && cartaP1Revelada" class="janela-so menu-ataque-card">
+                    <div class="header-so">🔴 🟡 🟢 ANALISADOR.bat</div>
+                    <div class="body-so">
+                      <h3 class="titulo-ataque-card">{{ cartaAtualP1.nome }}</h3>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('performance', 'Performance')">PERFORMANCE [{{cartaAtualP1.performance}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('sintaxe', 'Sintaxe')">SINTAXE [{{cartaAtualP1.sintaxe}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('seguranca', 'Segurança')">SEGURANÇA [{{cartaAtualP1.seguranca}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('longevidade', 'Longevidade')">LONGEVIDADE [{{cartaAtualP1.longevidade}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('popularidade', 'Popularidade')">POPULARIDADE [{{cartaAtualP1.popularidade}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('abstracao', 'Abstração')">ABSTRAÇÃO [{{cartaAtualP1.abstracao}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('versatilidade', 'Versatilidade')">VERSATILIDADE [{{cartaAtualP1.versatilidade}}]</button>
+                    </div>
+                  </div>
+
+                  <app-carta-exibicao *ngIf="!(passoAtual === 'ESCOLHER_ATRIB_P1' && cartaP1Revelada)" 
+                                     [carta]="cartaAtualP1"
+                                     [class.carta-stats-ocultos]="passoAtual !== 'COMPARAR' && (!cartaP1Revelada || (modoTela === 'DUPLA' && papelLocal !== 'P1'))">
+                  </app-carta-exibicao>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- PAINEL CENTRAL VS -->
+          <div class="painel-confronto-centro">
+            <div class="divisor-vs">VS</div>
+            <div *ngIf="passoAtual === 'COMPARAR'" class="detalhes-confronto">
+               <div class="escolha-jogador p1-escolha">
+                 {{ nomeP1 }} escolheu<br><strong>{{ nomeAtributoEscolhidoP1 }}</strong>
+               </div>
+               <div class="escolha-jogador p2-escolha">
+                 {{ nomeP2 }} escolheu<br><strong>{{ nomeAtributoEscolhidoP2 }}</strong>
+               </div>
+            </div>
+          </div>
+
+          <!-- SLOT JOGADOR 2 -->
+          <div class="slot-carta slot-p2">
+            <div *ngIf="!cartaAtualP2" class="placeholder-holografico inimigo">AGENTE 2</div>
+
+            <div *ngIf="cartaAtualP2"
+                 class="card-flip-container"
+                 [class.flipped]="passoAtual === 'COMPARAR' || (cartaP2Revelada && (modoTela === 'UNICA' || papelLocal === 'P2'))"
+                 [class.vencedor-rodada]="passoAtual === 'COMPARAR' && vencedorRodada === 'P2'"
+                 [class.perdedor-rodada]="passoAtual === 'COMPARAR' && vencedorRodada === 'P1'"
+                 [class.empate-rodada]="passoAtual === 'COMPARAR' && vencedorRodada === 'EMPATE'"
+                 (click)="passoAtual === 'ESCOLHER_ATRIB_P2' && (modoTela === 'UNICA' || papelLocal === 'P2') ? revelarCartasParaEscolha() : null">
+              <div class="card-flipper">
+                
+                <div class="card-face card-face-back">
+                  <div class="carta-player-escondida-wrapper">
+                    <app-carta-exibicao [carta]="cartaAtualP2" class="carta-stats-ocultos"></app-carta-exibicao>
+                    <span class="click-to-reveal-overlay" *ngIf="passoAtual === 'ESCOLHER_ATRIB_P2' && (modoTela === 'UNICA' || papelLocal === 'P2')">
+                      CLIQUE PARA REVELAR VETORES DE ATAQUE
+                    </span>
+                  </div>
+                </div>
+
+                <div class="card-face card-face-front">
+                  <div *ngIf="passoAtual === 'ESCOLHER_ATRIB_P2' && cartaP2Revelada" class="janela-so menu-ataque-card">
+                    <div class="header-so">🔴 🟡 🟢 ANALISADOR.bat</div>
+                    <div class="body-so">
+                      <h3 class="titulo-ataque-card">{{ cartaAtualP2.nome }}</h3>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('performance', 'Performance')">PERFORMANCE [{{cartaAtualP2.performance}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('sintaxe', 'Sintaxe')">SINTAXE [{{cartaAtualP2.sintaxe}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('seguranca', 'Segurança')">SEGURANÇA [{{cartaAtualP2.seguranca}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('longevidade', 'Longevidade')">LONGEVIDADE [{{cartaAtualP2.longevidade}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('popularidade', 'Popularidade')">POPULARIDADE [{{cartaAtualP2.popularidade}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('abstracao', 'Abstração')">ABSTRAÇÃO [{{cartaAtualP2.abstracao}}]</button>
+                      <button class="btn-atributo" (click)="$event.stopPropagation(); escolherAtributo('versatilidade', 'Versatilidade')">VERSATILIDADE [{{cartaAtualP2.versatilidade}}]</button>
+                    </div>
+                  </div>
+
+                  <app-carta-exibicao *ngIf="!(passoAtual === 'ESCOLHER_ATRIB_P2' && cartaP2Revelada)" 
+                                     [carta]="cartaAtualP2"
+                                     [class.carta-stats-ocultos]="passoAtual !== 'COMPARAR' && (!cartaP2Revelada || (modoTela === 'DUPLA' && papelLocal !== 'P2'))">
+                  </app-carta-exibicao>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- PAINEL DE MÃO PARA O JOGADOR ATIVO -->
+      <div class="rodape-mao-cartas-pvp">
+        
+        <div *ngIf="passoAtual === 'MESA_P1' && (modoTela === 'UNICA' || papelLocal === 'P1')" class="mao-seletor-container">
+          <h3 class="status-turno-label">> MÃO DO {{ nomeP1 }}</h3>
+          <div class="lista-cartas-mao">
+            <button type="button" class="carta-na-mao" 
+                 *ngFor="let carta of maoP1; let i = index" 
+                 (click)="selecionarCartaP1(i)"
+                 [attr.aria-label]="'Escolher carta ' + carta.nome">
+              <app-carta-exibicao [carta]="carta"></app-carta-exibicao>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="passoAtual === 'MESA_P1' && modoTela === 'DUPLA' && papelLocal === 'P2'" class="aguardando-container">
+          <p class="texto-carregando-cyber">> AGUARDANDO AÇÃO DO {{ nomeP1 }}... <span class="cursor-pisca">_</span></p>
+        </div>
+
+        <div *ngIf="passoAtual === 'MESA_P2' && (modoTela === 'UNICA' || papelLocal === 'P2')" class="mao-seletor-container">
+          <h3 class="status-turno-label">> MÃO DO {{ nomeP2 }}</h3>
+          <div class="lista-cartas-mao">
+            <button type="button" class="carta-na-mao" 
+                 *ngFor="let carta of maoP2; let i = index" 
+                 (click)="selecionarCartaP2(i)"
+                 [attr.aria-label]="'Escolher carta ' + carta.nome">
+              <app-carta-exibicao [carta]="carta"></app-carta-exibicao>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="passoAtual === 'MESA_P2' && modoTela === 'DUPLA' && papelLocal === 'P1'" class="aguardando-container">
+          <p class="texto-carregando-cyber">> AGUARDANDO AÇÃO DO {{ nomeP2 }}... <span class="cursor-pisca">_</span></p>
+        </div>
+
+        <!-- Esperas para os passos de ESCOLHER_ATRIB -->
+        <div *ngIf="passoAtual === 'ESCOLHER_ATRIB_P1' && modoTela === 'DUPLA' && papelLocal === 'P2'" class="aguardando-container">
+          <p class="texto-carregando-cyber">
+            > {{ nomeP1 }} ESTÁ FILTRANDO VETORES DE ATAQUE... <span class="cursor-pisca">_</span>
+          </p>
+        </div>
+        
+        <div *ngIf="passoAtual === 'ESCOLHER_ATRIB_P2' && modoTela === 'DUPLA' && papelLocal === 'P1'" class="aguardando-container">
+          <p class="texto-carregando-cyber">
+            > {{ nomeP2 }} ESTÁ FILTRANDO VETORES DE ATAQUE... <span class="cursor-pisca">_</span>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FASE 3: FIM DE DUELO -->
+  <div *ngIf="jogoAcabou" class="fim-de-jogo-painel">
+    <h2 class="texto-final vitoria">
+      🏆 DUELO ENCERRADO 🏆
+    </h2>
+    <p class="subtexto-final">
+      AGENTE CONECTADO VITORIOSO: {{ vencedor === 'P1' ? nomeP1 : nomeP2 }}
+    </p>
+    <div style="display: flex; gap: 20px;">
+      <button class="btn-acao-final" (click)="iniciarPartida()">🔄 REINICIAR CONEXÃO (REVANCHE)</button>
+      <button class="btn-acao-final" (click)="voltarParaMenu()">🔙 RETORNAR À CENTRAL</button>
+    </div>
+  </div>
+</div>

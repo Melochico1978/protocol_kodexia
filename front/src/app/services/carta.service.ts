@@ -35,4 +35,12 @@ export class CartaService {
   getDeck(): Carta[] {
     return this.deckSelecionado;
   }
+
+  getPartidaPvp(): Observable<any> {
+    return this.http.get<any>('/api/partida_pvp');
+  }
+
+  savePartidaPvp(state: any): Observable<any> {
+    return this.http.put<any>('/api/partida_pvp', { ...state, id: "1" });
+  }
 }

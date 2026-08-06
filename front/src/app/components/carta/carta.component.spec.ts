@@ -14,6 +14,21 @@ describe('CartaComponent', () => {
 
     fixture = TestBed.createComponent(CartaComponent);
     component = fixture.componentInstance;
+    component.cartaInput = {
+      id: '1',
+      grupo: 'A',
+      codigo: '01',
+      nome: 'PYTHON',
+      imagem: '',
+      performance: 80,
+      sintaxe: 85,
+      seguranca: 90,
+      longevidade: 95,
+      popularidade: 100,
+      abstracao: 75,
+      versatilidade: 70,
+      lendaria: false
+    };
     fixture.detectChanges();
   });
 

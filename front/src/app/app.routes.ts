@@ -12,6 +12,7 @@ export const routes: Routes = [
   { path: '', component: SplashComponent },
   { path: 'inicio', component: InicioComponent },
   { path: 'mesa', component: PartidaComponent },
+  { path: 'pvp', loadComponent: () => import('./components/partida-pvp/partida-pvp.component').then(m => m.PartidaPvpComponent) },
   { path: 'crud', component: GerenciarCartasComponent },
   { path: 'deck', component: SelecaoDeckComponent }, 
   { path: 'desconectado', component: DesconectadoComponent }, 

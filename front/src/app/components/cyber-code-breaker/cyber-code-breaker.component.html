@@ -8,37 +8,60 @@
   <div class="top-bar">
     <div class="glitch-title">CYBER CODE BREAKER</div>
     <div class="level-info" *ngIf="gameState() !== 'CREATOR_PANEL'" style="font-size: 18px; color: #fff;">
-      {{ gameState() === 'PLAYING_CUSTOM' ? 'CONEXÃO CUSTOMIZADA' : 'NÍVEL ' + activeLevel.id + ' - ' + activeLevel.name }}
+      {{ gameState() === 'PLAYING_CUSTOM' ? 'CONEXÃO CUSTOMIZADA' : (gameState().startsWith('HVH') ? 'HUMANO vs HUMANO' : 'NÍVEL ' + activeLevel.id + ' - ' + activeLevel.name) }}
     </div>
-    
-    <div class="mode-toggles" style="display: flex; gap: 15px; align-items: center;">
+       <div class="mode-toggles" style="display: flex; gap: 15px; align-items: center;">
       <button type="button" class="btn-dica music-toggle-btn" (click)="toggleMusic()" 
               [style.background]="isMusicPlaying() ? 'rgba(0, 229, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)'"
               [style.borderColor]="isMusicPlaying() ? '#00e5ff' : '#666'"
               [style.color]="isMusicPlaying() ? '#00e5ff' : '#999'"
               style="margin-top: 0; font-family: 'Share Tech Mono', monospace; display: flex; align-items: center; gap: 8px;">
-        <span class="music-icon" [class.music-playing]="isMusicPlaying()">🎵</span>
+        <span class="music-icon" [class.music-playing]="isMusicPlaying()">&#127925;</span>
         {{ isMusicPlaying() ? 'MÚSICA: LIGADA' : 'MÚSICA: DESLIGADA' }}
       </button>
 
-      <button type="button" class="btn-dica" *ngIf="gameState() !== 'CREATOR_PANEL'" (click)="iniciarCriador()" style="margin-top: 0; background: rgba(255, 0, 127, 0.15); border-color: #ff007f; color: #ff007f;">
+      <button type="button" class="btn-dica" 
+              *ngIf="gameState() !== 'CREATOR_PANEL' && gameState() !== 'HVH_SETUP' && gameState() !== 'HVH_TRANSITION' && gameState() !== 'HVH_PLAYING' && gameState() !== 'HVH_WON' && gameState() !== 'HVH_LOST'"
+              (click)="iniciarCriador()" 
+              style="margin-top: 0; background: #0d0221; border-color: #ff007f; color: #ff007f;">
         [ MODO CRIAÇÃO ]
       </button>
-      <button type="button" class="btn-dica" *ngIf="gameState() === 'CREATOR_PANEL'" (click)="restartGame()" style="margin-top: 0; background: rgba(0, 229, 255, 0.15); border-color: #00e5ff; color: #00e5ff;">
+
+      <button type="button" class="btn-dica"
+              *ngIf="gameState() !== 'CREATOR_PANEL' && gameState() !== 'HVH_SETUP' && gameState() !== 'HVH_TRANSITION' && gameState() !== 'HVH_PLAYING' && gameState() !== 'HVH_WON' && gameState() !== 'HVH_LOST'"
+              (click)="iniciarModoHvH()"
+              style="margin-top: 0; background: #0d0221; border-color: #9d00ff; color: #9d00ff;">
+        [ HUMANO vs HUMANO ]
+      </button>
+
+      <button type="button" class="btn-dica" *ngIf="gameState() === 'CREATOR_PANEL'" (click)="restartGame()" style="margin-top: 0; background: #0d0221; border-color: #00e5ff; color: #00e5ff;">
+        [ MODO CAMPANHA ]
+      </button>
+
+      <button type="button" class="btn-dica"
+              *ngIf="gameState() === 'HVH_SETUP' || gameState() === 'HVH_PLAYING' || gameState() === 'HVH_WON' || gameState() === 'HVH_LOST'"
+              (click)="restartGame()"
+              style="margin-top: 0; background: #0d0221; border-color: #00e5ff; color: #00e5ff;">
         [ MODO CAMPANHA ]
       </button>
     </div>
-
-    <div class="health-bar-container" *ngIf="gameState() !== 'CREATOR_PANEL'">
-      <span style="color: #ff003c; font-weight: bold;">JOGADAS RESTANTES: {{ activeLevel.maxAttempts - guesses.length }} / {{ activeLevel.maxAttempts }}</span>
-      <div class="health-bar">
-        <div class="health-fill" [style.width.%]="((activeLevel.maxAttempts - guesses.length) / activeLevel.maxAttempts) * 100"></div>
-      </div>
-    </div>
   </div>
 
+  <div class="health-bar-container" *ngIf="gameState() !== 'CREATOR_PANEL' && gameState() !== 'HVH_SETUP' && gameState() !== 'HVH_TRANSITION'">
+      <span *ngIf="gameState() !== 'HVH_PLAYING' && gameState() !== 'HVH_WON' && gameState() !== 'HVH_LOST'" style="color: #ff003c; font-weight: bold;">JOGADAS RESTANTES: {{ activeLevel.maxAttempts - guesses.length }} / {{ activeLevel.maxAttempts }}</span>
+      <span *ngIf="gameState() === 'HVH_PLAYING' || gameState() === 'HVH_WON' || gameState() === 'HVH_LOST'" style="color: #ff003c; font-weight: bold;">JOGADAS RESTANTES: {{ hvhMaxAttempts() - hvhGuesses.length }} / {{ hvhMaxAttempts() }}</span>
+      <div class="health-bar">
+        <div class="health-fill" 
+             *ngIf="gameState() !== 'HVH_PLAYING' && gameState() !== 'HVH_WON' && gameState() !== 'HVH_LOST'"
+             [style.width.%]="((activeLevel.maxAttempts - guesses.length) / activeLevel.maxAttempts) * 100"></div>
+        <div class="health-fill hvh-health-fill" 
+             *ngIf="gameState() === 'HVH_PLAYING' || gameState() === 'HVH_WON' || gameState() === 'HVH_LOST'"
+             [style.width.%]="((hvhMaxAttempts() - hvhGuesses.length) / hvhMaxAttempts()) * 100"></div>
+      </div>
+    </div>
+
   <!-- TELA DO JOGO (CAMPANHA OU CUSTOMIZADO) -->
-  <div class="main-content" *ngIf="gameState() !== 'CREATOR_PANEL'">
+  <div class="main-content" *ngIf="gameState() !== 'CREATOR_PANEL' && gameState() !== 'HVH_SETUP' && gameState() !== 'HVH_TRANSITION' && gameState() !== 'HVH_PLAYING' && gameState() !== 'HVH_WON' && gameState() !== 'HVH_LOST'">
     <div class="game-panel">
       <div class="history-board">
         <div class="guess-row" *ngFor="let g of guesses">
@@ -143,7 +166,7 @@
       </h2>
       
       <div class="creator-section">
-        <label class="creator-label">COMPRIMENTO DO CÓDIGO (SENHA):</label>
+        <span class="creator-label">COMPRIMENTO DO CÓDIGO (SENHA):</span>
         <div class="selector-row">
           <button type="button" class="select-btn" [class.active]="creatorCodeLength() === 3" (click)="onCreatorCodeLengthChange(3)">3</button>
           <button type="button" class="select-btn" [class.active]="creatorCodeLength() === 4" (click)="onCreatorCodeLengthChange(4)">4</button>
@@ -152,12 +175,12 @@
       </div>
 
       <div class="creator-section">
-        <label class="creator-label">TENTATIVAS MÁXIMAS: <span style="color: #00e5ff; margin-left: 10px;">{{ creatorMaxAttempts() }}</span></label>
-        <input type="range" min="5" max="15" [value]="creatorMaxAttempts()" (input)="creatorMaxAttempts.set($any($event.target).value)" class="cyber-range"/>
+        <label for="creatorMaxAttemptsInput" class="creator-label">TENTATIVAS MÁXIMAS: <span style="color: #00e5ff; margin-left: 10px;">{{ creatorMaxAttempts() }}</span></label>
+        <input id="creatorMaxAttemptsInput" type="range" min="5" max="15" [value]="creatorMaxAttempts()" (input)="creatorMaxAttempts.set($any($event.target).value)" class="cyber-range"/>
       </div>
 
       <div class="creator-section">
-        <label class="creator-label">COMANDOS ATIVOS:</label>
+        <span class="creator-label">COMANDOS ATIVOS:</span>
         <div class="commands-grid">
           <button type="button" class="cmd-check-btn" 
                   *ngFor="let cmd of allCommands" 
@@ -169,10 +192,10 @@
       </div>
 
       <div class="creator-section" style="border-top: 1px dashed rgba(0, 229, 255, 0.2); padding-top: 15px; margin-top: 15px;">
-        <label class="creator-label">CRIAR NOVO COMANDO CUSTOMIZADO:</label>
+        <span class="creator-label">CRIAR NOVO COMANDO CUSTOMIZADO:</span>
         <div class="custom-cmd-inputs" style="display: flex; gap: 10px; margin-top: 10px; align-items: center;">
-          <input type="text" [(ngModel)]="novoComandoNome" placeholder="NOME (ex: WHILE)" class="cyber-input" style="flex: 1; max-width: 150px; text-transform: uppercase;" />
-          <input type="text" [(ngModel)]="novoComandoDesc" placeholder="Descrição do conceito lógico..." class="cyber-input" style="flex: 2;" />
+          <input id="novoComandoNome" aria-label="Nome do novo comando personalizado" type="text" [(ngModel)]="novoComandoNome" placeholder="NOME (ex: WHILE)" class="cyber-input" style="flex: 1; max-width: 150px; text-transform: uppercase;" />
+          <input id="novoComandoDesc" aria-label="Descrição do novo comando personalizado" type="text" [(ngModel)]="novoComandoDesc" placeholder="Descrição do conceito lógico..." class="cyber-input" style="flex: 2;" />
           <button type="button" class="action-btn test-btn" style="padding: 0 15px; margin-top: 0; white-space: nowrap; height: 38px;" (click)="adicionarNovoComandoPersonalizado()">
             + CRIAR
           </button>
@@ -180,7 +203,7 @@
       </div>
 
       <div class="creator-section">
-        <label class="creator-label">DEFINIR GABARITO (SEQUÊNCIA SECRETA):</label>
+        <span class="creator-label">DEFINIR GABARITO (SEQUÊNCIA SECRETA):</span>
         <div class="code-slots" style="margin-top: 10px; margin-bottom: 15px;">
           <button type="button" class="slot interactive" 
                   *ngFor="let slot of creatorSecretCode(); let i = index" 
@@ -200,8 +223,8 @@
       </div>
 
       <div class="creator-section">
-        <label class="creator-label">INSTRUÇÃO PEDAGÓGICA DO ORACLE:</label>
-        <textarea rows="3" class="cyber-textarea" 
+        <label for="creatorOracleIntroInput" class="creator-label">INSTRUÇÃO PEDAGÓGICA DO ORACLE:</label>
+        <textarea id="creatorOracleIntroInput" rows="3" class="cyber-textarea" 
                   [value]="creatorOracleIntro()" 
                   (input)="creatorOracleIntro.set($any($event.target).value)" 
                   placeholder="Escreva dicas e objetivos pedagógicos sobre esse fluxo lógico..."></textarea>
@@ -213,8 +236,8 @@
       </div>
 
       <div class="share-box" *ngIf="customLevelCode()">
-        <label class="creator-label">CÓDIGO DE INVASÃO GERADO:</label>
-        <input type="text" readonly class="cyber-input" [value]="customLevelCode()" onClick="this.select()"/>
+        <label for="customLevelCodeInput" class="creator-label">CÓDIGO DE INVASÃO GERADO:</label>
+        <input id="customLevelCodeInput" type="text" readonly class="cyber-input" [value]="customLevelCode()" onClick="this.select()"/>
         <p style="color: #666; font-size: 11px; margin-top: 5px;">Copie e compartilhe esse hash com outros decoders para jogarem seu nível.</p>
       </div>
     </div>
@@ -225,7 +248,7 @@
           [ IMPORTAR FIREWALL ]
         </h3>
         <p style="color: #ccc; font-size: 12px; margin: 0;">Cole o código Base64 recebido para descriptografar e testar a sequência.</p>
-        <input type="text" class="cyber-input" 
+        <input id="importLevelCodeInput" aria-label="Código hash de importação" type="text" class="cyber-input" 
                [value]="importLevelCode()" 
                (input)="importLevelCode.set($any($event.target).value)" 
                placeholder="Cole o código hash aqui..."/>
@@ -236,7 +259,209 @@
     </div>
   </div>
 
-  <button class="abort-btn" style="position: absolute; bottom: 30px; right: 30px; z-index: 10;" (click)="voltarParaMapa()">ABORTAR INVASÃO</button>
+  <button class="abort-btn" 
+          *ngIf="gameState() !== 'HVH_SETUP' && gameState() !== 'HVH_TRANSITION' && gameState() !== 'HVH_PLAYING' && gameState() !== 'HVH_WON' && gameState() !== 'HVH_LOST'"
+          style="position: absolute; bottom: 30px; right: 30px; z-index: 10;" 
+          (click)="voltarParaMapa()">ABORTAR INVASÃO</button>
+
+  <!-- ===== MODO HUMANO vs HUMANO ===== -->
+
+  <!-- HVH_SETUP: Jogador 1 define a senha -->
+  <div class="main-content hvh-setup-grid" *ngIf="gameState() === 'HVH_SETUP'">
+    <div class="game-panel creator-panel-box">
+      <h2 style="font-family: 'Orbitron', sans-serif; color: #9d00ff; margin-bottom: 8px; text-shadow: 0 0 10px rgba(157,0,255,0.4);">
+        [ JOGADOR 1: CONFIGURAR FIREWALL ]
+      </h2>
+      <p style="color: #999; font-size: 12px; margin-bottom: 20px;">O Jogador 2 não deve ver esta tela. Defina a senha secreta e clique em CONFIRMAR.</p>
+
+      <!-- Comprimento -->
+      <div class="creator-section">
+        <span class="creator-label">COMPRIMENTO DA SENHA:</span>
+        <div class="selector-row">
+          <button type="button" class="select-btn" [class.active]="hvhCodeLength() === 3" (click)="onHvhCodeLengthChange(3)">3</button>
+          <button type="button" class="select-btn" [class.active]="hvhCodeLength() === 4" (click)="onHvhCodeLengthChange(4)">4</button>
+          <button type="button" class="select-btn" [class.active]="hvhCodeLength() === 5" (click)="onHvhCodeLengthChange(5)">5</button>
+        </div>
+      </div>
+
+      <!-- Tentativas máximas -->
+      <div class="creator-section">
+        <label for="hvhMaxAttemptsInput" class="creator-label">TENTATIVAS MÁXIMAS: <span style="color: #9d00ff; margin-left: 10px;">{{ hvhMaxAttempts() }}</span></label>
+        <input id="hvhMaxAttemptsInput" type="range" min="5" max="15" [value]="hvhMaxAttempts()" (input)="hvhMaxAttempts.set(+$any($event.target).value)" class="cyber-range hvh-range"/>
+      </div>
+
+      <!-- Comandos disponíveis -->
+      <div class="creator-section">
+        <span class="creator-label">COMANDOS QUE O JG2 PODERÁ USAR:</span>
+        <div class="commands-grid">
+          <button type="button" class="cmd-check-btn hvh-check-btn"
+                  *ngFor="let cmd of allCommands"
+                  [class.checked]="hvhAvailableCommands().includes(cmd)"
+                  (click)="alternarHvhComando(cmd)">
+            {{ cmd }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Senha secreta -->
+      <div class="creator-section">
+        <span class="creator-label">DEFINA A SENHA SECRETA (GABARITO):</span>
+        <div class="code-slots" style="margin-top: 10px; margin-bottom: 15px;">
+          <button type="button" class="slot interactive hvh-slot"
+                  *ngFor="let slot of hvhSecretCode(); let i = index"
+                  [class.filled]="slot"
+                  (click)="limparHvhSecretCode(i)"
+                  title="Clique para limpar slot">
+            {{ slot || '_' }}
+          </button>
+        </div>
+        <div class="commands-palette" *ngIf="hvhSecretCode().includes(null)">
+          <button type="button" class="cmd-btn hvh-cmd-btn"
+                  *ngFor="let cmd of hvhAvailableCommands()"
+                  (click)="definirHvhSecretCode(hvhSecretCode().indexOf(null), cmd)">
+            {{ cmd }}
+          </button>
+        </div>
+        <p style="color:#666; font-size:11px; margin-top: 8px;">Clique em um slot para limpar. Clique num comando para preencher o próximo slot vazio.</p>
+      </div>
+
+      <!-- Botóes de ação -->
+      <div class="creator-actions">
+        <button type="button" class="action-btn hvh-confirm-btn" (click)="confirmarSetupHvH()">✓ CONFIRMAR E PASSAR PARA JG2</button>
+        <button type="button" class="abort-btn" style="position: static; font-size: 12px; padding: 8px 16px;" (click)="restartGame()">CANCELAR</button>
+      </div>
+    </div>
+
+    <!-- Painel direito informativo -->
+    <div class="story-panel">
+      <div class="oracle-box" style="flex-direction: column; align-items: stretch; gap: 15px; padding: 20px;">
+        <h3 style="font-family: 'Orbitron', sans-serif; color: #9d00ff; margin: 0; font-size: 16px;">
+          [ COMO JOGAR ]
+        </h3>
+        <div style="color: #ccc; font-size: 13px; line-height: 1.8;">
+          <p>🟣 <strong style="color:#9d00ff">Jogador 1</strong> define uma senha secreta usando os comandos disponíveis.</p>
+          <p>🔵 <strong style="color:#00e5ff">Jogador 2</strong> tenta adivinhar a sequência dentro do limite de tentativas.</p>
+          <p>🟡 Após confirmar, uma tela de transição será exibida antes de iniciar o jogo do JG2.</p>
+          <hr style="border-color: rgba(157,0,255,0.2); margin: 10px 0;">
+          <p style="color:#666"><strong style="color:#00e5ff">■ EXATO</strong>: Comando certo, posição certa</p>
+          <p style="color:#666"><strong style="color:#ff007f">■ PARCIAL</strong>: Comando certo, posição errada</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HVH_TRANSITION: Tela de transição entre jogadores -->
+  <div class="hvh-transition-screen" *ngIf="gameState() === 'HVH_TRANSITION'">
+    <div class="hvh-transition-inner">
+      <div class="hvh-lock-icon">🔒</div>
+      <h1 class="hvh-transition-title">FIREWALL CONFIGURADO!</h1>
+      <p class="hvh-transition-sub">PASSE O DISPOSITIVO PARA O JOGADOR 2</p>
+      <div class="hvh-countdown-ring">
+        <span class="hvh-countdown-number">{{ hvhTransitionCountdown() }}</span>
+      </div>
+      <p style="color: #666; font-size: 13px; margin-top: 20px;">O jogo iniciará automaticamente em {{ hvhTransitionCountdown() }} segundo(s)...</p>
+    </div>
+  </div>
+
+  <!-- HVH_PLAYING / HVH_WON / HVH_LOST: Jogador 2 jogando -->
+  <div class="main-content" *ngIf="gameState() === 'HVH_PLAYING' || gameState() === 'HVH_WON' || gameState() === 'HVH_LOST'">
+    <div class="game-panel">
+      <!-- Histórico de tentativas -->
+      <div class="history-board">
+        <div class="guess-row" *ngFor="let g of hvhGuesses">
+          <div class="code-slots">
+            <div class="slot filled" *ngFor="let cmd of g.code">{{ cmd }}</div>
+          </div>
+          <div class="feedback-pegs">
+            <div class="peg exact" *ngFor="let e of [].constructor(g.exact)" title="Acerto Total"></div>
+            <div class="peg partial" *ngFor="let p of [].constructor(g.partial)" title="Acerto Parcial"></div>
+            <div class="peg" *ngFor="let m of [].constructor(hvhCodeLength() - g.exact - g.partial)"></div>
+          </div>
+        </div>
+        <div *ngIf="hvhGuesses.length === 0" style="color: #666; text-align: center; margin-top: 50px;">
+          AGUARDANDO PRIMEIRA TENTATIVA DO JOGADOR 2.
+        </div>
+      </div>
+
+      <!-- Área de input do JG2 -->
+      <div class="input-area" *ngIf="gameState() === 'HVH_PLAYING'">
+        <div style="margin-bottom: 15px; color: #ccc;">JOGADOR 2 &mdash; SELECIONE OS COMANDOS PARA MONTAR A SEQUÊNCIA:</div>
+
+        <div class="commands-palette">
+          <button class="cmd-btn hvh-cmd-btn"
+                  *ngFor="let cmd of hvhAvailableCommands(); let idx = index"
+                  draggable="true"
+                  (click)="selectHvhCommand(cmd)"
+                  (mouseenter)="onCommandHover(cmd)"
+                  (mouseleave)="onCommandLeave()">
+            {{ cmd }}
+            <span class="cmd-btn-key-hint">[{{ idx + 1 }}]</span>
+          </button>
+        </div>
+
+        <div class="cmd-description-box">
+          <span class="desc-tag">::CONCEITO_LOGICO //</span>
+          <span class="desc-text">{{ hoveredCommandDesc() || 'Passe o mouse sobre um comando para analisar sua função.' }}</span>
+        </div>
+
+        <div class="action-row">
+          <div class="code-slots">
+            <button type="button" class="slot interactive hvh-slot"
+                    *ngFor="let slot of hvhCurrentGuess; let i = index"
+                    [class.filled]="slot"
+                    (click)="clearHvhCommand(i)"
+                    title="Clique para remover">
+              {{ slot || '_' }}
+            </button>
+          </div>
+          <button class="submit-btn hvh-submit-btn" (click)="submitHvhGuess()" [disabled]="hvhCurrentGuess.includes(null!)">
+            EXECUTAR BYPASS
+          </button>
+        </div>
+      </div>
+
+      <!-- Revelador da senha ao fim do jogo HvH -->
+      <div *ngIf="gameState() === 'HVH_WON' || gameState() === 'HVH_LOST'" class="hvh-reveal-box">
+        <span class="creator-label">SENHA SECRETA DO JG1:</span>
+        <div class="code-slots" style="margin-top: 10px;">
+          <div class="slot filled hvh-reveal-slot" *ngFor="let cmd of hvhSecretCode()">{{ cmd }}</div>
+        </div>
+        <div class="creator-actions" style="margin-top: 20px;">
+          <button type="button" class="action-btn hvh-confirm-btn" (click)="reiniciarHvH()">&#8635; JOGAR DE NOVO (HvH)</button>
+          <button type="button" class="action-btn test-btn" (click)="restartGame()">MODO CAMPANHA</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-panel">
+      <div class="oracle-box">
+        <div class="oracle-avatar">
+          <div class="hologram-wrapper">
+            <svg viewBox="0 0 100 100" class="oracle-hologram-svg">
+              <defs>
+                <linearGradient id="holoGradHvh" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#9d00ff" stop-opacity="0.9"/>
+                  <stop offset="50%" stop-color="#ff007f" stop-opacity="0.6"/>
+                  <stop offset="100%" stop-color="#9d00ff" stop-opacity="0.9"/>
+                </linearGradient>
+              </defs>
+              <circle cx="50" cy="50" r="42" stroke="url(#holoGradHvh)" stroke-width="2" fill="none" stroke-dasharray="10 5 20 5" class="ring-outer"/>
+              <circle cx="50" cy="50" r="32" stroke="#9d00ff" stroke-width="1.2" fill="none" stroke-dasharray="5 5" class="ring-inner"/>
+              <path d="M 20,50 Q 35,20 50,50 T 80,50" stroke="#ff007f" stroke-width="2" fill="none" class="wave-line w1"/>
+              <path d="M 20,50 Q 35,80 50,50 T 80,50" stroke="#9d00ff" stroke-width="1.5" fill="none" class="wave-line w2"/>
+              <circle cx="50" cy="50" r="8" fill="#9d00ff" class="core-pulse"/>
+            </svg>
+          </div>
+          <div class="oracle-tag" style="color:#9d00ff; border-color: #9d00ff;">ORACLE v2.0</div>
+        </div>
+        <div class="oracle-dialog">
+          <div class="oracle-text-container">
+            <span>{{ oracleMessage() }}</span><span class="typing-cursor" *ngIf="isTyping()"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="overlay" [class.active]="gameState() === 'LEVEL_WON'">
