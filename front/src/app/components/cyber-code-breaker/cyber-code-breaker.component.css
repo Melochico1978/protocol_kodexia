@@ -13,20 +13,25 @@ body, html {
   background-color: #04040c;
 }
 
-/* Animated moving matrix background grid */
+/* BACKGROUND GRID CYBERPUNK 3D (IGUAL AO DO PVP) */
 .cyber-container::before {
-  content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  content: ""; 
+  position: absolute; 
+  top: 0; left: -50%; right: -50%; bottom: 0;
   background-image: 
-    linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
-  background-size: 40px 40px;
+    linear-gradient(rgba(0, 229, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.15) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center bottom;
+  transform: perspective(500px) rotateX(60deg) translateY(100px) translateZ(-200px);
+  animation: gridMove 3s linear infinite;
   z-index: -2;
-  animation: gridScroll 15s linear infinite;
+  pointer-events: none;
 }
 
-@keyframes gridScroll {
-  from { background-position: 0 0; }
-  to { background-position: 0 40px; }
+@keyframes gridMove {
+  0% { background-position: center 0; }
+  100% { background-position: center 50px; }
 }
 
 .cyber-container::after {

@@ -225,7 +225,7 @@ export class PartidaPvpComponent implements OnInit, OnDestroy {
   }
 
   avancarPassoSecreto(): void {
-    this.tocarSomClique();
+    this.tocarSomInterface();
     if (this.passoAtual === 'SECRET_P1') {
       this.passoAtual = 'MESA_P1';
       this.escreverMensagemSistema(`> ${this.nomeP1}, SELECIONE A SUA CARTA DE COMBATE.`);
@@ -245,7 +245,7 @@ export class PartidaPvpComponent implements OnInit, OnDestroy {
   selecionarCartaP1(index: number): void {
     if (this.passoAtual !== 'MESA_P1') return;
     this.cartaAtualP1 = this.maoP1.splice(index, 1)[0];
-    this.tocarSomClique();
+    this.tocarSomSelecionarCarta();
     
     if (this.modoTela === 'DUPLA') {
       this.passoAtual = 'MESA_P2';
@@ -260,7 +260,7 @@ export class PartidaPvpComponent implements OnInit, OnDestroy {
   selecionarCartaP2(index: number): void {
     if (this.passoAtual !== 'MESA_P2') return;
     this.cartaAtualP2 = this.maoP2.splice(index, 1)[0];
-    this.tocarSomClique();
+    this.tocarSomSelecionarCarta();
 
     this.cartaP1Revelada = false;
     this.cartaP2Revelada = false;
@@ -291,7 +291,7 @@ export class PartidaPvpComponent implements OnInit, OnDestroy {
   }
 
   revelarCartasParaEscolha(): void {
-    this.tocarSomClique();
+    this.tocarSomInterface();
     if (this.passoAtual === 'ESCOLHER_ATRIB_P1') {
       this.cartaP1Revelada = true;
     } else if (this.passoAtual === 'ESCOLHER_ATRIB_P2') {
@@ -301,7 +301,7 @@ export class PartidaPvpComponent implements OnInit, OnDestroy {
   }
 
   escolherAtributo(atributo: keyof Carta, nomeAtributo: string): void {
-    this.tocarSomClique();
+    this.tocarSomAtributo();
 
     if (this.passoAtual === 'ESCOLHER_ATRIB_P1') {
       this.escolherAtributoP1(atributo, nomeAtributo);
@@ -374,6 +374,7 @@ export class PartidaPvpComponent implements OnInit, OnDestroy {
       }
     }
 
+    this.tocarSomImpacto();
     this.sincronizarServidor();
 
     setTimeout(() => {
@@ -559,24 +560,106 @@ export class PartidaPvpComponent implements OnInit, OnDestroy {
     setTimeout(() => { this.mostrarGlitch = false; }, 250);
   }
 
-  tocarSomClique(): void {
+  // ================= ÁUDIO (SINTETIZADOR) =================
+
+  private playTone(freq: number, type: OscillatorType, duration: number, vol: number = 0.05): void {
     if (!this.audioAtivo) return;
     try {
       this.initCtx();
+      if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+      
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+      
+      gain.gain.setValueAtTime(vol, this.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + duration);
+      
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      
+      osc.start();
+      osc.stop(this.audioCtx.currentTime + duration);
+    } catch (e) { console.error("Erro no áudio:", e); }
+  }
+
+  tocarSomInterface(): void {
+    // Beep simples e agudo para cliques comuns (fuga, avançar turnos)
+    this.playTone(800, 'sine', 0.1, 0.05);
+  }
+
+  tocarSomSelecionarCarta(): void {
+    // Duplo beep (estilo lock-in cibernético)
+    this.playTone(400, 'square', 0.08, 0.04);
+    setTimeout(() => this.playTone(600, 'square', 0.1, 0.04), 100);
+  }
+
+  tocarSomAtributo(): void {
+    // Som agudo de seleção de arma/poder
+    this.playTone(1200, 'triangle', 0.15, 0.05);
+  }
+
+  tocarSomSucesso(): void {
+    // Vitória (Arpeggio rápido)
+    this.playTone(400, 'sine', 0.1, 0.05);
+    setTimeout(() => this.playTone(600, 'sine', 0.1, 0.05), 100);
+    setTimeout(() => this.playTone(800, 'sine', 0.2, 0.05), 200);
+  }
+
+  tocarSomDerrota(): void {
+    // Derrota (Tom caindo)
+    if (!this.audioAtivo) return;
+    try {
+      this.initCtx();
+      if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+      const osc = this.audioCtx.createOscillator();
+      const gain = this.audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(300, this.audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(100, this.audioCtx.currentTime + 0.4);
+      gain.gain.setValueAtTime(0.08, this.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + 0.4);
+      osc.connect(gain);
+      gain.connect(this.audioCtx.destination);
+      osc.start();
+      osc.stop(this.audioCtx.currentTime + 0.4);
+    } catch(e) {}
+  }
+  
+  tocarSomImpacto(): void {
+    if (!this.audioAtivo) return;
+    try {
+      this.initCtx();
+      if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
       const osc = this.audioCtx.createOscillator();
       const gain = this.audioCtx.createGain();
       osc.connect(gain);
       gain.connect(this.audioCtx.destination);
-      osc.frequency.setValueAtTime(600, this.audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.08, this.audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.1);
+      
+      // Som grave estilo explosão/impacto (Super Grave)
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(100, this.audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(20, this.audioCtx.currentTime + 0.5);
+      
+      gain.gain.setValueAtTime(0.4, this.audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, this.audioCtx.currentTime + 0.5);
+      
       osc.start();
-      osc.stop(this.audioCtx.currentTime + 0.1);
-    } catch {}
+      osc.stop(this.audioCtx.currentTime + 0.5);
+    } catch (e) { console.error("Erro no som de impacto:", e); }
   }
 
   toggleAudio(): void {
     this.audioAtivo = !this.audioAtivo;
+    if (this.audioAtivo) {
+      this.initCtx();
+      if (this.audioCtx && this.audioCtx.state === 'suspended') {
+        this.audioCtx.resume();
+      }
+      this.tocarSomSucesso();
+    }
   }
 
   private initCtx(): void {

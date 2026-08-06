@@ -11,3 +11,93 @@ body {
   overflow: hidden;
   background-color: #0d0221;
 }
+
+/* ========================================================
+   CYBER HUD BUTTONS (3D NEON STYLE)
+   ======================================================== */
+.btn-cyber-hud {
+  position: relative;
+  padding: 10px 25px;
+  color: #00f3ff;
+  font-family: 'Orbitron', 'VT323', sans-serif;
+  font-size: 22px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px #00f3ff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1;
+  margin: 5px; /* space for outer glow */
+}
+
+/* Fundo Escuro + Borda Ciano Interna */
+.btn-cyber-hud::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(10, 15, 30, 0.95);
+  border: 2px solid #00f3ff;
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+  z-index: -1;
+  box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* Borda Externa Magenta Esculpida */
+.btn-cyber-hud::after {
+  content: "";
+  position: absolute;
+  top: -4px; left: -4px; right: -4px; bottom: -4px;
+  background: #ff007f;
+  clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
+  z-index: -2;
+  transition: all 0.3s ease;
+}
+
+.btn-cyber-hud:hover {
+  color: #fff;
+  text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff;
+}
+
+.btn-cyber-hud:hover::before {
+  background: rgba(0, 243, 255, 0.2);
+  box-shadow: inset 0 0 30px rgba(0, 243, 255, 0.8);
+}
+
+.btn-cyber-hud:hover::after {
+  background: #ff00ff;
+  top: -5px; left: -5px; right: -5px; bottom: -5px;
+}
+
+/* VARIAÇÃO DE ALERTA / ABORTAR (Vermelho e Laranja) */
+.btn-cyber-hud.btn-abort {
+  color: #ff003c;
+  text-shadow: 0 0 5px #ff003c;
+}
+
+.btn-cyber-hud.btn-abort::before {
+  border-color: #ff003c;
+  box-shadow: inset 0 0 20px rgba(255, 0, 60, 0.5);
+}
+
+.btn-cyber-hud.btn-abort::after {
+  background: #ff9900;
+}
+
+.btn-cyber-hud.btn-abort:hover {
+  color: #fff;
+  text-shadow: 0 0 10px #ff003c, 0 0 20px #ff003c;
+}
+
+.btn-cyber-hud.btn-abort:hover::before {
+  background: rgba(255, 0, 60, 0.2);
+  box-shadow: inset 0 0 30px rgba(255, 0, 60, 0.8);
+}
+
+.btn-cyber-hud.btn-abort:hover::after {
+  background: #ffea00;
+}

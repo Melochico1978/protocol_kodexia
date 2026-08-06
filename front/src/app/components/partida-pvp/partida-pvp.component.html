@@ -1,11 +1,16 @@
-<div class="batalha-master-container" style="font-family: 'VT323', monospace;">
+<div class="batalha-master-container" [class.shake-active]="passoAtual === 'COMPARAR'" style="font-family: 'VT323', monospace;">
   <div class="glitch-overlay" *ngIf="mostrarGlitch"></div>
+  <div class="flash-impact" *ngIf="passoAtual === 'COMPARAR'"></div>
 
-  <!-- BOTOES GLOBAIS DE FUGA E AUDIO -->
-  <button class="btn-fuga" (click)="voltarParaMenu()">[X] ABORTAR SIMULAÇÃO</button>
-  <button class="btn-audio" (click)="toggleAudio()">
-    {{ audioAtivo ? '🔊 SOM: ON' : '🔇 SOM: OFF' }}
-  </button>
+  <!-- BARRA DE CONTROLES GLOBAIS -->
+  <div class="barra-controles-globais">
+    <div style="display: flex; gap: 15px;">
+      <button class="btn-cyber-hud btn-abort" (click)="voltarParaMenu()">[X] ABORTAR SIMULAÇÃO</button>
+      <button class="btn-cyber-hud" (click)="toggleAudio()">
+        {{ audioAtivo ? '🔊 SOM: ON' : '🔇 SOM: OFF' }}
+      </button>
+    </div>
+  </div>
 
   <div class="header-batalha">
     <h1 class="titulo-cyberpunk"> [ DUELO DE AGENTES ] </h1>
@@ -110,14 +115,24 @@
         <div class="painel-status-pvp">
           <div class="status-box p1" [class.ativo]="passoAtual === 'MESA_P1' || passoAtual === 'ESCOLHER_ATRIB_P1'">
             <span class="nome">{{ nomeP1 }}</span>
-            <span class="contador">CARTAS: {{ totalCartasP1 }}</span>
+            <div class="contador">
+              <span>ENERGIA [{{ totalCartasP1 }}]</span>
+              <div class="health-bar-container">
+                 <div class="health-bar-fill" [style.width.%]="(totalCartasP1 / deckInicial.length) * 100"></div>
+              </div>
+            </div>
           </div>
           <div class="pote-empate" *ngIf="deckEmpate.length > 0">
             ⚔️ EM DISPUTA: {{ deckEmpate.length }}
           </div>
           <div class="status-box p2" [class.ativo]="passoAtual === 'MESA_P2' || passoAtual === 'ESCOLHER_ATRIB_P2'">
             <span class="nome">{{ nomeP2 }}</span>
-            <span class="contador">CARTAS: {{ totalCartasP2 }}</span>
+            <div class="contador">
+              <span>ENERGIA [{{ totalCartasP2 }}]</span>
+              <div class="health-bar-container">
+                 <div class="health-bar-fill" [style.width.%]="(totalCartasP2 / deckInicial.length) * 100"></div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -179,6 +194,15 @@
                </div>
                <div class="escolha-jogador p2-escolha">
                  {{ nomeP2 }} escolheu<br><strong>{{ nomeAtributoEscolhidoP2 }}</strong>
+               </div>
+            </div>
+            
+            <!-- EXIBIÇÃO VISUAL DAS CARTAS EMPATADAS -->
+            <div *ngIf="deckEmpate.length > 0 && passoAtual !== 'COMPARAR'" class="cartas-empate-mesa">
+               <div class="mini-carta" *ngFor="let c of deckEmpate; let i = index" 
+                    [style.transform]="'rotate(' + (i % 2 === 0 ? -10 + (i*2) : 10 - (i*2)) + 'deg) translateX(' + (i * 5) + 'px)'"
+                    [style.zIndex]="i">
+                  <app-carta-exibicao [carta]="c"></app-carta-exibicao>
                </div>
             </div>
           </div>
