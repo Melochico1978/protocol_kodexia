@@ -1,29 +1,58 @@
-<div class="card" [class.lendaria]="carta.lendaria">
-  <!-- Imagem de fundo cobrindo toda a carta -->
-  <div class="card-background-imagem">
-    <img [src]="getImagemUrl()" [alt]="carta.nome">
-    <div class="card-background-overlay"></div>
-  </div>
+<div class="card-scene">
+  <div class="card-flip-container" [class.is-flipped]="!isFaceUp">
+    
+    <!-- LADO FRENTE DA CARTA -->
+    <div class="card-face card-front" [class.lendaria]="carta.lendaria">
+      <div class="card-background-imagem">
+        <img [src]="getImagemUrl()" [alt]="carta.nome">
+        <div class="card-background-overlay"></div>
+      </div>
 
-  <div class="card-header">
-    <span class="grupo">{{ carta.grupo }}-{{ carta.codigo }}</span>
-    <h3 class="nome">{{ carta.nome }}</h3>
-  </div>
+      <div class="card-header">
+        <span class="grupo">{{ carta.grupo }}-{{ carta.codigo }}</span>
+        <h3 class="nome">{{ carta.nome }}</h3>
+      </div>
 
-  <div class="stats">
-    <div class="stat-row">
-      <label>Performance</label>
-      <div class="bar-container"><div class="bar perf" [style.width]="getBarWidth(carta.performance)"></div></div>
-    </div>
-    <div class="stat-row">
-      <label>Sintaxe</label>
-      <div class="bar-container"><div class="bar sint" [style.width]="getBarWidth(carta.sintaxe)"></div></div>
-    </div>
-    <div class="stat-row">
-      <label>Segurança</label>
-      <div class="bar-container"><div class="bar segu" [style.width]="getBarWidth(carta.seguranca)"></div></div>
-    </div>
-  </div>
+      <div class="stats">
+        
+        <!-- OPÇÕES DE JOGADA (SÓ APARECE SE FOR JOGADOR) -->
+        <ng-container *ngIf="isJogador; else apenasMostrar">
+          <button class="btn-atributo" [disabled]="!podeAtacar" (click)="selecionar('performance', 'Performance')">PERFORMANCE [{{carta.performance}}]</button>
+          <button class="btn-atributo" [disabled]="!podeAtacar" (click)="selecionar('sintaxe', 'Sintaxe')">SINTAXE [{{carta.sintaxe}}]</button>
+          <button class="btn-atributo" [disabled]="!podeAtacar" (click)="selecionar('seguranca', 'Segurança')">SEGURANÇA [{{carta.seguranca}}]</button>
+          <button class="btn-atributo" [disabled]="!podeAtacar" (click)="selecionar('longevidade', 'Longevidade')">LONGEVIDADE [{{carta.longevidade}}]</button>
+          <button class="btn-atributo" [disabled]="!podeAtacar" (click)="selecionar('popularidade', 'Popularidade')">POPULARIDADE [{{carta.popularidade}}]</button>
+          <button class="btn-atributo" [disabled]="!podeAtacar" (click)="selecionar('abstracao', 'Abstração')">ABSTRAÇÃO [{{carta.abstracao}}]</button>
+          <button class="btn-atributo" [disabled]="!podeAtacar" (click)="selecionar('versatilidade', 'Versatilidade')">VERSATILIDADE [{{carta.versatilidade}}]</button>
+        </ng-container>
 
-  <div *ngIf="carta.lendaria" class="badge">★ LENDÁRIA ★</div>
+        <!-- APENAS VISUALIZAÇÃO DE ATRIBUTOS (MÁQUINA OU CARTAS INATIVAS) -->
+        <ng-template #apenasMostrar>
+          <div class="stat-row">
+            <label>Performance <span class="valor-texto">[{{carta.performance}}]</span></label>
+            <div class="bar-container"><div class="bar perf" [style.width]="getBarWidth(carta.performance)"></div></div>
+          </div>
+          <div class="stat-row">
+            <label>Sintaxe <span class="valor-texto">[{{carta.sintaxe}}]</span></label>
+            <div class="bar-container"><div class="bar sint" [style.width]="getBarWidth(carta.sintaxe)"></div></div>
+          </div>
+          <div class="stat-row">
+            <label>Segurança <span class="valor-texto">[{{carta.seguranca}}]</span></label>
+            <div class="bar-container"><div class="bar segu" [style.width]="getBarWidth(carta.seguranca)"></div></div>
+          </div>
+        </ng-template>
+        
+      </div>
+
+      <div *ngIf="carta.lendaria" class="badge">★ LENDÁRIA ★</div>
+    </div>
+
+    <!-- LADO VERSO DA CARTA -->
+    <div class="card-face card-back">
+      <div class="carta-verso">
+        <span class="logo-verso">KODEXIA</span>
+      </div>
+    </div>
+
+  </div>
 </div>

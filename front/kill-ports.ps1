@@ -1,6 +1,6 @@
 # Script para liberar portas e iniciar os servidores
 # Mata processos nas portas 3000 e 4200 se existirem
-$ports = @(3000, 4200)
+$ports = @(3000, 3001, 4200)
 foreach ($port in $ports) {
     try {
         $connections = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue

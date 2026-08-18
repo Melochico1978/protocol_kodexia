@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Carta } from '../../models/carta.model';
 
@@ -11,6 +11,17 @@ import { Carta } from '../../models/carta.model';
 })
 export class CartaExibicaoComponent {
   @Input({ required: true }) carta!: Carta;
+  @Input() isFaceUp: boolean = true;
+  @Input() isJogador: boolean = false;
+  @Input() podeAtacar: boolean = false;
+  
+  @Output() atributoSelecionado = new EventEmitter<{atributo: string, nome: string}>();
+
+  selecionar(atributo: string, nome: string) {
+    if (this.isJogador && this.podeAtacar) {
+      this.atributoSelecionado.emit({ atributo, nome });
+    }
+  }
 
   getBarWidth(nota: number): string {
     return (nota * 10) + '%';

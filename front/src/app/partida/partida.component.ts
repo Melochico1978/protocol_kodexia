@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CartaService } from '../services/carta.service';
+import { UsuarioService } from '../services/usuario.service';
 import { Carta } from '../models/carta.model';
 import { CartaExibicaoComponent } from '../components/carta-exibicao/carta-exibicao.componet'; 
 
@@ -81,19 +82,30 @@ export class PartidaComponent implements OnInit, OnDestroy {
     return this.deckBot.length + (this.cartaAtualBot ? 1 : 0);
   }
 
-  constructor(private readonly cartaService: CartaService, private readonly router: Router) {}
+  constructor(
+    private readonly cartaService: CartaService, 
+    private readonly router: Router,
+    private readonly usuarioService: UsuarioService
+  ) {}
 
   ngOnInit(): void {
     if (this.isModoBoss) return;
 
-    if (typeof window !== 'undefined' && window.localStorage) {
-      this.nomeJogador = localStorage.getItem('nomeJogador') || 'JOGADOR 1';
-      this.vitorias = Number.parseInt(localStorage.getItem('vitoriasJogador') || '0', 10);
-      this.atualizarTrofeu();
-      
-      this.vitoriasBot = Number.parseInt(localStorage.getItem('vitoriasBot') || '0', 10);
-      this.atualizarTrofeuBot();
+    const usr = this.usuarioService.getUsuarioLogado();
+    if (usr) {
+      this.nomeJogador = usr.nome || 'JOGADOR 1';
+      this.vitorias = usr.vitoriasJogador || 0;
+      this.vitoriasBot = usr.vitoriasBot || 0;
+    } else {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        this.nomeJogador = localStorage.getItem('nomeJogador') || 'JOGADOR 1';
+        this.vitorias = Number.parseInt(localStorage.getItem('vitoriasJogador') || '0', 10);
+        this.vitoriasBot = Number.parseInt(localStorage.getItem('vitoriasBot') || '0', 10);
+      }
     }
+    
+    this.atualizarTrofeu();
+    this.atualizarTrofeuBot();
 
     // Iniciar intro do Miraberto
     this.faseAtual = 'INTRO';
@@ -406,7 +418,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  batalhar(atributo: keyof Carta, nomeAtributo: string): void {
+  batalhar(atributo: any, nomeAtributo: string): void {
     this.tocarSomClique();
     if ((this.faseAtual !== 'ESCOLHER' && this.faseAtual !== 'DEFENDER') || !this.cartaAtualJogador || !this.cartaAtualBot) return;
 
@@ -531,20 +543,34 @@ export class PartidaComponent implements OnInit, OnDestroy {
 
   finalizarJogo(): void {
     this.jogoAcabou = true;
+    this.cartaAtualJogador = null;
+    this.cartaAtualBot = null;
+    this.maoJogador = [];
     
     const totalJogador = this.deckJogador.length + this.maoJogador.length;
+    let vitoriaJogador = false;
+
     if (totalJogador > 0 && this.deckBot.length === 0) {
       this.vencedor = 'JOGADOR';
+      vitoriaJogador = true;
+      this.vitorias++;
+      this.atualizarTrofeu();
       this.escreverMensagemSistema('> VITÓRIA ABSOLUTA! VOCÊ DOMINOU O PROTOCOLO KODEXIA!');
-    } else if (this.deckBot.length > 0 && totalJogador === 0) {
+    } else {
       this.vencedor = 'BOT';
+      vitoriaJogador = false;
+      this.vitoriasBot++;
+      this.atualizarTrofeuBot();
       this.escreverMensagemSistema('> DERROTA! A INTELIGÊNCIA ARTIFICIAL VENCEU O CONFLITO.');
     }
 
-    if (this.vencedor === 'JOGADOR') {
-      this.registrarVitoria();
-    } else if (this.vencedor === 'BOT') {
-      this.registrarVitoriaBot();
+    // Salvar no banco de dados via UsuarioService
+    this.usuarioService.registrarPartida(vitoriaJogador).subscribe();
+    
+    // Fallback pra localStorage apenas por garantia
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem('vitoriasJogador', this.vitorias.toString());
+      localStorage.setItem('vitoriasBot', this.vitoriasBot.toString());
     }
   }
 

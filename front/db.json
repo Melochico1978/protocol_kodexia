@@ -501,6 +501,15 @@
       "id": "1",
       "login": "roberth",
       "nome": "Roberth"
+    },
+    {
+      "login": "12",
+      "nome": "21",
+      "vitoriasJogador": 0,
+      "vitoriasBot": 0,
+      "partidasJogadas": 0,
+      "historico": [],
+      "id": "Xp-3dyPSFJ8"
     }
   ],
   "partida_pvp": {

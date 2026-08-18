@@ -312,3 +312,74 @@
   0% { transform: translateY(0); }
   100% { transform: translateY(155px); } 
 }
+
+/* ======================================== */
+/* ====== LOGIN OVERLAY - ESTILOS ====== */
+/* ======================================== */
+
+.login-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  backdrop-filter: blur(5px);
+}
+
+.login-box {
+  background: rgba(13, 2, 33, 0.95);
+  border: 3px solid #00f3ff;
+  border-radius: 10px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+}
+
+.login-box h2 {
+  color: #00f3ff;
+  font-size: 32px;
+  margin: 0 0 10px 0;
+  text-shadow: 0 0 10px #00f3ff;
+}
+
+.input-cyber {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #00f3ff;
+  color: #fff;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  padding: 10px;
+  width: 250px;
+  text-align: center;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.input-cyber:focus {
+  border-bottom-color: #b026ff;
+  box-shadow: 0 10px 10px -10px #b026ff;
+}
+
+.btn-entrar {
+  background: transparent;
+  border: 2px solid #00f3ff;
+  color: #00f3ff;
+  font-family: 'VT323', monospace;
+  font-size: 24px;
+  padding: 10px 30px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+.btn-entrar:hover {
+  background: #00f3ff;
+  color: #000;
+  box-shadow: 0 0 15px #00f3ff;
+}

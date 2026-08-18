@@ -1,4 +1,13 @@
 <div class="menu-container">
+  <div class="login-overlay" *ngIf="mostrandoLogin">
+    <div class="login-box">
+      <h2>IDENTIFICAÇÃO DE AGENTE</h2>
+      <input type="text" placeholder="Login (ex: neo)" [(ngModel)]="loginInput" class="input-cyber">
+      <input type="text" placeholder="Nome de Exibição" [(ngModel)]="nomeInput" class="input-cyber" (keyup.enter)="entrar()">
+      <button (click)="entrar()" class="btn-entrar">ACESSAR SISTEMA</button>
+    </div>
+  </div>
+
   
   <div class="titulo-game">
     <h1 class="azul-neon">PROTOCOL</h1>
@@ -7,7 +16,7 @@
 
   <div class="scanline-transicao" *ngIf="efeitoScanline"></div>
 
-  <div class="opcoes-menu" *ngIf="menuAtual === 'principal'">
+  <div class="opcoes-menu" *ngIf="!mostrandoLogin && menuAtual === 'principal'">
     
     <div class="opcao" (click)="trocarMenu('duelo')">
       <div class="conteudo-lista">
@@ -88,7 +97,7 @@
 
   </div>
 
-  <div class="opcoes-menu sub-menu" *ngIf="menuAtual === 'duelo'">
+  <div class="opcoes-menu sub-menu" *ngIf="!mostrandoLogin && menuAtual === 'duelo'">
     
     <div class="opcao" (click)="navegar('mesa')">
       <div class="conteudo-lista">

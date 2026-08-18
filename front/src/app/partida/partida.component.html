@@ -1,6 +1,6 @@
 <div class="batalha-master-container" style="font-family: 'VT323', monospace;">
   <div class="glitch-overlay" *ngIf="mostrarGlitch"></div>
-  <button type="button" class="intro-miraberto-overlay" *ngIf="faseAtual === 'INTRO'" (click)="avancarIntro()" aria-label="Avançar introdução">
+  <div class="intro-miraberto-overlay" *ngIf="faseAtual === 'INTRO'" (click)="avancarIntro()">
     
     <button class="btn-pular-intro" (click)="pularIntro($event)">[ PULAR >> ]</button>
 
@@ -36,7 +36,7 @@
       <div class="intro-particula" *ngFor="let p of [1,2,3,4,5,6,7,8]"></div>
     </div>
 
-  </button>
+  </div>
   <!-- ====== FIM INTRODUÇAO====== -->
 
   <button class="btn-fuga" (click)="voltarParaMenu()">[X] ABORTAR SIMULAÇÃO</button>
@@ -71,15 +71,11 @@
     <div class="painel-lateral p1">
       <div class="info-jogador">
         <div class="icone-mao">🖐️</div>
-        <h2 class="nome-jogador" *ngIf="!editandoNome">
-          <button type="button" class="btn-editar-nome" (click)="editandoNome = true" title="Clique para alterar o nome">
-            {{ nomeJogador }} ✎
-          </button>
+        <h2 class="nome-jogador" *ngIf="!editandoNome" (click)="editandoNome = true" title="Clique para alterar o nome" style="cursor: pointer;">
+          {{ nomeJogador }} ✎
         </h2>
         
-        <label for="nome-jogador-input" class="sr-only">Nome do Jogador</label>
         <input *ngIf="editandoNome" 
-               id="nome-jogador-input"
                type="text" 
                class="input-nome-jogador" 
                [(ngModel)]="nomeJogador" 
@@ -108,64 +104,38 @@
         <div class="contador-cartas empate-texto">EM DISPUTA: {{ deckEmpate.length }}</div>
       </div>
 
+
+
     </div>
 
-
     <div class="arena-central">
-      
       <div class="zona-embate">
-        
-        <div class="slot-carta slot-p1">
-          <div *ngIf="!cartaAtualJogador" class="placeholder-holografico">OUTRO JOGADOR</div>
-          
-          <!-- Se a carta existe, criamos a estrutura 3D de flip -->
-          <div *ngIf="cartaAtualJogador" 
-               class="card-flip-container" 
-               [class.flipped]="cartaPlayerRevelada || faseAtual === 'COMPARAR'"
-               (click)="faseAtual === 'ESCOLHER' ? (cartaPlayerRevelada = true) : null">
-            <div class="card-flipper">
-              
-              <!-- Frente da animação (quando está de costas) -->
-              <div class="card-face card-face-back">
-                <div class="carta-player-escondida-wrapper">
-                  <app-carta-exibicao [carta]="cartaAtualJogador" class="carta-stats-ocultos"></app-carta-exibicao>
-                  <span class="click-to-reveal-overlay">CLIQUE PARA REVELAR VETORES DE ATAQUE</span>
-                </div>
-              </div>
-
-              <!-- Verso da animação (quando revela a frente e/ou o menu de ataque) -->
-              <div class="card-face card-face-front">
-                <!-- Se for fase de ESCOLHER e estiver revelada, exibe o ANALISADOR.bat -->
-                <div *ngIf="faseAtual === 'ESCOLHER' && cartaPlayerRevelada" class="janela-so menu-ataque-card">
-                  <div class="header-so">🔴 🟡 🟢 ANALISADOR.bat</div>
-                  <div class="body-so">
-                    <h3 class="titulo-ataque-card">{{ cartaAtualJogador.nome }}</h3>
-                    <button class="btn-atributo" (click)="$event.stopPropagation(); batalhar('performance', 'Performance')">PERFORMANCE [{{cartaAtualJogador.performance}}]</button>
-                    <button class="btn-atributo" (click)="$event.stopPropagation(); batalhar('sintaxe', 'Sintaxe')">SINTAXE [{{cartaAtualJogador.sintaxe}}]</button>
-                    <button class="btn-atributo" (click)="$event.stopPropagation(); batalhar('seguranca', 'Segurança')">SEGURANÇA [{{cartaAtualJogador.seguranca}}]</button>
-                    <button class="btn-atributo" (click)="$event.stopPropagation(); batalhar('longevidade', 'Longevidade')">LONGEVIDADE [{{cartaAtualJogador.longevidade}}]</button>
-                    <button class="btn-atributo" (click)="$event.stopPropagation(); batalhar('popularidade', 'Popularidade')">POPULARIDADE [{{cartaAtualJogador.popularidade}}]</button>
-                    <button class="btn-atributo" (click)="$event.stopPropagation(); batalhar('abstracao', 'Abstração')">ABSTRAÇÃO [{{cartaAtualJogador.abstracao}}]</button>
-                    <button class="btn-atributo" (click)="$event.stopPropagation(); batalhar('versatilidade', 'Versatilidade')">VERSATILIDADE [{{cartaAtualJogador.versatilidade}}]</button>
-                  </div>
-                </div>
-
-                <!-- Caso contrário, exibe a carta normalmente -->
-                <app-carta-exibicao *ngIf="!(faseAtual === 'ESCOLHER' && cartaPlayerRevelada)" [carta]="cartaAtualJogador"></app-carta-exibicao>
-              </div>
-
-            </div>
+        <div class="lado-embate lado-p1">
+          <div class="slot-carta slot-p1">
+            <div *ngIf="!cartaAtualJogador" class="placeholder-holografico">Sua Carta</div>
+            <div *ngIf="cartaAtualJogador?.lendaria" class="badge-lendaria">★ LENDÁRIA</div>
+            <app-carta-exibicao *ngIf="cartaAtualJogador" 
+              [carta]="cartaAtualJogador"
+              [isJogador]="true"
+              [isFaceUp]="true"
+              [podeAtacar]="faseAtual === 'ESCOLHER' || faseAtual === 'DEFENDER'"
+              (atributoSelecionado)="batalhar($event.atributo, $event.nome)">
+            </app-carta-exibicao>
           </div>
         </div>
 
         <div class="divisor-vs">VS</div>
 
-        <div class="slot-carta slot-p2">
-          <div *ngIf="faseAtual === 'ESCOLHER_CARTA'" class="placeholder-holografico inimigo">MÁQUINA</div>
-          <app-carta-exibicao *ngIf="(faseAtual === 'COMPARAR' || faseAtual === 'DEFENDER' || faseAtual === 'ESCOLHER') && cartaAtualBot" [carta]="cartaAtualBot"></app-carta-exibicao>
+        <div class="lado-embate lado-p2">
+          <div class="slot-carta slot-p2">
+            <div *ngIf="!cartaAtualBot" class="placeholder-holografico inimigo">MÁQUINA</div>
+            <app-carta-exibicao *ngIf="cartaAtualBot" 
+              [carta]="cartaAtualBot"
+              [isFaceUp]="faseAtual === 'COMPARAR' || faseAtual === 'DEFENDER'">
+            </app-carta-exibicao>
+          </div>
         </div>
       </div>
-
     </div>
 
 
@@ -194,6 +164,8 @@
         <div class="contador-cartas empate-texto" style="border-color: #ff003c; color: #ff003c;">EM DISPUTA: {{ deckEmpate.length }}</div>
       </div>
 
+
+
     </div>
 
   </div>
@@ -202,17 +174,15 @@
   
   
   <div class="rodape-mao-cartas" *ngIf="!jogoAcabou">
-    <button type="button" class="carta-na-mao" 
+    <div class="carta-na-mao" 
          *ngFor="let carta of maoJogador; let i = index" 
          (click)="selecionarCartaDaMao(i)"
          (mouseenter)="cartaFocadaIndex = i"
          [class.focada]="cartaFocadaIndex === i"
-         [class.pode-jogar]="faseAtual === 'ESCOLHER_CARTA' || faseAtual === 'DEFENDER'"
-         [attr.aria-label]="'Escolher carta ' + carta.nome">
+         [class.pode-jogar]="faseAtual === 'ESCOLHER_CARTA' || faseAtual === 'DEFENDER'">
       <app-carta-exibicao [carta]="carta"></app-carta-exibicao>
-    </button>
+    </div>
   </div>
-
 
   
   
@@ -246,8 +216,7 @@
       <div class="terminal-input-area">
         <div class="input-line">
           <span class="prompt-symbol">C:\KODEXIA></span>
-          <label for="terminal-input" class="sr-only">Script de Defesa</label>
-          <input id="terminal-input" type="text" class="terminal-input" placeholder="DIGITE O SCRIPT DE DEFESA..." autofocus>
+          <input type="text" class="terminal-input" placeholder="DIGITE O SCRIPT DE DEFESA..." autofocus>
           <button class="btn-executar">EXECUTAR_</button>
         </div>
       </div>
