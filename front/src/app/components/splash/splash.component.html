@@ -1,20 +1,22 @@
 <div class="splash-container">
-  <!-- Scanlines CRT e Barra de Escaneamento Laser -->
+  <div class="bg-overlay"></div>
   <div class="crt-scanline"></div>
-  <div class="laser-scanner"></div>
 
-  <div class="content-wrapper">
-    <div class="img-container">
-      <img src="assets/images/splash.jpeg" alt="Super Trunfo Rally Splash Screen" />
+  <div class="boot-sequence">
+    <div class="logo-container">
+      <h1 class="glitch-title" data-text="KODEXIA OS">KODEXIA OS</h1>
+      <p class="subtitle">PROTOCOL INITIALIZATION</p>
     </div>
-
-    <!-- Barra de carregamento estilizada nova -->
-    <div class="loading-panel">
-      <div class="loading-text">
-        <span class="prefix">:: LOGIN_INFO //</span> {{ loadingMessage() }}
+    
+    <div class="terminal-box">
+      <div class="terminal-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="term-title">sys_boot.exe</span>
       </div>
-      <div class="progress-bar">
-        <div class="progress-fill"></div>
+      <div class="terminal-body">
+        <p class="log-line">> <span class="highlight">{{ loadingMessage() }}</span><span class="cursor">_</span></p>
       </div>
     </div>
   </div>
