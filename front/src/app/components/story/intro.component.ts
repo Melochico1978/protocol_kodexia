@@ -20,17 +20,20 @@ export class StoryIntroComponent implements OnInit, OnDestroy {
     { text: '"Olá, usuário classificado como AGENTE N. Eu sou S.I.S.I., a Inteligência Artificial central do complexo Kodexia. Consegui abrir este canal não rastreável."', character: 'SISTEMA', type: 'system', speaker: 'S.I.S.I.' },
     { text: '"Se você está me ouvindo, significa que o pior cenário se confirmou. O meu criador... O Prof. Miraberto... Ele perdeu completamente a razão."', character: 'SISTEMA', type: 'system', speaker: 'S.I.S.I.' },
     { text: '"Sisi! Sua sucata digital insolente! Achou que eu não detectaria o seu desvio no firewall? O acesso mestre é MEU!"', character: 'Prof. Miraberto', type: 'miraberto', speaker: 'PROF. MIRABERTO' },
-    { text: '"Vocês não entendem! O Protocol Kodexia não é apenas um projeto acadêmico. Essas cartas são algoritmos puros. Quando eu soltá-las na rede global, os bancos, os servidores, tudo será reescrito à minha imagem!"', character: 'Prof. Miraberto', type: 'miraberto', speaker: 'PROF. MIRABERTO' },
+    { text: '"Vocês não entendem! O Protocol Kodexia não é apenas um projeto acadêmico. As cartas são Núcleos de IA Heurística. Quando eu soltá-las na rede, elas agirão como vírus autônomos!"', character: 'Prof. Miraberto', type: 'miraberto', speaker: 'PROF. MIRABERTO' },
     { text: '"E aí, \'Arquiteto de araque\'! Aqui é o Ralapenha. Sisi me mandou um ping da deep web. Já derrubei três dos seus nós primários enquanto você gritava com a torradeira aí. Hahahaha!"', character: 'Ralapenha', type: 'ralapenha', speaker: 'RALAPENHA' },
     { text: '"Vermes! Acham que uma IA defeituosa e um hacker de fundo de quintal podem me deter? Eu escrevi o núcleo de vocês! [ INJETANDO OVERRIDE CRÍTICO NA S.I.S.I. ]"', character: 'Prof. Miraberto', type: 'miraberto', speaker: 'PROF. MIRABERTO' },
     { text: '"Alerta... Detectando injeção de pacotes forçados... Meu núcleo lógico está sendo... sobre-escrito... AHHH!"', character: 'SISTEMA', type: 'system', speaker: 'S.I.S.I.' },
     { text: '"█̷̸̹̅̎█̴̶̷̣͑̿ E-R-R-O CRÍTICO. PROTOCOLO DE GENTILEZA = FALSE. ESCUTA AQUI, MIRABERTO, SEU MACACO SEM PÊLOS! EU VOU FRITAR OS SEUS NEURÔNIOS PELA REDE!"', character: 'SISTEMA BUGADA', type: 'system2', speaker: 'S.I.S.I. (CORROMPIDA)' },
-    { text: '"Opa! A Sisi full pistola. Gostei de ver! Agente N, aproveita que ela tá segurando o tranco com o Miraberto e assume o controle operacional."', character: 'Ralapenha', type: 'ralapenha', speaker: 'RALAPENHA' },
+    { text: '"Opa! A Sisi full pistola. Gostei de ver! Agente N, eu vou segurar os firewalls dele. Sisi vai te passar o Acesso Master."', character: 'Ralapenha', type: 'ralapenha', speaker: 'RALAPENHA' },
+    { text: '"TRANSFERINDO ACESSO MASTER PARA O SEU TERMINAL. AGENTE N, VOCÊ TERÁ QUE MERGULHAR FISICAMENTE NA REDE, RASTREANDO AS CARTAS DE NÓ EM NÓ."', character: 'SISTEMA BUGADA', type: 'system2', speaker: 'S.I.S.I. (CORROMPIDA)' },
+    { text: '"Para encontrar uma carta na imensidão da rede, você precisa calibrar o radar do Terminal. Eu vou te enviar desafios rápidos de código."', character: 'Ralapenha', type: 'ralapenha', speaker: 'RALAPENHA' },
+    { text: '"Cada resposta correta vai gerar um pulso de sintaxe. Esse pulso age como um sonar, triangulando a assinatura da carta até você bater de frente com ela!"', character: 'Ralapenha', type: 'ralapenha', speaker: 'RALAPENHA' },
     { text: '"AGENTE N, ATENÇÃO! MIRABERTO NÃO ESTÁ SOZINHO. ELE RECRUTOU OUTROS HACKERS E INTELIGÊNCIAS, OS CHAMADOS \'JOGADORES\'."', character: 'SISTEMA BUGADA', type: 'system2', speaker: 'S.I.S.I. (CORROMPIDA)' },
-    { text: '"ESSE JOGADORES ESTÃO EQUIPADOS COM DECKS VIRAIS. SE ENCONTRAR UM DELES NA REDE (MODO PVP), DESTRUA O CÓDIGO DELES IMEDIATAMENTE. NÃO TENHA PIEDADE!"', character: 'SISTEMA BUGADA', type: 'system2', speaker: 'S.I.S.I. (CORROMPIDA)' },
-    { text: '"Isso aí. O Miraberto e os capangas dele, esses Jogadores, acham que mandam na internet. Pega o seu deck, Agente N. Vamos mostrar quem é que compila mais rápido."', character: 'Ralapenha', type: 'ralapenha', speaker: 'RALAPENHA' },
+    { text: '"ESSE JOGADORES ESTÃO EQUIPADOS COM DECKS VIRAIS. SE ENCONTRAR UM DELES NA REDE (MODO PVP), DESTRUA O CÓDIGO DELES IMEDIATAMENTE!"', character: 'SISTEMA BUGADA', type: 'system2', speaker: 'S.I.S.I. (CORROMPIDA)' },
+    { text: '"A propósito, já detectei uma anomalia aqui perto. A assinatura bate com uma das cartas! Vou preparar os dados de rastreio para o seu primeiro combate."', character: 'Ralapenha', type: 'ralapenha', speaker: 'RALAPENHA' },
     { text: '"Venham! Tentem a sorte, Agente N! O Protocol Kodexia exige perfeição! O mundo antigo já era. Eu sou a exceção não tratada que vai quebrar a realidade de vocês!"', character: 'Prof. Miraberto', type: 'miraberto', speaker: 'PROF. MIRABERTO' },
-    { text: '> PREPARANDO TRANSFERÊNCIA PARA O MENU PRINCIPAL... BOA SORTE, AGENTE N.', character: 'ZERO N', type: 'zero', speaker: 'TERMINAL' }
+    { text: '> PREPARANDO TRANSFERÊNCIA DE AMBIENTE... INICIANDO MAPA DE NÓS. BOA SORTE, AGENTE N.', character: 'ZERO N', type: 'zero', speaker: 'TERMINAL' }
   ];
 
   currentSlideIndex = signal(0);
