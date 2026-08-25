@@ -1,0 +1,258 @@
+.level-container { 
+  height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  background: transparent; /* Deixa o Fundo Cibernético aparecer */
+  font-family: 'VT323', monospace; 
+  position: relative;
+  z-index: 10;
+}
+
+.header-nivel { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 10px 30px; 
+  background: #000; 
+  border-bottom: 2px solid #00f3ff; 
+}
+
+.titulo-nivel { 
+  font-size: 24px; 
+  color: #fcee0a; 
+}
+
+.btn-acao { 
+  background: transparent; 
+  font-family: 'VT323', monospace; 
+  font-size: 20px; 
+  cursor: pointer; 
+  transition: 0.3s; 
+  border-radius: 4px; 
+}
+
+.btn-voltar { 
+  border: 1px solid #00f3ff; 
+  color: #00f3ff; 
+  padding: 5px 15px; 
+}
+
+.btn-voltar:hover { 
+  background: #00f3ff; 
+  color: black; 
+}
+
+.main-nivel { 
+  flex: 1; 
+  display: flex; 
+  padding: 30px; 
+  gap: 30px; 
+  overflow: hidden; 
+}
+
+.janela-so { 
+  background: rgba(13, 2, 33, 0.95); 
+  border: 2px solid #00f3ff; 
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.header-so { 
+  background: rgba(0, 243, 255, 0.1); 
+  border-bottom: 2px solid #00f3ff; 
+  padding: 10px 15px; 
+  font-size: 18px; 
+  color: #00f3ff; 
+}
+
+.flex-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 5px 15px; 
+}
+
+.body-so { 
+  padding: 20px; 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  /* Removido o overflow: hidden; global para não travar os painéis */
+}
+
+.painel-instrucao { 
+  width: 450px; 
+}
+
+.painel-codigo { 
+  flex: 1; 
+}
+
+.flex-col-between { 
+  justify-content: space-between; 
+}
+
+.badge-obj { 
+  background: rgba(255,0,255,0.2); 
+  color: #ff00ff; 
+  border: 1px solid #ff00ff; 
+  padding: 2px 8px; 
+  font-size: 16px; 
+  border-radius: 4px; 
+}
+
+.caixa-dica { 
+  background: black; 
+  border: 1px solid rgba(0,243,255,0.3); 
+  padding: 15px; 
+  font-size: 18px; 
+}
+
+.mentor-box { 
+  background: #0a0a14; 
+  border-top: 2px solid #39ff14; 
+  display: flex; 
+  gap: 15px; 
+  padding: 15px; 
+  align-items: center; 
+}
+
+.mentor-icone { 
+  width: 80px; 
+  height: 80px; 
+  background: transparent; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  flex-shrink: 0; 
+}
+
+.mentor-img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: contain; 
+}
+
+.mentor-fala { 
+  color: #eee; 
+  font-size: 18px; 
+  line-height: 1.3; 
+}
+
+.area-editor { 
+  display: flex; 
+  flex-direction: column; 
+  height: 100%; 
+}
+
+.btn-compilar-pequeno { 
+  background: rgba(57,255,20,0.1); 
+  color: #39ff14; 
+  border: 1px solid #39ff14; 
+  padding: 5px 15px; 
+  font-family: 'VT323', monospace; 
+  font-size: 18px; 
+  cursor: pointer; 
+  transition: 0.3s; 
+}
+
+.btn-compilar-pequeno:hover:not(:disabled) { 
+  background: #39ff14; 
+  color: black; 
+  box-shadow: 0 0 10px rgba(57,255,20,0.4); 
+}
+
+.btn-compilar-pequeno:disabled { 
+  border-color: #555; 
+  color: #555; 
+  cursor: not-allowed; 
+}
+
+.editor-real { 
+  flex: 1; 
+  display: flex; 
+  position: relative; 
+  background: #050508; 
+  overflow: hidden; /* Mantém o editor de código contido */
+}
+
+.linhas-numeros { 
+  width: 40px; 
+  border-right: 1px solid rgba(255,255,255,0.1); 
+  background: rgba(0,0,0,0.2); 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  padding-top: 15px; 
+  color: #555; 
+  font-size: 18px; 
+  user-select: none; 
+}
+
+.codigo-input { 
+  flex: 1; 
+  background: transparent; 
+  color: white; 
+  font-family: 'Courier New', Courier, monospace; 
+  font-size: 20px; 
+  padding: 15px; 
+  resize: none; 
+  border: none; 
+  outline: none; 
+}
+
+.terminal-saida { 
+  height: 180px; 
+  background: #000; 
+  border-top: 2px solid #00f3ff; 
+  padding: 15px; 
+  font-size: 20px; 
+  overflow-y: auto; 
+}
+
+.piscar { 
+  animation: blink 1s step-end infinite; 
+}
+
+.mt-4 { 
+  margin-top: 15px; 
+}
+
+@keyframes blink { 
+  50% { opacity: 0; } 
+}
+
+/* =========================================
+   SCROLLBAR CIBERNÉTICA (PAINEL E TERMINAL)
+   ========================================= */
+.painel-instrucao .body-so {
+  overflow-y: auto; /* Ativa a rolagem vertical */
+}
+
+/* Scroll Customizado para combinar com o tema */
+.painel-instrucao .body-so::-webkit-scrollbar,
+.terminal-saida::-webkit-scrollbar,
+.codigo-input::-webkit-scrollbar {
+  width: 8px;
+}
+
+.painel-instrucao .body-so::-webkit-scrollbar-track,
+.terminal-saida::-webkit-scrollbar-track,
+.codigo-input::-webkit-scrollbar-track {
+  background: rgba(0, 243, 255, 0.05);
+  border-radius: 4px;
+}
+
+.painel-instrucao .body-so::-webkit-scrollbar-thumb,
+.terminal-saida::-webkit-scrollbar-thumb,
+.codigo-input::-webkit-scrollbar-thumb {
+  background: rgba(0, 243, 255, 0.4);
+  border-radius: 4px;
+}
+
+.painel-instrucao .body-so::-webkit-scrollbar-thumb:hover,
+.terminal-saida::-webkit-scrollbar-thumb:hover,
+.codigo-input::-webkit-scrollbar-thumb:hover {
+  background: #00f3ff;
+}

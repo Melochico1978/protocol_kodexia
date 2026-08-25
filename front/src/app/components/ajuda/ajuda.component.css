@@ -1,10 +1,12 @@
 .ajuda-master-container {
   height: 100vh; width: 100vw;
-  background: transparent; /* Permite ver o fundo de letras/grid */
+  background: transparent; 
   padding: 30px;
   display: flex;
   flex-direction: column;
   font-family: 'VT323', monospace;
+  position: relative;
+  z-index: 10;
 }
 
 .header-ajuda { text-align: center; margin-bottom: 20px; }
@@ -16,9 +18,9 @@
   margin: 0 auto; width: 100%;
 }
 
-/* JANELAS COM ESTILO DE BORDA NEON (IGUAL ÀS CARTAS) */
 .janela-so {
-  background: linear-gradient(rgba(13, 2, 33, 0.95), rgba(13, 2, 33, 0.95)) padding-box,
+  /* Escureci de 0.95 para 0.99 para bloquear mais o fundo Matrix e melhorar a leitura */
+  background: linear-gradient(rgba(8, 2, 20, 0.99), rgba(8, 2, 20, 0.99)) padding-box,
               linear-gradient(135deg, #00d2ff 0%, #8a2be2 100%) border-box;
   border: 3px solid transparent;
   border-radius: 12px;
@@ -34,18 +36,15 @@
   letter-spacing: 1px;
 }
 
-/* DIMINUIÇÃO DA JANELA PRINCIPAL */
-.janela-principal { flex: 1.8; } /* Era 2.5, agora está mais equilibrada */
+.janela-principal { flex: 1.8; } 
 
 .conteudo-dinamico { padding: 25px; color: white; overflow-y: auto; }
 
-/* PAINEL DE BOTÕES */
 .painel-botoes { flex: 1; display: flex; flex-direction: column; gap: 15px; }
 
 .btn-janela {
   cursor: pointer; transition: 0.3s;
-  /* Borda roxa neon para os botões secundários */
-  background: linear-gradient(rgba(13, 2, 33, 0.95), rgba(13, 2, 33, 0.95)) padding-box,
+  background: linear-gradient(rgba(8, 2, 20, 0.99), rgba(8, 2, 20, 0.99)) padding-box,
               linear-gradient(135deg, #b026ff 0%, #ff003c 100%) border-box;
 }
 
@@ -63,8 +62,9 @@
 .grid-quadrados { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
 .quadrado {
-  height: 120px; display: flex; align-items: center;
-  justify-content: center; color: #00f3ff; font-size: 20px;
+  height: 100px; /* Reduzido levemente para o grid não estourar a tela */
+  display: flex; align-items: center;
+  justify-content: center; color: #00f3ff; font-size: 20px; text-align: center;
 }
 
 .subtitulo { color: #00ff41; text-shadow: 0 0 5px #00ff41; margin-bottom: 15px; }

@@ -1,5 +1,6 @@
-<div class="ajuda-master-container" style="font-family: 'VT323', monospace;">
+<app-fundo-cibernetico></app-fundo-cibernetico>
 
+<div class="ajuda-master-container" style="font-family: 'VT323', monospace;">
   <div class="header-ajuda">
     <h1 class="titulo-central azul-neon">AJUDA & SUPORTE</h1>
   </div>
@@ -22,11 +23,33 @@
 
         <div *ngIf="secaoAtiva === 'faq'" class="sessao-conteudo">
           <h2 class="subtitulo">> F.A.Q - PERGUNTAS FREQUENTES</h2>
-          <div class="lista-faq">
-            <p><strong>P: O que acontece em caso de empate?</strong></p>
-            <p>R: As cartas ficam na mesa. O vencedor da próxima rodada coleta todas.</p>
-            <p><strong>P: Como criar linguagens lendárias?</strong></p>
-            <p>R: Acesse a Oficina e marque a flag 'Lendária' durante o cadastro.</p>
+          <div class="lista-faq" style="display: flex; flex-direction: column; gap: 15px;">
+            
+            <div class="faq-item">
+              <p style="color: #00f3ff; margin-bottom: 5px;"><strong>> O que acontece em caso de empate na Arena?</strong></p>
+              <p style="color: #ccc; margin-top: 0;">R: As cartas sofrem um *Deadlock* (ficam travadas na mesa). O vencedor do próximo turno coleta todas de uma vez.</p>
+            </div>
+
+            <div class="faq-item">
+              <p style="color: #00f3ff; margin-bottom: 5px;"><strong>> Fiquei travado em um desafio de código. O que fazer?</strong></p>
+              <p style="color: #ccc; margin-top: 0;">R: O Terminal destaca erros críticos. Verifique a sintaxe com cuidado: algumas linguagens diferenciam maiúsculas de minúsculas e exigem o uso do ponto e vírgula ( ; ) no final das instruções, então atenção aos detalhes.</p>
+            </div>
+
+            <div class="faq-item">
+              <p style="color: #00f3ff; margin-bottom: 5px;"><strong>> Posso usar as cartas da Oficina no Modo História?</strong></p>
+              <p style="color: #ccc; margin-top: 0;">R: Negativo. As cartas que você forja na Oficina vão para o seu Deck Pessoal para uso no Modo Duelo. A campanha principal possui uma jogabilidade diferente, e portanto, não usamos as mesmas cartas.</p>
+            </div>
+
+            <div class="faq-item">
+              <p style="color: #00f3ff; margin-bottom: 5px;"><strong>> Como sei qual atributo escolher na batalha?</strong></p>
+              <p style="color: #ccc; margin-top: 0;">R: Observe com atenção seus maiores atributos e selecione com base nas opções disponíveis.</p>
+            </div>
+
+            <div class="faq-item">
+              <p style="color: #00f3ff; margin-bottom: 5px;"><strong>> O sistema está agindo de forma estranha (insetos na tela)...</strong></p>
+              <p style="color: #ccc; margin-top: 0;">R: Alguns Hackers adoram deixar scripts maliciosos visuais escondidos nas interfaces. Recomendamos **não interagir** com esses "bugs"...</p>
+            </div>
+
           </div>
         </div>
 

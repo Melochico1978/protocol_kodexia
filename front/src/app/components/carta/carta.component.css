@@ -1,11 +1,18 @@
 .carta-container {
-  font-family: 'VT323', monospace;
+  font-family: 'VT323', monospace; /* Fonte estilo arcade/terminal */
   width: 350px;
-  border: 4px solid transparent;
+  border: 4px solid transparent; /* A borda deve ser transparente para o fundo aparecer */
   border-radius: 12px;
-  background:
+  
+  background: 
+    /* 1ª Camada: Fundo escuro da carta (padding-box impede que vaze para a borda) */
     linear-gradient(#0b0c10, #0b0c10) padding-box,
+    
+    /* 2ª Camada: O degradê da borda oscilando de azul metálico (cyan) para roxo */
     linear-gradient(135deg, #00d2ff 0%, #8a2be2 100%) border-box;
+  /*background-color: #0b0c10;
+  border: 4px solid #1f2833;*/
+  border-radius: 12px;
   padding: 15px;
   color: #fff;
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.3), inset 0 0 10px rgba(0, 0, 255, 0.2);
@@ -16,7 +23,7 @@
 
 .carta-header {
   font-size: 2.2rem;
-  color: #39ff14;
+  color: #39ff14; /* Verde neon */
   text-shadow: 0 0 5px #39ff14;
   margin-bottom: 10px;
   display: flex;
@@ -35,67 +42,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+
+  .imagem-pixel {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    image-rendering: pixelated; /* Mantém o estilo pixel art sem borrar */
+  }
 }
 
-.imagem-pixel {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  image-rendering: pixelated;
-}
-
-/* === ESTILO DO ERRO RETRO (Quando não há imagem) === */
-.placeholder-erro {
-  text-align: center;
-  color: #ff003c;
-  font-family: 'VT323', monospace;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background: rgba(255, 0, 60, 0.1);
-}
-
-.glitch-text {
-  font-size: 24px;
-  font-weight: bold;
-  position: relative;
-  text-shadow: 2px 0 #00f3ff;
-  animation: glitch 2s infinite;
-}
-
-.sub-erro {
-  font-size: 14px;
-  opacity: 0.7;
-  display: block;
-  margin-top: 5px;
-}
-
-.scanline-erro {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 2px;
-  background: rgba(255, 0, 60, 0.3);
-  animation: scanlineMove 3s linear infinite;
-}
-
-@keyframes scanlineMove {
-  0% { top: 0; }
-  100% { top: 100%; }
-}
-
-@keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
-  100% { transform: translate(0); }
-}
-
-/* === ATRIBUTOS E BARRAS === */
 .atributos-lista {
   display: flex;
   flex-direction: column;
@@ -115,6 +70,7 @@
   letter-spacing: 1px;
 }
 
+/* O segredo da barra de progresso em blocos */
 .attr-barra-container {
   flex: 1;
   height: 16px;
@@ -126,13 +82,18 @@
 
 .attr-barra-preenchimento {
   height: 100%;
+  /* Gradiente que muda conforme o preenchimento da barra */
   background: linear-gradient(90deg, #39ff14 0%, #ffff00 60%, #ff0000 100%);
   transition: width 0.3s ease;
 }
 
 .attr-barra-segmentos {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Cria os "cortes" pretos para simular blocos separados */
   background: repeating-linear-gradient(
     90deg,
     transparent,
@@ -148,7 +109,6 @@
   text-align: right;
 }
 
-/* === CARTA LENDÁRIA === */
 .super-trunfo-box {
   border: 2px solid #ff0000;
   border-radius: 6px;
@@ -156,29 +116,29 @@
   background: rgba(255, 0, 0, 0.1);
   text-align: center;
   box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.3);
-}
 
-.titulo-trunfo {
-  color: #ff0000;
-  font-size: 1.5rem;
-  margin-bottom: 5px;
-  text-shadow: 0 0 4px #ff0000;
-}
+  .titulo-trunfo {
+    color: #ff0000;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    text-shadow: 0 0 4px #ff0000;
+  }
 
-.conteudo-trunfo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.1rem;
-  color: #fff;
-  line-height: 1.2;
-}
+  .conteudo-trunfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    color: #fff;
+    line-height: 1.2;
 
-.estrela {
-  font-size: 1.8rem;
-}
-
-.conteudo-trunfo p {
-  margin: 0;
-  text-align: center;
+    .estrela {
+      font-size: 1.8rem;
+    }
+    
+    p {
+      margin: 0;
+      text-align: center;
+    }
+  }
 }

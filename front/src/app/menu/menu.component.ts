@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { RouterModule, Router } from '@angular/router'; 
+import { LoadingService } from '../services/loading.service'; // Caso o arquivo mude de lugar, valide este caminho!
 
 @Component({
   selector: 'app-menu',
@@ -11,11 +12,27 @@ import { RouterModule, Router } from '@angular/router';
 })
 export class MenuComponent {
   
-  // Variável que controla qual menu aparece
+  // Controladores reativos de visualização da interface
   menuAtual: 'principal' | 'duelo' = 'principal';
-  efeitoScanline: boolean = false; // Controla a "onda" de transição
+  efeitoScanline: boolean = false; 
 
-  constructor(private router: Router) {}
+  // Injeções de Dependência do Core
+  private router = inject(Router);
+  private loadingService = inject(LoadingService);
+
+  iniciarModoHistoria() {
+    // 1. Invoca a tela de carregamento oficial do Kodexia
+    this.loadingService.adicionarItemLoading('inicializando-campanha');
+    
+    // 2. Aguarda o tempo de transição e imersão visual acabar
+    setTimeout(() => {
+      // 3. Remove o item e libera a renderização principal
+      this.loadingService.removerItemLoading('inicializando-campanha');
+      
+      // 4. Redireciona o usuário direto para o terminal de introdução
+      this.router.navigate(['/story/intro']);
+    }, 2500);
+  }
 
   navegar(rota: string) {
     this.router.navigate([`/${rota}`]);
@@ -26,15 +43,12 @@ export class MenuComponent {
   }
 
   trocarMenu(novoMenu: 'principal' | 'duelo') {
-    // Ativa a onda cibernética
     this.efeitoScanline = true;
     
-    // Espera a onda passar (500ms) para trocar os botões
     setTimeout(() => {
       this.menuAtual = novoMenu;
     }, 300);
 
-    // Remove a onda
     setTimeout(() => {
       this.efeitoScanline = false;
     }, 600);
