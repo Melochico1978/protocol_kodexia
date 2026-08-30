@@ -1,0 +1,96 @@
+.fundo-ranking {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('/assets/images/bg_premium.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 40px;
+}
+
+.container-vidro {
+  background: rgba(10, 15, 25, 0.7);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(0, 255, 204, 0.2);
+  box-shadow: 0 0 30px rgba(0, 255, 204, 0.1);
+  border-radius: 15px;
+  width: 100%;
+  max-width: 800px;
+  padding: 40px;
+  color: white;
+}
+
+.titulo-neon {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 3rem;
+  color: #00ffcc;
+  text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+  text-align: center;
+  margin: 0;
+}
+
+.subtitulo {
+  text-align: center;
+  color: #a0aab5;
+  font-family: Arial, sans-serif;
+  margin-bottom: 30px;
+}
+
+.jogador-card {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.jogador-card:hover {
+  background: rgba(0, 255, 204, 0.1);
+  transform: translateX(10px);
+  border-color: rgba(0, 255, 204, 0.5);
+}
+
+.posicao {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #00ffcc;
+  width: 60px;
+  text-shadow: 0 0 5px rgba(0, 255, 204, 0.5);
+}
+
+.info {
+  flex: 1;
+}
+
+.nome {
+  margin: 0 0 5px 0;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.login {
+  color: #00ffcc;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.status span {
+  margin-right: 15px;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* Efeitos Especiais para os Top 3 */
+.top1 { border-color: gold; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
+.top1 .posicao { color: gold; text-shadow: 0 0 10px gold; }
+
+.top2 { border-color: silver; box-shadow: 0 0 15px rgba(192, 192, 192, 0.3); }
+.top2 .posicao { color: silver; text-shadow: 0 0 10px silver; }
+
+.top3 { border-color: #cd7f32; box-shadow: 0 0 15px rgba(205, 127, 50, 0.3); }
+.top3 .posicao { color: #cd7f32; text-shadow: 0 0 10px #cd7f32; }

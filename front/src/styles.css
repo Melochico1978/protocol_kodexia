@@ -13,81 +13,101 @@ body {
 }
 
 /* ========================================================
-   CYBER HUD BUTTONS (3D NEON STYLE)
+   CYBER HUD BUTTONS (3D NEON STYLE) - Trem bão sô!
    ======================================================== */
 .btn-cyber-hud {
+  /* Arrumando o lugarzinho do botão, uai */
   position: relative;
+  /* Dando aquele respiro maroto pro texto */
   padding: 10px 25px;
+  /* Azulzinho neon que brilha mais que estrela na roça */
   color: #00f3ff;
   font-family: 'Orbitron', 'VT323', sans-serif;
   font-size: 22px;
+  /* Sem bordinha feia */
   border: none;
   background: transparent;
+  /* Pro mouse ficar com cara de mãozinha */
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 2px;
+  /* Sombra que dá o brilho cibernético, trem chique demais */
   text-shadow: 0 0 5px #00f3ff;
   display: flex;
   align-items: center;
   gap: 12px;
   z-index: 1;
+  /* Espaço pro trem não ficar apertado */
   margin: 5px; /* space for outer glow */
 }
 
-/* Fundo Escuro + Borda Ciano Interna */
+/* Fundo Escuro + Borda Ciano Interna (O forro do botão sô) */
 .btn-cyber-hud::before {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
+  /* Fundo escurão pra dar destaque */
   background: rgba(10, 15, 30, 0.95);
   border: 2px solid #00f3ff;
+  /* Cortando as quinas pra ficar pique nave espacial, nu! */
   clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
   z-index: -1;
+  /* Brilho pra dentro, parecendo bruxaria */
   box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.5);
+  /* Deixando a transição mansa igual carro de boi */
   transition: all 0.3s ease;
 }
 
-/* Borda Externa Magenta Esculpida */
+/* Borda Externa Magenta Esculpida (A moldura do trem) */
 .btn-cyber-hud::after {
   content: "";
   position: absolute;
   top: -4px; left: -4px; right: -4px; bottom: -4px;
+  /* Rosa chocante, arreda pra lá! */
   background: #ff007f;
   clip-path: polygon(18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%, 0 18px);
   z-index: -2;
   transition: all 0.3s ease;
 }
 
+/* Quando passa o mouse por cima do trem (hover) */
 .btn-cyber-hud:hover {
+  /* Fica branquinho e brilha que é uma beleza */
   color: #fff;
   text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff;
 }
 
+/* O forro dá uma clareada também */
 .btn-cyber-hud:hover::before {
   background: rgba(0, 243, 255, 0.2);
   box-shadow: inset 0 0 30px rgba(0, 243, 255, 0.8);
 }
 
+/* A moldura pula e muda de cor, eita lelê */
 .btn-cyber-hud:hover::after {
   background: #ff00ff;
   top: -5px; left: -5px; right: -5px; bottom: -5px;
 }
 
-/* VARIAÇÃO DE ALERTA / ABORTAR (Vermelho e Laranja) */
+/* VARIAÇÃO DE ALERTA / ABORTAR (Vermelho e Laranja - Pra dar susto) */
 .btn-cyber-hud.btn-abort {
+  /* Vermelhão de parar o trânsito */
   color: #ff003c;
   text-shadow: 0 0 5px #ff003c;
 }
 
+/* O forro do botão de perigo sô */
 .btn-cyber-hud.btn-abort::before {
   border-color: #ff003c;
   box-shadow: inset 0 0 20px rgba(255, 0, 60, 0.5);
 }
 
+/* A moldura do botão de perigo fica alaranjada */
 .btn-cyber-hud.btn-abort::after {
   background: #ff9900;
 }
 
+/* Quando passa o mouse no perigo */
 .btn-cyber-hud.btn-abort:hover {
   color: #fff;
   text-shadow: 0 0 10px #ff003c, 0 0 20px #ff003c;
@@ -99,5 +119,6 @@ body {
 }
 
 .btn-cyber-hud.btn-abort:hover::after {
+  /* Fica amarelão chamando atenção, sô doido! */
   background: #ffea00;
 }
