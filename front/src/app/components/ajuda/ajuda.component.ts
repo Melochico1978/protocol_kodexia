@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
+import { FundoCiberneticoComponent } from '../fundo-cibernetico/fundo-cibernetico.component'; 
 
 @Component({
   selector: 'app-ajuda',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FundoCiberneticoComponent],
   templateUrl: './ajuda.component.html',
   styleUrls: ['./ajuda.component.css'] 
 })

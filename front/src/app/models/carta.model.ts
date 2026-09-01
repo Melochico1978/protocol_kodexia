@@ -3,7 +3,6 @@ export interface Carta {
   grupo: string;
   codigo: string;
   nome: string;
-  imagem?: string;
   performance: number;
   sintaxe: number;
   seguranca: number;
