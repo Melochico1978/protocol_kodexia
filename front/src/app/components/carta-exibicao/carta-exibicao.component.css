@@ -9,8 +9,12 @@
   width: 100%;
   height: 100%;
   position: relative;
-  transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transform-style: preserve-3d;
+}
+
+.card-scene:hover .card-flip-container:not(.is-flipped) {
+  transform: translateY(-12px) scale(1.03);
 }
 
 .card-flip-container.is-flipped {
@@ -31,13 +35,22 @@
 }
 
 .card-front {
-  background: linear-gradient(135deg, #0d0e15 0%, #151821 50%, #0d0e15 100%);
-  border: 2px solid #2d3548;
+  background: linear-gradient(135deg, rgba(13, 14, 21, 0.45) 0%, rgba(21, 24, 33, 0.65) 50%, rgba(13, 14, 21, 0.45) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   color: white;
   padding: 12px;
   font-family: 'Rajdhani', 'VT323', monospace;
   display: flex;
   flex-direction: column;
+  transition: all 0.4s ease;
+}
+
+.card-scene:hover .card-front {
+  box-shadow: 0 0 25px rgba(0, 243, 255, 0.4), inset 0 0 10px rgba(0, 243, 255, 0.2);
+  border-color: rgba(0, 243, 255, 0.8);
 }
 
 .card-back {
@@ -107,7 +120,7 @@
 .card-background-overlay {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(to bottom, rgba(13, 14, 21, 0.2) 0%, rgba(13, 14, 21, 0.5) 100%);
+  background: linear-gradient(to bottom, rgba(13, 14, 21, 0.1) 0%, rgba(13, 14, 21, 0.7) 100%);
 }
 .card-header {
   text-align: center;

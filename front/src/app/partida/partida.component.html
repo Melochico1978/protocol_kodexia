@@ -47,6 +47,9 @@
 
   <div class="header-batalha">
     <h1 class="titulo-cyberpunk"> [ SIMULAÇÃO VS. IA ] </h1>
+    <h2 *ngIf="contextoAtual && !jogoAcabou && faseAtual !== 'INTRO'" style="color: #00ffcc; font-family: 'Orbitron', 'VT323', monospace; text-shadow: 0 0 10px #00ffcc; letter-spacing: 2px; margin-bottom: 5px; font-size: 26px;">
+      🌐 AMBIENTE DA RODADA: {{ contextoAtual }} 🌐
+    </h2>
     <p class="log-sistema" [class.super-trunfo-msg]="superTrunfoAtivado">{{ mensagemSistemaDisplay }}<span class="cursor-pisca">_</span></p>
   </div>
 

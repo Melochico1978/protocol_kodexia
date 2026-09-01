@@ -102,12 +102,13 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 40px;
+  gap: 2vw;
   flex: 1;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
   padding-bottom: 120px; 
+  flex-wrap: wrap;
 }
 
 
@@ -274,7 +275,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
   z-index: 10;
 }
 
-.zona-embate { display: flex; justify-content: space-between; align-items: center; gap: 40px; margin-bottom: 10px; width: 100%; min-width: 800px; }
+.zona-embate { display: flex; justify-content: space-between; align-items: center; gap: 2vw; margin-bottom: 10px; width: 100%; flex-wrap: wrap; }
 
 .area-acao-jogador, .area-acao-bot {
   display: flex;
@@ -594,7 +595,7 @@ button, .carta-na-mao, .btn-atributo, .nome-jogador {
 
 .btn-audio {
   position: absolute;
-  top: 30px;
+  top: 80px;
   right: 30px;
   background: rgba(13, 2, 33, 0.8);
   border: 1px solid #00f3ff;

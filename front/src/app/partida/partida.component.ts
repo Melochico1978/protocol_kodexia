@@ -59,6 +59,18 @@ export class PartidaComponent implements OnInit, OnDestroy {
   superTrunfoAtivado: boolean = false;
   vencedor: 'JOGADOR' | 'BOT' | null = null;
 
+  contextoAtual: string = '';
+  bonusAplicadoP1: boolean = false;
+  bonusAplicadoP2: boolean = false;
+
+  contextosDisponiveis = [
+    { nome: 'WEB DEVELOPMENT', linguagens: ['JavaScript', 'TypeScript', 'PHP', 'Ruby', 'Dart'] },
+    { nome: 'DATA SCIENCE', linguagens: ['Python', 'R', 'Julia', 'MATLAB'] },
+    { nome: 'SYSTEMS PROGRAMMING', linguagens: ['C', 'C++', 'Rust', 'Zig', 'Nim', 'Assembly'] },
+    { nome: 'ENTERPRISE', linguagens: ['Java', 'C#', 'Go', 'Scala', 'COBOL'] },
+    { nome: 'MOBILE', linguagens: ['Swift', 'Kotlin', 'Dart'] }
+  ];
+
   nomeJogador: string = 'JOGADOR 1';
   editandoNome: boolean = false;
   vitorias: number = 0;
@@ -231,8 +243,14 @@ export class PartidaComponent implements OnInit, OnDestroy {
     this.turnoAtual = 'JOGADOR';
     this.faseAtual = 'ESCOLHER_CARTA';
     this.cartaFocadaIndex = 0;
-    this.escreverMensagemSistema('> SELECIONE UMA CARTA DA SUA MÃO.');
+    this.sortearContexto();
+    this.escreverMensagemSistema(`> INICIANDO COMBATE. AMBIENTE: ${this.contextoAtual}. SELECIONE SUA CARTA.`);
     this.mostrarOverlay('INICIAR PARTIDA');
+  }
+
+  sortearContexto(): void {
+    const randomIdx = Math.floor(Math.random() * this.contextosDisponiveis.length);
+    this.contextoAtual = this.contextosDisponiveis[randomIdx].nome;
   }
 
   preencherMao(): void {
@@ -397,9 +415,15 @@ export class PartidaComponent implements OnInit, OnDestroy {
   }
 
   private verificarSuperTrunfo(carta1: Carta, carta2: Carta): 'JOGADOR' | 'BOT' | null {
+    const chanceFalha = Math.random();
+
     if (carta1.lendaria) {
       if (carta2.grupo === 'A') {
         this.escreverMensagemSistema('> ⚠️ SUPER TRUNFO ANULADO! A carta adversária é do Grupo A! Combate normal iniciado...');
+        return null;
+      }
+      if (chanceFalha < 0.30) {
+        this.escreverMensagemSistema('> ⚠️ GLITCH NO SISTEMA! O Super Trunfo falhou em ativar sua prioridade máxima! Combate normal iniciado...');
         return null;
       }
       this.superTrunfoAtivado = true;
@@ -409,6 +433,10 @@ export class PartidaComponent implements OnInit, OnDestroy {
     if (carta2.lendaria) {
       if (carta1.grupo === 'A') {
         this.escreverMensagemSistema('> ⚠️ SUPER TRUNFO ANULADO! Sua carta é do Grupo A! Combate normal iniciado...');
+        return null;
+      }
+      if (chanceFalha < 0.30) {
+        this.escreverMensagemSistema('> ⚠️ GLITCH NO SISTEMA INIMIGO! O Super Trunfo da Máquina falhou! Combate normal iniciado...');
         return null;
       }
       this.superTrunfoAtivado = true;
@@ -434,7 +462,7 @@ export class PartidaComponent implements OnInit, OnDestroy {
     
     setTimeout(() => {
       this.recolherCartas();
-    }, 1500);
+    }, 2500); // aumentado para 2.5s para ler o log do buff
   }
 
   private executarResultadoSuperTrunfo(vencedor: 'JOGADOR' | 'BOT'): void {
@@ -463,9 +491,28 @@ export class PartidaComponent implements OnInit, OnDestroy {
     }
   }
 
+  private aplicarBuffContexto(carta: Carta): number {
+    let valorOriginal = Number(carta[this.atributoAtaqueBot || 'performance']) || 0; // fallback if needed
+    // However, executaResultadoAtributo receives 'atributo'
+    return 0; // We'll do it inside the function
+  }
+
   private executarResultadoAtributo(atributo: keyof Carta, nomeAtributo: string): void {
-    const valorJogador = Number(this.cartaAtualJogador![atributo]);
-    const valorBot = Number(this.cartaAtualBot![atributo]);
+    let valorJogador = Number(this.cartaAtualJogador![atributo]);
+    let valorBot = Number(this.cartaAtualBot![atributo]);
+
+    let msg = '';
+    const ctxObj = this.contextosDisponiveis.find(c => c.nome === this.contextoAtual);
+    if (ctxObj) {
+      if (ctxObj.linguagens.includes(this.cartaAtualJogador!.nome)) {
+        valorJogador = Math.min(100, valorJogador + 15);
+        msg += `[BUFF JOGADOR] Seu ambiente favoreceu ${this.cartaAtualJogador!.nome} (+15 em ${nomeAtributo})!\n`;
+      }
+      if (ctxObj.linguagens.includes(this.cartaAtualBot!.nome)) {
+        valorBot = Math.min(100, valorBot + 15);
+        msg += `[BUFF BOT] O ambiente favoreceu ${this.cartaAtualBot!.nome} (+15 em ${nomeAtributo})!\n`;
+      }
+    }
 
     if (valorJogador > valorBot) {
       const diff = valorJogador - valorBot;
@@ -535,9 +582,18 @@ export class PartidaComponent implements OnInit, OnDestroy {
       
       
       this.turnoAtual = 'JOGADOR';
-      this.escreverMensagemSistema('> SEU TURNO. SELECIONE UMA CARTA DA MÃO.');
+      this.sortearContexto();
+      this.escreverMensagemSistema(`> SEU TURNO. AMBIENTE ATUAL: ${this.contextoAtual}. SELECIONE UMA CARTA.`);
       this.faseAtual = 'ESCOLHER_CARTA';
       this.cartaFocadaIndex = 0;
+    }
+  }
+
+  renderSe(): void {
+    if (confirm('Tem certeza que deseja desistir e entregar a vitória para a Máquina?')) {
+      this.deckJogador = [];
+      this.maoJogador = [];
+      this.finalizarJogo();
     }
   }
 

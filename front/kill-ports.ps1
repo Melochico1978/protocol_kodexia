@@ -1,5 +1,4 @@
-# Script para liberar portas e iniciar os servidores
-# Mata processos nas portas 3000 e 4200 se existirem
+
 $ports = @(3000, 3001, 4200)
 foreach ($port in $ports) {
     try {
@@ -11,7 +10,7 @@ foreach ($port in $ports) {
             Write-Host "Porta $port liberada."
         }
     } catch {
-        # Porta ja livre
+   
     }
 }
 Write-Host "Portas livres. Iniciando servidores..."
