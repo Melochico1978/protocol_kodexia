@@ -1,7 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
+:root {
+  --bg-main: #0d0221;
+  --bg-card: #161b22;
+  --primary: #00f3ff;
+  --primary-hover: #fff;
+  --secondary: #ff007f;
+  --error: #ff003c;
+  --text-main: #f0f6fc;
+  --font-main: 'VT323', monospace;
+}
+
 * {
-  font-family: 'VT323', monospace;
+  font-family: var(--font-main);
   box-sizing: border-box;
 }
 

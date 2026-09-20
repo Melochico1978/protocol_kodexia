@@ -24,6 +24,10 @@ export class CartaService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
+  updateCarta(id: string, carta: Partial<Carta>): Observable<Carta> {
+    return this.http.patch<Carta>(`${this.apiUrl}/${id}`, carta);
+  }
+
   setDeck(cartas: Carta[]): void {
     this.deckSelecionado = cartas;
   }

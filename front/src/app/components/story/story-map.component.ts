@@ -17,10 +17,11 @@ export class StoryMapComponent implements OnInit {
     { id: '1', numero: '01', titulo: 'Inicialização', subtitulo: 'Fundamentos da Sintaxe' },
     { id: '2', numero: '02', titulo: 'Alocação de Memória', subtitulo: 'Variáveis e Tipos' },
     { id: '3', numero: '03', titulo: 'Fluxo de Controle', subtitulo: 'Condicionais if/else' },
-    { id: '4', numero: '04', titulo: 'Invasão de Firewall', subtitulo: 'Cyber Code Breaker' }
+    { id: '4', numero: '04', titulo: 'Invasão de Firewall', subtitulo: 'Cyber Code Breaker' },
+    { id: '5', numero: '05', titulo: 'Infiltração Lógica', subtitulo: 'Desafio do Terminal' }
   ];
 
-  nivelAtualLiberado = signal<number>(4);
+  nivelAtualLiberado = signal<number>(5);
   bugHits = signal<number>(0);
   isHacked = signal<boolean>(false);
 
@@ -34,6 +35,8 @@ export class StoryMapComponent implements OnInit {
   acessarNivel(id: string) {
     if (id === '4') {
       this.router.navigate(['/story/breaker']);
+    } else if (id === '5') {
+      this.router.navigate(['/story/logica']);
     } else {
       this.router.navigate(['/story/level', id]);
     }

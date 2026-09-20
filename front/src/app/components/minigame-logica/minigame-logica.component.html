@@ -1,1 +1,82 @@
-<p>minigame-logica works!</p>
+<div class="minigame-container" [class.glitch-bg]="explosao">
+  <div class="hud-top">
+    <div class="miraberto-avatar">
+      <img src="assets/images/miraberto.jpeg" alt="Prof. Miraberto" />
+    </div>
+    <div class="dialog-box">
+      <p class="speaker">{{ dialogos[dialogoIndex].speaker }}</p>
+      <p class="dialog-text" (click)="avancarDialogo()">
+        {{ textoExibido }}
+        <span class="cursor" *ngIf="textoExibido.length === dialogos[dialogoIndex].text.length">▼</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="terminal-box">
+    <div class="terminal-header">
+      <span class="terminal-title">TERMINAL KODEXIA v4.0 - ROOT ACCESS</span>
+    </div>
+    
+    <div class="terminal-content">
+      <!-- Fase 1: Entradas Simples -->
+      <div *ngIf="faseAtual === 1" class="fase-container fade-in">
+        <p class="code-line"><span class="keyword">String</span> usuario = <input type="text" [(ngModel)]="inputUsuario" placeholder='"Joao N"' class="terminal-input">;</p>
+        <p class="code-line"><span class="keyword">String</span> senha = <input type="text" [(ngModel)]="inputSenha" placeholder='"Fluffy"' class="terminal-input">;</p>
+        <p class="code-line"><span class="keyword">int</span> numero = <input type="text" [(ngModel)]="inputNumero" placeholder="404" class="terminal-input">;</p>
+        <button class="cyber-btn" (click)="validarFase1()" [disabled]="!inputUsuario || !inputSenha || !inputNumero">ENVIAR DADOS</button>
+      </div>
+
+      <!-- Fase 2: Condicionais && -->
+      <div *ngIf="faseAtual === 2" class="fase-container fade-in">
+        <div class="code-block">
+          <span class="keyword">if</span> (usuario == <span class="string">"Joao N"</span> 
+          <input type="text" [(ngModel)]="operador1" placeholder="&&" class="terminal-input short-input"> 
+          senha == <span class="string">"Fluffy"</span> 
+          <input type="text" [(ngModel)]="operador2" placeholder="&&" class="terminal-input short-input"> 
+          numero == <span class="number">404</span>) {{ '{' }}
+          <br>&nbsp;&nbsp;<span class="comment">// Acesso Autorizado</span>
+          <br>{{ '}' }} <span class="keyword">else</span> {{ '{' }}
+          <br>&nbsp;&nbsp;<span class="comment">// Acesso Negado</span>
+          <br>{{ '}' }}
+        </div>
+        <button class="cyber-btn" (click)="validarFase2()" [disabled]="!operador1 || !operador2">COMPILAR E RODAR</button>
+      </div>
+
+      <!-- Fase 3: Matriz e Módulo -->
+      <div *ngIf="faseAtual === 3" class="fase-container fade-in">
+        <p class="prompt-text">Insira as coordenadas para extração:</p>
+        <p class="code-line">X = <input type="number" [(ngModel)]="inputX" class="terminal-input short-input"></p>
+        <p class="code-line">Y = <input type="number" [(ngModel)]="inputY" class="terminal-input short-input"></p>
+        
+        <div class="code-block">
+          <span class="keyword">if</span> ( (x % <span class="number">2</span> == <span class="number">0</span> && x < <span class="number">3</span>) && (y % <span class="number">2</span> != <span class="number">0</span> && y > <span class="number">2</span>) ) {{ '{' }}
+          <br>&nbsp;&nbsp;<span class="comment">// Gerar Matriz</span>
+          <br>{{ '}' }} <span class="keyword">else</span> {{ '{' }}
+          <br>&nbsp;&nbsp;<span class="comment">// Explodir</span>
+          <br>{{ '}' }}
+        </div>
+        <button class="cyber-btn danger-btn" (click)="validarFase3()" [disabled]="inputX === null || inputY === null">INICIAR EXTRAÇÃO</button>
+      </div>
+
+      <!-- Fase 4: Matriz Renderizada (Sucesso) -->
+      <div *ngIf="faseAtual === 4" class="fase-container matrix-container fade-in">
+        <div class="matrix-row" *ngFor="let linha of matriz">
+          <span class="matrix-cell" *ngFor="let celula of linha" [class.highlight]="celula === '[X]'">
+            {{ celula }}
+          </span>
+        </div>
+        <button class="cyber-btn success-btn" (click)="concluirDesafio()">RETORNAR À BASE</button>
+      </div>
+
+      <!-- Console Output -->
+      <div class="console-output" *ngIf="faseAtual > 0">
+        <pre>{{ mensagemTerminal }}</pre>
+      </div>
+    </div>
+  </div>
+  
+  <div class="explosao-overlay" *ngIf="explosao">
+    <h1>💥 FALHA CRÍTICA 💥</h1>
+    <p>CONEXÃO PERDIDA...</p>
+  </div>
+</div>

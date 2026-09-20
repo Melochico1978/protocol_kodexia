@@ -24,6 +24,7 @@ export const routes: Routes = [
   { path: 'story/map', loadComponent: () => import('./components/story/story-map.component').then(m => m.StoryMapComponent) },
   { path: 'story/level/:id', loadComponent: () => import('./components/level/level.component').then(m => m.LevelComponent) },
   { path: 'story/breaker', loadComponent: () => import('./components/cyber-code-breaker/cyber-code-breaker.component').then(m => m.CyberCodeBreakerComponent) },
+  { path: 'story/logica', loadComponent: () => import('./components/minigame-logica/minigame-logica.component').then(m => m.MinigameLogicaComponent) },
 
   { path: '**', redirectTo: '' }, 
 ];
